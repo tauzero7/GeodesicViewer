@@ -1,0 +1,533 @@
+## ---------------------------------------------------------
+##   GeodesicViewer
+##  
+##  Copyright (c) 2009-2011  Thomas Mueller, Frank Grave
+##
+##   This file is part of the GeodesicViewer.
+## ---------------------------------------------------------
+
+Before installation:
+--------------------
+The GeodesicViewer (v1.1) is based on the Qt framework (version 4.7),
+the open graphics library (OpenGL), and the Motion4D-library (v1.3). 
+On standard Linux machines, OpenGL is already installed via the 
+graphics board drivers. Qt 4.7 can be downloaded from the developer 
+site as a LGPL-licensed version. The Motion4D-library also needs the 
+GNU Scientific Library (GSL).
+
+Note that you need a graphics card that supports the OpenGL Shading 
+language (GLSL). If you start the GeodesicViewer from a console, a 
+message will be print on the standard output whether your graphics 
+card supports GLSL or not.
+
+
+The following libraries have to be installed before compiling the GeodesicViewer:
+
+*) Qt  >= 4.7 
+   The LGPL-licensed version of the Qt SDK can be downloaded from 
+   http://www.qt.io/download/  
+   Please note that there might be difficulties with some older 
+   Qt 5.0 versions.
+
+*) GNU Scientific library.
+   http://www.gnu.org/software/gsl/
+
+   For Windows it depends on which compiler you use. 
+   If you use Visual Studio 2010, you can download a precompiled
+   version from the project site.
+
+
+*) Motion4D library.
+   A detailed discussion of the Motion4D library can be found here:
+   DOI: 10.1016/j.cpc.2009.07.014
+   The Motion4D library is delivered with the GeodesicViewer.
+
+
+Installation:
+-------------
+
+1.) Start the QtCreator and open the file "gviewer_m4d.pro".
+    
+2.) Edit the following variables in "gviewer_m4d.pro"
+    depending on your system:
+    
+    +) M4D_DIR
+       Root path to the Motion4D library source directory (src).
+       In the <Projects>-Tab of the Edit window you should find all header
+       and source files of the Motion4D library, otherwise the M4D_DIR 
+       variable was not correctly set.
+       
+    +) GSL_DIR
+       Path to the GNU Scientific library.
+
+    +) If your system supports  GL_GLEXT_PROTOTYPES, you can uncomment the line
+       #DEFINES += GL_GLEXT_PROTOTYPES
+
+    +) If you have a big screen (> 1280x1024), you can uncomment the line 
+       #DEFINES += USE_BIG_SCREEN      
+ 
+    +) If you would like to have tool tips shown in the status bar, then uncomment
+       #DEFINES += SHOW_STATUS_TIPS
+
+    +) unix:LIBS
+       If you have a 64-bit system, you might have to adjust the lib directories (lib -> lib64)
+ 
+3.) Switch to the Project-Tab and deactivate "Shadow-Build".
+      
+4.) Build All.
+
+A more detailed installation instruction with several screenshots can be found 
+in "doc/manual/index.html".
+
+
+
+Documentation:
+--------------
+
+A short documentation can be found in "doc/manual/index.html".
+
+
+Examples:
+---------
+
+The GeodesicViewer starts with an empty OpenGL-3D view. Now, you can either
+load a specific setting with "File/Load Setting" or you can follow the example
+in the article 
+
+T. Mueller and F. Grave, 
+"Motion4D - A library for lightrays and timelike worldlines in the theory 
+of relativity", 
+Comput. Phys. Commun. 180, 2355-2360 (2009) 
+(Sec. 4.1.1):
+
+
+Schwarzschild in geometric units:
+---------------------------------
+ 1.) Select "Schwarzschild" in the <Metric>-Tab of "Metric/Integrator/Constants".
+ 2.) Set the initial position to [ t=0, r=10, theta=1.5708, phi=0 ] in the 
+     <Position>-Tab of "Local Tetrad".
+ 3.) Set the local reference frame in the <Tetrad Directions>-Tab:
+        1  0  0  0
+        0 -1  0  0
+        0  0  0  1
+        0  0  1  0
+     Press "set" button.
+     ( This transformation defines the local reference frame with respect to the
+       natural local tetrad of the spacetime. )
+ 4.) Set the angle xi in <Direction Angles>-Tab of "Geodesic" to 27.9935 (degree) 
+     and the angle chi to 90.0 (degree). 
+     The type of the Geodesic should be "lightlike".
+ 5.) Use the default camera parameters ("DrawHadling"):
+     "eye x"=0.0, "eye y"=0.0, "eye z"=25.0, "FoV"=50.0, 
+     "poi x"=0.0, "poi y"=0.0, "poi z"=0.0.
+ 6.) Compare the output to the screenshot  doc/pics/gv_screenshot_schw_o1.png.
+     The parameters are also stored in the file  doc/examples/schw_orbit_1.ini.
+
+
+****  Note that a parameter setting does not store the <DrawHandling> parameters !  ****
+
+When loading a "Setting", change to the "doc/examples" directory. There, you will find
+the following examples:
+
+*) schw_orbit_1.ini
+    compare article, Sec. 4.1.1, Fig. 4
+
+*) schw_periodic_orbit.ini
+    compare article, Sec. 4.1.2, Fig. 5
+
+*) kerr.ini
+    compare article, Sec. 4.2
+
+*) kerr_photonorbit.ini
+    compare article, Sec. 4.2,   Fig. 6
+
+*) mt.ini
+    compare article, Sec. 4.3
+
+A screenshot of each setting can be found in doc/manual/screenshots.html. To reproduce
+these screenshots load the above examples via "File -> Load all".
+
+
+Schwarzschild in SI units:
+--------------------------
+The above example can also be realized in SI units:
+ 1.a) Select "Schwarzschild" in the <Metric>-Tab and change mass to "1.9891e30" (kg).
+ 1.b) Select "Runge-Kutta-Fehlberg" in the <Integrator>-Tab, activate "stepsize controlled",
+      and change "eps abs" to "1e-12".
+ 1.c) Push "SI units" button in the <Constants>-Tab.  
+ 2.) Set the initial position to [ t=0, r=14.771 (km), theta=1.5708, phi=0 ] in the <Position>-Tab.
+ 3.) Set the local reference frame in the <Tetrad Directions>-Tab:
+        1  0  0  0
+        0 -1  0  0
+        0  0  0  1
+        0  0  1  0
+     Press "set" button.
+ 4.) Set the angle xi in the <Direction Angles>-Tab to 27.9935 degree.
+ 5.) Change "eye z" in the <3D>-Tab to 35.
+
+
+
+FILES:
+------
+.
+├── GeodesicViewer
+│   ├── AUTHORS
+│   ├── data
+│   │   ├── box_ball.obj
+│   │   ├── coords.obj
+│   │   ├── objects.obj
+│   │   └── Tutorial
+│   │       ├── first_example.cfg
+│   │       ├── first_example.ini
+│   │       ├── first_example.obj
+│   │       ├── second_example.cfg
+│   │       ├── second_example.ini
+│   │       ├── second_example.obj
+│   │       ├── third_example.cfg
+│   │       ├── third_example.ini
+│   │       └── third_example.obj
+│   ├── doc
+│   │   ├── examples
+│   │   │   ├── html
+│   │   │   │   ├── kerr.cfg.html
+│   │   │   │   ├── kerr.ini.html
+│   │   │   │   ├── kerr.obj.html
+│   │   │   │   ├── kerr_photonorbit.cfg.html
+│   │   │   │   ├── kerr_photonorbit.ini.html
+│   │   │   │   ├── kerr_photonorbit.obj.html
+│   │   │   │   ├── mt.cfg.html
+│   │   │   │   ├── mt.ini.html
+│   │   │   │   ├── mt.obj.html
+│   │   │   │   ├── schw_orbit_1.cfg.html
+│   │   │   │   ├── schw_orbit_1.ini.html
+│   │   │   │   ├── schw_orbit_1.obj.html
+│   │   │   │   ├── schw_periodic_orbit.cfg.html
+│   │   │   │   ├── schw_periodic_orbit.ini.html
+│   │   │   │   └── schw_periodic_orbit.obj.html
+│   │   │   ├── kerr.cfg
+│   │   │   ├── kerr.ini
+│   │   │   ├── kerr.obj
+│   │   │   ├── kerr_photonorbit.cfg
+│   │   │   ├── kerr_photonorbit.ini
+│   │   │   ├── kerr_photonorbit.obj
+│   │   │   ├── mt.cfg
+│   │   │   ├── mt.ini
+│   │   │   ├── mt.obj
+│   │   │   ├── schw_orbit_1.2d.png
+│   │   │   ├── schw_orbit_1.3d.png
+│   │   │   ├── schw_orbit_1.cfg
+│   │   │   ├── schw_orbit_1.ini
+│   │   │   ├── schw_orbit_1.obj
+│   │   │   ├── schw_periodic_orbit.cfg
+│   │   │   ├── schw_periodic_orbit.ini
+│   │   │   └── schw_periodic_orbit.obj
+│   │   ├── manual
+│   │   │   ├── draw_view.html
+│   │   │   ├── geodesic.html
+│   │   │   ├── gv.css
+│   │   │   ├── html
+│   │   │   │   ├── first_example.cfg.html
+│   │   │   │   ├── first_example.ini.html
+│   │   │   │   ├── first_example.obj.html
+│   │   │   │   ├── second_example.cfg.html
+│   │   │   │   ├── second_example.ini.html
+│   │   │   │   ├── third_example.cfg.html
+│   │   │   │   ├── third_example.ini.html
+│   │   │   │   └── third_example.obj.html
+│   │   │   ├── index.html
+│   │   │   ├── localtetrad.html
+│   │   │   ├── main.html
+│   │   │   ├── menu.html
+│   │   │   ├── metric.html
+│   │   │   ├── navigation.html
+│   │   │   ├── opengl.html
+│   │   │   ├── screenshots.html
+│   │   │   ├── title.html
+│   │   │   ├── tut_first.html
+│   │   │   ├── tutorials.html
+│   │   │   ├── tut_second.html
+│   │   │   └── tut_third.html
+│   │   └── pics
+│   │       ├── constants.png
+│   │       ├── cosmic_geod.3d.png
+│   │       ├── draw_2d.png
+│   │       ├── draw_3d_animate.png
+│   │       ├── draw_3d_embed.png
+│   │       ├── draw_3d.png
+│   │       ├── draw_3d_scale.png
+│   │       ├── draw_3d_stereo.png
+│   │       ├── emb_mt.png
+│   │       ├── geodesic.png
+│   │       ├── go-up.png
+│   │       ├── gv_install_buildset.png
+│   │       ├── gv_install_projsetup.png
+│   │       ├── gv_install_pro.png
+│   │       ├── gv_screenshot_empty.png
+│   │       ├── gv_screenshot_first.png
+│   │       ├── gv_screenshot_geodesic.png
+│   │       ├── gv_screenshot_geodWithObjects.png
+│   │       ├── gv_screenshot_kerr.png
+│   │       ├── gv_screenshot_kerr_po.png
+│   │       ├── gv_screenshot_kerr_po_small.png
+│   │       ├── gv_screenshot_kerr_small.png
+│   │       ├── gv_screenshot_mt_2d.png
+│   │       ├── gv_screenshot_mt_fog.png
+│   │       ├── gv_screenshot_mt.png
+│   │       ├── gv_screenshot_mt_small.png
+│   │       ├── gv_screenshot_objects.png
+│   │       ├── gv_screenshot_rotSphere.png
+│   │       ├── gv_screenshot_schw_o1.png
+│   │       ├── gv_screenshot_schw_o1_small.png
+│   │       ├── gv_screenshot_schw_po.png
+│   │       ├── gv_screenshot_schw_po_small.png
+│   │       ├── initialDir.png
+│   │       ├── initVector.png
+│   │       ├── integrator.png
+│   │       ├── isotropic_rho.png
+│   │       ├── le_cosmic.png
+│   │       ├── le_morristhorne.png
+│   │       ├── le_schwarzschildiso.png
+│   │       ├── localtetrad_boost.png
+│   │       ├── localtetrad_direction.png
+│   │       ├── localtetrad_iso.png
+│   │       ├── localtetrad_mt.png
+│   │       ├── localtetrad_position.png
+│   │       ├── metric.png
+│   │       ├── mt_lt_reorder.png
+│   │       ├── objects.png
+│   │       ├── radius_mt.png
+│   │       ├── sachsjac.png
+│   │       ├── schwarzschildradius.png
+│   │       ├── schwradius.png
+│   │       ├── tetraddir.png
+│   │       ├── third_example.2d.png
+│   │       ├── third_example.3d.png
+│   │       ├── write_prot_empty.png
+│   │       └── write_prot.png
+│   ├── gdefs.h
+│   ├── gviewer_m4d.pri
+│   ├── gviewer_m4d.pro
+│   ├── gviewer_main.cpp
+│   ├── gviewer.qrc
+│   ├── icons
+│   │   ├── add.png
+│   │   ├── application-exit.png
+│   │   ├── back.png
+│   │   ├── config-users.png
+│   │   ├── display.png
+│   │   ├── document-open.png
+│   │   ├── document.png
+│   │   ├── document-print.png
+│   │   ├── document-save.png
+│   │   ├── dp-down.png
+│   │   ├── forward.png
+│   │   ├── go-down.png
+│   │   ├── go-up.png
+│   │   ├── gv.png
+│   │   └── readme
+│   ├── Makefile
+│   ├── model
+│   │   ├── draw2d_model.cpp
+│   │   ├── draw2d_model.h
+│   │   ├── opengl2d_model.cpp
+│   │   ├── opengl2d_model.h
+│   │   ├── opengl3d_model.cpp
+│   │   ├── opengl3d_model.h
+│   │   ├── openglJacobi_model.cpp
+│   │   └── openglJacobi_model.h
+│   ├── README
+│   ├── shader
+│   │   ├── frag.c
+│   │   └── vert.c
+│   ├── utils
+│   │   ├── camera.cpp
+│   │   ├── camera.h
+│   │   ├── doubleedit_util.cpp
+│   │   ├── doubleedit_util.h
+│   │   ├── gramschmidt.cpp
+│   │   ├── gramschmidt.h
+│   │   ├── greek.cpp
+│   │   ├── greek.h
+│   │   ├── myobject.cpp
+│   │   ├── myobject.h
+│   │   ├── quaternions.cpp
+│   │   ├── quaternions.h
+│   │   ├── utilities.cpp
+│   │   └── utilities.h
+│   └── view
+│       ├── compass_dial.cpp
+│       ├── compass_dial.h
+│       ├── dialwdg.cpp
+│       ├── dialwdg.h
+│       ├── doc_view.cpp
+│       ├── doc_view.h
+│       ├── draw_view.cpp
+│       ├── draw_view.h
+│       ├── geodesic_view.cpp
+│       ├── geodesic_view.h
+│       ├── geod_view.cpp
+│       ├── geod_view.h
+│       ├── ledpub_widget.cpp
+│       ├── ledpub_widget.h
+│       ├── locted_view.cpp
+│       ├── locted_view.h
+│       ├── object_view.cpp
+│       ├── object_view.h
+│       ├── prot_view.cpp
+│       ├── prot_view.h
+│       ├── report_view.cpp
+│       └── report_view.h
+└── libMotion4D
+    ├── m4d_sources.pri
+    └── src
+        ├── extra
+        │   ├── m4dObject.cpp
+        │   ├── m4dObject.h
+        │   ├── m4dPlatform.cpp
+        │   ├── m4dPlatform.h
+        │   ├── m4dUtilities.cpp
+        │   └── m4dUtilities.h
+        ├── m4dGlobalDefs.h
+        ├── math
+        │   ├── Mat.cpp
+        │   ├── Mat.h
+        │   ├── TransCoordinates.cpp
+        │   ├── TransCoordinates.h
+        │   ├── TransfMat.cpp
+        │   ├── TransfMat.h
+        │   ├── VnD.cpp
+        │   └── VnD.h
+        ├── metric
+        │   ├── m4dMetricAlcubierreAccel.cpp
+        │   ├── m4dMetricAlcubierreAccel.h
+        │   ├── m4dMetricAlcubierre.cpp
+        │   ├── m4dMetricAlcubierre.h
+        │   ├── m4dMetricAlcubierreSimple.cpp
+        │   ├── m4dMetricAlcubierreSimple.h
+        │   ├── m4dMetricBarriolaVilenkin.cpp
+        │   ├── m4dMetricBarriolaVilenkin.h
+        │   ├── m4dMetricBertottiKasner.cpp
+        │   ├── m4dMetricBertottiKasner.h
+        │   ├── m4dMetricBesselGravWaveCart.cpp
+        │   ├── m4dMetricBesselGravWaveCart.h
+        │   ├── m4dMetricChazyCurzonRot.cpp
+        │   ├── m4dMetricChazyCurzonRot.h
+        │   ├── m4dMetricCosmicStringSchwarzschild.cpp
+        │   ├── m4dMetricCosmicStringSchwarzschild.h
+        │   ├── m4dMetric.cpp
+        │   ├── m4dMetricCurzon.cpp
+        │   ├── m4dMetricCurzon.h
+        │   ├── m4dMetricDatabase.cpp
+        │   ├── m4dMetricDatabase.h
+        │   ├── m4dMetricDeSitterUnivConf.cpp
+        │   ├── m4dMetricDeSitterUnivConf.h
+        │   ├── m4dMetricDeSitterUniv.cpp
+        │   ├── m4dMetricDeSitterUniv.h
+        │   ├── m4dMetricEddFinkIn.cpp
+        │   ├── m4dMetricEddFinkIn.h
+        │   ├── m4dMetricEinsteinRosenWaveWWB.cpp
+        │   ├── m4dMetricEinsteinRosenWaveWWB.h
+        │   ├── m4dMetricErezRosenVar.cpp
+        │   ├── m4dMetricErezRosenVar.h
+        │   ├── m4dMetricErnst.cpp
+        │   ├── m4dMetricErnst.h
+        │   ├── m4dMetricErnstSchwarzschild.cpp
+        │   ├── m4dMetricErnstSchwarzschild.h
+        │   ├── m4dMetricExtremeReissnerNordstromDihole.cpp
+        │   ├── m4dMetricExtremeReissnerNordstromDihole.h
+        │   ├── m4dMetricFriedmanNonEmptyNull.cpp
+        │   ├── m4dMetricFriedmanNonEmptyNull.h
+        │   ├── m4dMetricGoedelCart.cpp
+        │   ├── m4dMetricGoedelCart.h
+        │   ├── m4dMetricGoedel.cpp
+        │   ├── m4dMetricGoedel.h
+        │   ├── m4dMetricGoedelScaledCart.cpp
+        │   ├── m4dMetricGoedelScaledCart.h
+        │   ├── m4dMetricGoedelScaled.cpp
+        │   ├── m4dMetricGoedelScaled.h
+        │   ├── m4dMetric.h
+        │   ├── m4dMetricHalilsoyWave.cpp
+        │   ├── m4dMetricHalilsoyWave.h
+        │   ├── m4dMetricJaNeWi.cpp
+        │   ├── m4dMetricJaNeWi.h
+        │   ├── m4dMetricKasner.cpp
+        │   ├── m4dMetricKasner.h
+        │   ├── m4dMetricKastorTraschen.cpp
+        │   ├── m4dMetricKastorTraschen.h
+        │   ├── m4dMetricKerrBL.cpp
+        │   ├── m4dMetricKerrBL.h
+        │   ├── m4dMetricKottler.cpp
+        │   ├── m4dMetricKottler.h
+        │   ├── m4dMetricList.h
+        │   ├── m4dMetricMinkowskiConformal.cpp
+        │   ├── m4dMetricMinkowskiConformal.h
+        │   ├── m4dMetricMinkowski.cpp
+        │   ├── m4dMetricMinkowski.h
+        │   ├── m4dMetricMinkRotLattice.cpp
+        │   ├── m4dMetricMinkRotLattice.h
+        │   ├── m4dMetricMorrisThorne.cpp
+        │   ├── m4dMetricMorrisThorne.h
+        │   ├── m4dMetricPainleveGullstrand.cpp
+        │   ├── m4dMetricPainleveGullstrand.h
+        │   ├── m4dMetricPlaneGravWave.cpp
+        │   ├── m4dMetricPlaneGravWave.h
+        │   ├── m4dMetricPravda_C_Can.cpp
+        │   ├── m4dMetricPravda_C_Can.h
+        │   ├── m4dMetricPravda_C.cpp
+        │   ├── m4dMetricPravda_C.h
+        │   ├── m4dMetricPTD_AI.cpp
+        │   ├── m4dMetricPTD_AI.h
+        │   ├── m4dMetricPTD_AII.cpp
+        │   ├── m4dMetricPTD_AII.h
+        │   ├── m4dMetricPTD_AIII.cpp
+        │   ├── m4dMetricPTD_AIII.h
+        │   ├── m4dMetricPTD_BI.cpp
+        │   ├── m4dMetricPTD_BI.h
+        │   ├── m4dMetricPTD_BII.cpp
+        │   ├── m4dMetricPTD_BII.h
+        │   ├── m4dMetricPTD_BIII.cpp
+        │   ├── m4dMetricPTD_BIII.h
+        │   ├── m4dMetricPTD_C.cpp
+        │   ├── m4dMetricPTD_C.h
+        │   ├── m4dMetricReissnerNordstrom.cpp
+        │   ├── m4dMetricReissnerNordstrom.h
+        │   ├── m4dMetricRotDihole.cpp
+        │   ├── m4dMetricRotDihole.h
+        │   ├── m4dMetricSchwarzschildCart.cpp
+        │   ├── m4dMetricSchwarzschildCart.h
+        │   ├── m4dMetricSchwarzschild.cpp
+        │   ├── m4dMetricSchwarzschild.h
+        │   ├── m4dMetricSchwarzschildIsotropic.cpp
+        │   ├── m4dMetricSchwarzschildIsotropic.h
+        │   ├── m4dMetricSchwarzschildTortoise.cpp
+        │   ├── m4dMetricSchwarzschildTortoise.h
+        │   ├── m4dMetricStraightSpinningString.cpp
+        │   ├── m4dMetricStraightSpinningString.h
+        │   ├── m4dMetricSultanaDyer.cpp
+        │   ├── m4dMetricSultanaDyer.h
+        │   ├── m4dMetricTaubNUT.cpp
+        │   ├── m4dMetricTaubNUT.h
+        │   ├── m4dMetricTeoWHl.cpp
+        │   └── m4dMetricTeoWHl.h
+        └── motion
+            ├── m4dFermiWalker.cpp
+            ├── m4dFermiWalker.h
+            ├── m4dGeodesicBS.cpp
+            ├── m4dGeodesicBS.h
+            ├── m4dGeodesic.cpp
+            ├── m4dGeodesicDP54.cpp
+            ├── m4dGeodesicDP54.h
+            ├── m4dGeodesicDP65.cpp
+            ├── m4dGeodesicDP65.h
+            ├── m4dGeodesicGSL.cpp
+            ├── m4dGeodesicGSL.h
+            ├── m4dGeodesic.h
+            ├── m4dGeodesicRK4.cpp
+            ├── m4dGeodesicRK4.h
+            ├── m4dMotion.cpp
+            ├── m4dMotionDatabase.cpp
+            ├── m4dMotionDatabase.h
+            ├── m4dMotion.h
+            └── m4dMotionList.h
+
+

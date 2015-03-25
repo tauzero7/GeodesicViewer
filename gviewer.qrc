@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/" >
+        <file alias="load.png" >icons/document-open.png</file>
+        <file alias="save.png" >icons/document-save.png</file>
+        <file alias="exit.png" >icons/application-exit.png</file>
+        <file alias="reset.png" >icons/dp-down.png</file>
+        <file alias="up.png" >icons/go-up.png</file>
+        <file alias="down.png" >icons/go-down.png</file>
+        <file alias="write.png" >icons/document-print.png</file>
+        <file alias="display.png" >icons/display.png</file>
+        <file alias="add.png" >icons/add.png</file>
+        <file alias="about.png" >icons/config-users.png</file>
+        <file alias="html.png" >icons/document.png</file>
+        <file alias="back.png" >icons/back.png</file>
+        <file alias="forward.png" >icons/forward.png</file>
+    </qresource>
+</RCC>
