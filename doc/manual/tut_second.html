@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+<title>GeodesicViewer manual - second advanced example</title>
+<link rel="stylesheet" type="text/css" href="gv.css">
+</head>
+
+<body>
+  <a name="home"></a>
+  <h2>An advanced example</h2>
+  <p>In the second example, we consider light-like geodesics in the Morris-Thorne wormhole space-time, cf. [Am. J. Phys. 56 (1988), 395-412], where the metric is given in spherical coordates (t,l,&thetasym;,&phi;). The line element reads<br><img style="margin-left:30px" src="../pics/le_morristhorne.png"><br>where b<sub>0</sub> is the throat radius and l is the proper radial coordinate. To understand the topology of this space-time, we use the embedding diagram representation that is described by the embedding function<br><img style="margin-left:30px" src="../pics/emb_mt.png">,<br>
+  where <img style="margin-left:0;margin-top:10px;vertical-align:text-bottom" src="../pics/radius_mt.png">. 
+  The natural local tetrad is adapted to the spherical symmetry of the metric:<br><img style="margin-left:30px" src="../pics/localtetrad_mt.png">
+  </p>
+  
+  <h3>Contents</h3>
+  <ol>
+    <li><a href="tut_second.html#start">Start the GeodesicViewer...</a></li>
+    <li><a href="tut_second.html#metric">Choose the space-time metric...</a></li>
+    <li><a href="tut_second.html#position">Set the initial position and the local reference frame...</a></li>
+    <li><a href="tut_second.html#embedding">Change representation type to embedding diagramm...</a></li>
+    <li><a href="tut_second.html#play">Play around with the initial direction...</a></li> 
+    <li><a href="tut_second.html#animate">Animate the OpenGL 3D view...</a></li> 
+    <li><a href="tut_second.html#approach">Closest approach to wormhole throat...</a></li>
+    <li><a href="tut_second.html#write">Save parameters...</a></li>
+  </ol>
+  <hr>
+  <!-- +++++++++++++++++++++++++++++++++ -->
+  <ol class="tut">
+  <li class="tut"><a name="start"></a><b>Start the GeodesicViewer...</b>
+    <p>If you directly come from the first tutorial, reset the GeodesicViewer. For that, click on the <gvmenu>File</gvmenu> menu and choose 'Reset'.</p></li>
+    
+  <li class="tut"><a name="metric"></a><b>Choose the space-time metric...</b>
+  <p>In the <tab>Metric</tab> tab of the <win>Metric/Integrator/Constants</win> window select 'MorrisThorne'. As the Morris-Thorne metric is defined in spherical coordinates, the GeodesicViewer transforms the spherical coordinates into pseudo-Cartesian coordinates via<br> <b>x=r sin(&thetasym;) cos(&phi;)</b>,&nbsp;<b>y=r sin(&thetasym;) sin(&phi;)</b>, <b>z=r cos(&thetasym;)</b>. In the pseudo-Cartesian representation, r is replaced by the proper radial coordinate l.</p>  </li>
+  
+   <li class="tut"><a name="position"></a><b>Set the initial position and the local reference frame...</b>
+   <p>The predefined initial position for the Morris-Thorne space-time reads t=0, l=10, &thetasym;=&pi;/2, &phi;=0, and we will keep these parameters here. For the local reference frame, however, we do not use the natural local tetrad as is but re-order the basis vectors in the following way:<br><img style="margin-left:0;margin-top:10px;vertical-align:text-bottom" src="../pics/mt_lt_reorder.png">.</p>
+   <p>To realize this re-ordering, go to the <tab>Tetrad Directions</tab> tab within the <win>Local Tetrad</win> window. Now, modify the table as shown below and press the 'set' button, or click on the combo box in the lower right corner and select 'inward' instead of 'standard'. </p>
+   <img style="margin-left:10px" width="400" src="../pics/tetraddir.png">
+   <p>The advantage of this re-ordering is, that if we change the initial direction angle &xi;, the light-like geodesic stays in the &thetasym;=&pi;/2 surface, which is crucial for the embedding diagram representation.</p></li>
+    
+  <li class="tut"><a name="embedding"></a><b>Change representation type to embedding diagramm...</b>
+  <p>To change the presentation from pseudo-Cartesian coordinates to the embedding diagram, go to the <tab>3D</tab> tab within the <win>DrawHandling</win> window. Click on the 'type' combo box and select 'embedding diagram'. In the <win>OpenGL 3D</win> view, the embedding surface is shown as a dark gray mesh.</p>
+  <p>Now, set the camera position to <parval>eye x = -9</parval>,&nbsp;&nbsp; <parval>eye y = -22</parval>,&nbsp;&nbsp; <parval>eye z = 8</parval>. Then switch to the <tab>3D scale</tab> tab and set <parval>scale z = 1.3</parval>. This scales the z-axis in the <tab>OpenGL 3D</tab> view.</p>
+  <p>To enhance the three-dimensional view, we add an artifical fog in the scenary. For that, go to the <tab>3D stereo</tab> tab, enable the 'fog' check-box, and set the density value to <parval>density = 0.03</parval>.</p>
+  <p>The GeodesicViewer should now look like this:</p>
+  <img style="margin-left:10px" src="../pics/gv_screenshot_mt_fog.png"> 
+  <p>To modify the embedding surface mesh, you can switch to the <tab>3D emb</tab> tab and change the embedding parameters.</p></li>
+  
+  <li class="tut"><a name="play"></a><b>Play around with the initial direction...</b>
+  <p>Now, return to the <tab>Direction Angles</tab> tab within in the <win>Geodesic</win> window and play with the initial angle &xi;. But note that the angle &chi; must be 90&deg;. Otherwise, the geodesic is no longer in the &thetasym;=&pi;/2 surface and the embedding diagram representation is not valid.</p></li>
+  
+  <li class="tut"><a name="animate"></a><b>Animate the OpenGL 3D view...</b>
+  <p>In the <tab>3D anim</tab> tab within the <win>DrawHandling</win> window set the 'Rotation' parameter <parval>z-axis = 0.3</parval> and press the 'play' button. To follow the geodesic in detail, move the 'Show # points' slider.</p></li>
+  
+  <li class="tut"><a name="approach"><b>Closest approach to wormhole throat...</b></a>
+  <p>So far, we only used the <win>OpenGL 3D</win> view to observe how a light-like geodesic behaves in the wormhole space-time. Now, let us find out how we can determine the closest approach of a light-like geodesic using the <win>Draw 2D</win> view.</p>
+  <p>For that, go back to the <tab>Direction Angles</tab> tab within the <win>Geodesic</win> window and set the initial direction angle to <parval>&xi; = 7&deg;</parval>. Then, switch the view by pressing on the <win>Draw 2D</win> tab or press 'Ctrl 2'.</p>
+  <p>Click on the combo box in the upper left corner of the <tab>2D</tab> in the <win>DrawHandling</win> window and change from 'pseudo cartesian' to 'coordinates'. Now you can select which coordinate relation shall be drawn. For example, set the abscissa to the affine parameter &lambda; and the ordinate to the proper radial coordinate l. Then, click with the left mouse button onto the graph and drag the mouse such that the minimum of the curve can be seen:</p>
+  <img style="margin-left:10px" src="../pics/gv_screenshot_mt_2d.png">
+  <p>Zoom in by pressing the middle mouse button and dragging the mouse forward. In the <tab>2D</tab> tab of the <win>DrawHandling</win> window the position of the mouse cursor in the <win>Draw 2D</win> view is shown in the 'Cur.pos.' line. Thus, the closest approach of the light-like geodesic to the wormhole throat is at &lambda;&asymp;10.86 and l&asymp;0.707.</p>
+  </li>
+  
+  <li class="tut"><a name="write"></a><b>Save parameters...</b>
+  <p>Save the parameters as in the first tutorial. The resulting files can be seen here:</p>
+  <ul>
+    <li><a href="html/second_example.ini.html" target="Daten">second_example.ini</a></li>
+    <li><a href="html/second_example.cfg.html" target="Daten">second_example.cfg</a></li>
+  </ul>
+  </li>
+  
+  </ol>  
+  
+  
+  &nbsp;&nbsp;&nbsp; <b>Have fun!</b><br><br>
+</body>
+</html>

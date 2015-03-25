@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+<title>GeodesicViewer manual - training example</title>
+<link rel="stylesheet" type="text/css" href="gv.css">
+</head>
+
+<body>
+  <a name="home"></a>
+  <h2>Training example</h2>
+  <p>In the training example, we consider time-like geodesics in the metric of a Schwarzschild black hole with a cosmic string, cf. [Phys. Rev. D 34 (1986), 2263-2266]. The corresponding line element reads
+  <br><img style="margin-left:30px" src="../pics/le_cosmic.png"><br>
+  where &beta; is the string parameter and <img style="margin-left:0;margin-top:10px;vertical-align:text-bottom" src="../pics/schwradius.png"> is the Schwarzschild radius.</p>
+  <p>The task is to reproduce the output of the <win>OpenGL 3D</win> and <win>Draw 2D</win> windows></p>
+  <a href="../pics/third_example.3d.png"><img style="margin-left:30px;margin-right:0" width="350" src="../pics/third_example.3d.png"></a><a href="../pics/third_example.2d.png"><img style="margin-left:10px;margin-right:0"width="350" src="../pics/third_example.2d.png"></a><br>
+  
+  <h3>Contents</h3>
+  <ol>
+    <li><a href="tut_third.html#start">Start the GeodesicViewer and set metric/integrator...</a></li>
+    <li><a href="tut_third.html#tetrad">Initial position and local reference frame...</a></li>
+    <li><a href="tut_third.html#geod">Initial direction and velocity...</a></li>
+    <li><a href="tut_third.html#view3d">View parameters for 3D representation...</a></li>
+    <li><a href="tut_third.html#poti">Effective potential in the 2D view...</a></li>
+    <li><a href="tut_third.html#result">Parameter files...</a></li>
+  </ol>
+  <hr>
+  <!-- +++++++++++++++++++++++++++++++++ -->
+  <ol class="tut">
+  <li class="tut"><a name="start"></a><b>Start the GeodesicViewer and set metric/integrator...</b>
+    <p>Start or reset the GeodesicViewer and select 'CosmicStringSchwarzschild' in the <tab>Metric</tab> tab. Set the metric parameters to <parval>beta=0.8</parval> and <parval>mass=1.0</parval>.</p>
+    <p>Switch to the <tab>Integrator</tab> tab and select the Runge-Kutta-Fehlberg integrator. Activate step-size control, set the absolute error parameter <parval>eps abs=1e-12</parval>, and increase the maximum number of points to be calculated to <parval>max points=6000</parval>.</p>
+    </li>
+  
+  <li class="tut"><a name="tetrad"></a><b>Initial position and local reference frame...</b>
+  <p>In the <tab>Position</tab> tab, change the initial position to <parval>r=7.0</parval>. Then, go to the <tab>Tetrad Directions</tab> tab and change the local reference frame to 'inward'.</p>
+  </li>
+  
+  <li class="tut"><a name="tetrad"></a><b>Initial direction and velocity...</b>
+  <p>Select 'timelike' in the type combo box in the <win>Geodesic</win> window and set the velocity to <parval>&beta;=0.49</parval> (Note that this &beta; is different from the metric parameter &beta;.)</p>
+  <p>Modify the initial angle &xi; until the geodesic looks like this:</p>
+  <img style="margin-left:30px;margin-top:0" width="300" src="../pics/cosmic_geod.3d.png">
+  </li>
+  
+  <li class="tut"><a name="view3d"><b>View parameters for 3D representation...</b></a>
+  <p>To reproduce the 3D view, change the representation type to 'embedding diagram', set the point of interest to <parval>poi z=12</parval>, and rotate the view by using the 'rotate on sphere' mouse control. To enhance the three-dimensional view, add an artifical fog of <parval>density=0.015</parval> to the scenary. As the embedding surface is too small with the predefined parameters, set the parameters to <parval>emp_phi_num=100</parval>, <parval>emb_r_num=40</parval>, <parval>emp_rmax=25</parval>, and <parval>emp_rmin=2</parval>.</p>
+  </li>
+  
+  <li class="tut"><a name="poti"><b>Effective potential in the 2D view...</b></a>
+  <p>To identify the turning points of the time-like geodesic in this space-time, we use the effective potential in the <win>Draw 2D</win> view. Go to the <tab>2D</tab> tab within the <win>DrawHandling</win> window and select 'effective potential' in the combo box in the upper left corner. Then, use the mouse control to zoom into the region [x=1.45:28.1, y=0.415:0.502] or set the minimum and maximum values for the abscissa and the ordinate. The intersection between the 'effective potential' (red line) and the 'total energy' (blue line) gives the minimal and maximal radial coordinate.</p>
+  </li>
+  
+  <li class="tut"><a name="result"></a><b>Parameter files...</b>
+  <p>The parameter files can be seen here:</p>
+  <ul>
+    <li><a href="html/third_example.ini.html" target="Daten">third_example.ini</a></li>
+    <li><a href="html/third_example.cfg.html" target="Daten">third_example.cfg</a></li>
+    <li><a href="html/third_example.obj.html" target="Daten">third_example.obj</a></li>
+  </ul>
+  </li>
+  
+  </ol>  
+  
+  
+  &nbsp;&nbsp;&nbsp; <b>Well done!</b><br><br>
+</body>
+</html>

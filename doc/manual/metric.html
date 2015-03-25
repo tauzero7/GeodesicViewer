@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+<title>GeodesicViewer manual - metric/integrator/constants</title>
+<link rel="stylesheet" type="text/css" href="gv.css">
+</head>
+
+<body>
+  <h2>Metric/Integrator/Constants</h2>
+  <ul>
+    <li><a href="metric.html#metric">Metric</a></li>
+    <li><a href="metric.html#integrator">Integrator</a></li>
+    <li><a href="metric.html#constants">Constants</a></li>
+  </ul>
+  <hr>
+<!------------------------------------------------------------------------------------------
+        Metric
+  ------------------------------------------------------------------------------------------>
+  <h3><a name="metric">Metric</a></h3>
+  <img style="margin-left:30px" width="400" src="../pics/metric.png">
+  <br>
+
+  <br>The database of space-time metrics is taken from the Motion4D library. Currently, the following metrics are implemented:
+  <ul class="text">
+    <li>Minkowski
+    <li>Schwarzschild
+    <li>Alcubierre
+    <li>Barriola-Vilenkin
+    <li>Bertotti-Kasner
+    <li>Bessel gravitational wave
+    <li>Cosmic string
+    <li>Ernst
+    <li>Extreme Reissner Nordstrom dihole
+    <li>Friedman non empty
+    <li>G&ouml;del
+    <li>Halilsoy wave
+    <li>Janis-Newman-Winicour
+    <li>Kasner
+    <li>Kerr
+    <li>Kottler    
+    <li>Morris-Thorne.
+    <li>PetrovTypeD AI-AIII, BI-BII, C
+    <li>Reissner-Nordstrom.
+    <li>DeSitter
+    <li>StraightSpinningString
+    <li>Sultana-Dyer black hole
+    <li>TaubNUT
+    <li>Teo wormhole
+  </ul>
+  Depending on the metric, there will be a list of all parameters. For the Kerr metric, e.g., we can adjust the angular momentum as well as the mass of the black hole.
+  <br><br>
+  <hr>
+<!------------------------------------------------------------------------------------------
+        Integrator
+  ------------------------------------------------------------------------------------------>
+  <h3><a name="integrator">Integrator</a></h3>
+  <img style="margin-left:30px" width="400" src="../pics/integrator.png">
+  <br>
+
+  <br>Implemented integrators:
+  <ul class="text">
+    <li>Standard Runge-Kutta fourth-order.
+    <li>Standard Bulirsch-Stoer.</li>
+    <li>Integrators from the GNU Scientific Library <a href="http://www.gnu.org/software/gsl/" target="_top">(GSL)</a>.
+  </ul>
+  <br>
+  Parameters:
+  <table class="menu">
+    <tr>
+      <th width = "150">Name</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td>draw with lines</td>
+      <td>Connect the points of the geodesic with lines.</td>
+    </tr>
+    <tr>
+      <td>stepsize controlled</td>
+      <td>(De)Activate stepsize control for the integrator.</td>
+    </td>
+    <tr>
+      <td>max points</td>
+      <td>Maximum number of points to be calculated for a geodesic.</td>
+    </tr>
+    <tr>
+      <td>step size</td>
+      <td>Step size for the integrator.</td>
+    </tr>
+    <tr>
+      <td>constr. eps</td>
+      <td>epsilon value for the constraint equation.</td>
+    </tr>
+    <tr>
+      <td>eps abs</td>
+      <td>absolute epsilon</td>
+    </tr>
+    <tr>
+      <td>eps rel</td>
+      <td>relative epsilon</td>
+    </tr>
+    <tr>
+      <td>max step</td>
+      <td>maximum step size (Bulirsch Stoer only)</td>
+    </tr>
+  </table>
+  <br><br>
+  <hr>
+
+<!------------------------------------------------------------------------------------------
+        Constants
+  ------------------------------------------------------------------------------------------>
+  <h3><a name="constants">Constants</a></h3>
+  The fundamental constants like the speed of light, Newton's gravitational constant or the dielectric permittivity can be given in SI or geometrical units.
+  <img style="margin-left:30px" width="400" src="../pics/constants.png">
+  <br><br>
+</body>
+</html>
+

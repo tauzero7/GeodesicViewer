@@ -1,0 +1,254 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+<title>GeodesicViewer manual - menu</title>
+<link rel="stylesheet" type="text/css" href="gv.css">
+</head>
+
+<body>
+  <h2>Menu</h2>
+  <ul>
+    <li><a href="menu.html#file">File</a></li>
+    <li><a href="menu.html#objects">Objects</a></li>
+    <li><a href="menu.html#report">Report</a></li>
+    <li><a href="menu.html#help">Help</a></li>
+  </ul>
+  <hr>
+<!------------------------------------------------------------------------------------------
+        File
+  ------------------------------------------------------------------------------------------>
+  <h3><a name="file">File</a></h3>
+  
+  The <gvmenu>File</gvmenu> menu has the following entries:
+  <table class="menu">
+    <tr>
+      <th width = "150">Name</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td>Reset</td>
+      <td>Reset all parameters.</td>
+    </tr>
+    <tr>
+      <td>Load Setting</td>
+      <td>Load configuration file.</td>
+    </tr>
+    <tr>
+      <td>Save Setting</td>
+      <td>Save configuration file.</td>
+    </tr>
+    <tr>
+      <td>Load ViewParams</td>
+      <td>Load viewing parameters file.</td>
+    </tr>
+    <tr>
+      <td>Save ViewParams</td>
+      <td>Save viewing parameters file.</td>
+    </tr>
+    <tr>
+      <td>Reset ViewParams</td>
+      <td>Reset viewing parameters file.</td>
+    </tr>
+    <tr>
+      <td>Load all</td>
+      <td>Load configuration, viewing parameters, and objects file.</td>
+    </tr>
+    <tr>
+      <td>Save Image 2D</td>
+      <td>Save OpenGL-2D view.</td>
+    </tr>
+    <tr>
+      <td>Save Image 3D</td>
+      <td>Save OpenGL-3D view.</td>
+    </tr>
+    <tr>
+      <td>Write Protocoll</td>
+      <td>Write protocoll of the current setting.</td>
+    </tr>
+    <tr>
+      <td>Quit</td>
+      <td>Quit program.</td>
+    </tr>
+  </table>
+  <br>
+  <a name="writeprot"></a>
+  Selecting <b>Write Protocoll</b> opens the dialog:<br>
+  <img style="margin-left:30px" width="400" src="../pics/write_prot.png"><br><br>
+  The protocoll saves the following details:
+  <ul>  
+    <li><b>Parameters:</b> the parameters of the metric, the geodesic integrator, and the initial conditions (<a href="../examples/schw_orbit_1.ini">schw_orbit_1.ini</a>).
+    <li><b>ViewParameters:</b> the viewing parameters like the eye position, line colors, background colors, projection type,... (<a href="../examples/schw_orbit_1.cfg">schw_orbit_1.cfg</a>).</li>
+    <li><b>Objects:</b> the objects list (<a href="../examples/schw_orbit_1.obj">schw_orbit_1.obj</a>).
+    <li><b>Geodesic:</b> the points and the tangents of the geodesic in metric coordinates  (<a href="../examples/schw_orbit_1.points">schw_orbit_1.points</a>).
+    <li><b>3d Image:</b> the current OpenGL-3D content (<a href="../examples/schw_orbit_1.3d.png">schw_orbit_1.3d.png</a>)
+    <li><b>2d Image:</b> the current OpenGL-2D content (<a href="../examples/schw_orbit_1.2d.png">schw_orbit_1.2d.png</a>)
+    <li><b>Report:</b> the <a href="menu.html#report">report</a> of the metric with the current settings (<a href="../examples/schw_orbit_1.rep">schw_orbit_1.rep</a>).
+  </ul>
+<hr>
+
+<!------------------------------------------------------------------------------------------
+        Objects
+  ------------------------------------------------------------------------------------------>
+  <h3><a name="objects">Objects</a></h3>
+  The <gvmenu>Objects</gvmenu> menu has the following entries:
+  <table class="menu">
+    <tr>
+      <th width = "150">Name</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td>Load object file</td>
+      <td>Load object file.</td>
+    </tr>   
+    <tr>
+      <td>Append object file</td>
+      <td>Append object file.</td>
+    </tr>     
+    <tr>
+      <td>Save object file</td>
+      <td>Save object file.</td>
+    </tr>   
+    <tr>
+      <td>Show objects</td>
+      <td>Show all objects</td>
+    </tr>   
+  </table>
+  <br>
+  Selecting <b>Show objects</b> opens the object dialog which is a simple text editor.<br>
+  <img style="margin-left:30px" width="600" src="../pics/objects.png"><br><br>
+  Each object must be defined in a specific syntax. To add e.g. a three-dimensional sphere to the OpenGL environment, you should do the following:
+  <ul>
+    <li>Select an object with <b>Add object</b> (The syntax of the object appears in the <b>Syntax</b> line.)
+    <li>Press <b>+</b> button to add the object into the text field.
+    <li>Adjust the parameters of the sphere.
+    <li><b>Apply</b> commits the object list to the OpenGL environment.
+  </ul>
+  <p>To close the dialog, press <b>Close</b>.<br>To remove a single object, erase it from the text field.<br>To remove all objects, press <b>Remove all</b>.</p>
+  <p>Currently, the following objects are implemented:</p>
+  <table class="menu">
+    <tr>
+      <th width = "100">Name</th>
+      <th width = "170">Description</th>
+      <th>Syntax parameters</th>
+    </tr>
+    <tr>
+      <td>sphere2d</td>
+      <td>Circle in "Draw 2D".</td>
+      <td>centerX centerY   radius numPoints  line_width  col_red col_green col_blue</td>
+    </tr>
+    <tr>
+      <td>sphere3d</td>
+      <td>Sphere in "OpenGL 3D".</td>
+      <td>centerX centerY centerZ   radius slices stacks   col_red col_green col_blue</td>
+    </tr>    
+    <tr>
+      <td>box2d</td>
+      <td>Rectangle in "Draw 2D".</td>
+      <td>centerX centerY   sizeX sizeY  line_width  col_red col_green col_blue</td>
+    </tr>
+    <tr>
+      <td>box3d</td>
+      <td>Cube in "OpenGL 3D".</td>
+      <td>centerX centerY centerZ   sizeX sizeY sizeZ   line_width  col_red col_green col_blue</td>
+    </tr>
+    <tr>
+      <td>line2d</td>
+      <td>Line in "Draw 2D".</td>
+      <td>v1_x v1_y   v2_x v2_y   line_width   col_red col_green col_blue</td>
+    </tr>
+    <tr>
+      <td>line3d</td>
+      <td>Line in "OpenGL 3D".</td>
+      <td>v1_x v1_y v1_z  v2_x v2_y v2_z   line_width   col_red col_green col_blue</td>
+    </tr>
+    <tr>
+      <td>quad2d</td>
+      <td>Quadrangle in "Draw 2D".</td>
+      <td>v1_x v1_y  v2_x v2_y  v3_x v3_y  v4_x v4_y  line_width   col_red col_green col_blue</td>
+    </tr>
+    <tr>
+      <td>plane3d</td>
+      <td>Plane in "OpenGL 3D".</td>
+      <td>v1_x v1_y v1_z  v2_x v2_y v2_z  v3_x v3_y v3_z  col_red col_green col_blue col_alpha</td>
+    </tr>
+    <tr>
+      <td>disk2d</td>
+      <td>Disk in "Draw 2D".</td>
+      <td>centerX centerY  radius  slices  col_red col_green col_blue</td>
+    </tr>
+    <tr>
+      <td>disk3d</td>
+      <td>Disk in "OpenGL 3D".</td>
+      <td>centerX centerY centerZ  dirX dirY dirZ  iRadius oRadius  slices loops  col_red col_green col_blue col_alpha</td>
+    </tr>
+    <tr>
+      <td>cylinder3d</td>
+      <td>Cylinder in "OpenGL 3D".</td>
+      <td>baseX baseY baseZ  topX topY topZ  bRadius tRadius  slices stacks  col_red col_green col_blue</td>
+    </tr>
+    <tr>
+      <td>torus3d</td>
+      <td>Torus in "OpenGL 3D".</td>
+      <td>centerX centerY centerZ  normalTheta  normalPhi  outerRadius innerRadius maxPhi  slices stacks  col_red col_green col_blue</td>
+    </tr>
+    <tr>
+      <td>tube3d</td>
+      <td>Tube in "OpenGL 3D".</td>
+      <td>baseX baseY baseZ  e1x e1y e1z  e2x e2y e2z  e3x e3y e3z  slices stacks  col_red col_green col_blue</td>
+    </tr>
+    <tr>
+      <td>text2d</td>
+      <td>Text in "Draw 2D".</td>
+      <td>posX posY  text size  col_red col_grenn col_blue</td>
+    </tr>
+    <tr>
+      <td>text3d</td>
+      <td>Text in "OpenGL 3D".</td>
+      <td>posX posY posZ  text size  col_red col_grenn col_blue</td>
+    </tr>
+  </table>
+  <hr>
+
+<!------------------------------------------------------------------------------------------
+        Report
+  ------------------------------------------------------------------------------------------>
+  <h3><a name="report">Report</a></h3>
+  <p>The report of a metric depends on what the Motion4D library can tell about the metric.</p>
+  <table class="menu">
+    <tr>
+      <th width = "150">Name</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td>Save report</td>
+      <td>Save report.</td>
+    </tr>   
+    <tr>
+      <td>Show report</td>
+      <td>Show report.</td>
+    </tr>  
+  </table>
+  <br><hr>
+
+<!------------------------------------------------------------------------------------------
+        Help
+  ------------------------------------------------------------------------------------------>
+  <h3><a name="help">Help</a></h3>
+  <table class="menu">
+    <tr>
+      <th width = "150">Name</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td>Manual</td>
+      <td>This manual.</td>
+    </tr> 
+    <tr>
+      <td>About</td>
+      <td>About message.</td>
+    </tr>  
+  </table>
+  <br>
+</body>
+</html>

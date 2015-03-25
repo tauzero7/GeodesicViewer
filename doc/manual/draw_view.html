@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+<title>GeodesicViewer manual - drawview</title>
+<link rel="stylesheet" type="text/css" href="gv.css">
+</head>
+
+<body>
+  <h2>Draw view</h2>
+  <ul>
+    <li><a href="draw_view.html#general3d">General 3D control elements</a></li>
+    <li><a href="draw_view.html#3dscaling">3D Scaling</a></li>
+    <li><a href="draw_view.html#3dstereo">Stereo and artificial fog</a></li>
+    <li><a href="draw_view.html#3danim">Animations</a></li>
+    <li><a href="draw_view.html#3dembed">Embedding diagram</a></li>
+    <li><a href="draw_view.html#general2d">General 2D control</a></li>
+  </ul>
+  <hr>
+<!------------------------------------------------------------------------------------------
+        General 3d control elements
+  ------------------------------------------------------------------------------------------>
+  
+  <h3><a name="general3d">General 3D control elements</a></h3>
+  The camera system, the projection, and the representation type can be choosen within the <tab>3D</tab> tab.
+  <img style="margin-left:30px" width="400" src="../pics/draw_3d.png">
+  <ul class="text">
+    <li>Mouse navigation within the OpenGL 3D representation.
+    <li>The projection can either be <i>perspective</i> or <i>orthogonal</i>
+    <li>By default, the type of representation is in <i>pseudo cartesian</i> coordinates. But you can also choose the <i>embedding diagram</i> or <i>effective potential</i> representation, if the metric has implemented the corresponding transformations.
+    <li>The camera has three standard views: xy, zx, yz, custom.
+  </ul>
+  
+  Camera parameters:
+  <ul class="text">
+    <li>The eye position can either be changed by mouse control or directly in the line edits. Use the mouse wheel to increase/decrease the values.
+    <li>The point of interest can either be changed by mouse control or directly in the line edits. Use the mouse wheel to increase/decrease the values.
+  </ul>
+  
+  Color and line width:
+  <ul class="text">
+    <li>To change the line color, press the colored button.</li>
+    <li>To change the background color, press the colored button.</li>
+    <li>The line width can be between 1 and 5.</li>
+    <li>Choose <i>line smooth</i> for antialiasing.</li>
+  </ul>
+  <br><hr>
+
+<!------------------------------------------------------------------------------------------
+        3D scaling
+  ------------------------------------------------------------------------------------------>  
+  <h3><a name="3dscaling">3D Scaling</a></h3>
+  The 3D visualization can be scaled in x-, y-, and z-direction.<br>
+  <img style="margin-left:30px" width="400" src="../pics/draw_3d_scale.png">
+  <br><br><hr>
+  
+<!------------------------------------------------------------------------------------------
+        Stereo and artificial fog
+  ------------------------------------------------------------------------------------------>
+  <h3><a name="3dstereo">Stereo and artificial fog</a></h3>
+  To enhance the three-dimensional view, you can add an artifical fog. If you have anaglyph glasses, you can enable the <i>Stereo - anaglyph</i> view.
+  <img style="margin-left:30px" width="400" src="../pics/draw_3d_stereo.png"> <br>
+  <br>Stereo - anaglyph
+  <ul class="text">
+    <li>Using stereo glasses might enhance the three dimensional view.
+    <li>Choose the color-filter-combination depending on your stereo glasses.
+    <li>The eye separation is given in pseudo cartesian coordinate units.
+  </ul>
+  
+  Fog - artificial
+  <ul class="text">
+    <li>An artificial fog might enhance the three dimensional impression.
+  </ul>
+  <br><hr>
+  
+<!------------------------------------------------------------------------------------------
+        Animations
+  ------------------------------------------------------------------------------------------>
+  <h3><a name="3danim">Animations</a></h3>
+  <img style="margin-left:30px" width="400" src="../pics/draw_3d_animate.png"><br>
+  <br>
+  Rotation
+  <ul class="text">
+    <li>Rotate around axes defined by the local tetrad or by the coordinate axes.
+    <li>Start and stop animation by toggling the 'Play' button.
+  </ul>
+  Show # points:
+  <ul class="text">
+    <li>Change the number of points shown in the 3D visualization with the slider. The current point is given in metric coordinates.  &lambda; represents the affine parameter of the geodesic.
+  </ul>
+  <br><hr>
+
+<!------------------------------------------------------------------------------------------
+        Embedding diagram
+  ------------------------------------------------------------------------------------------>  
+  <h3><a name="3dembed">Embedding diagram</a></h3>
+  If an embedding diagram is defined for the current metric, the available embedding parameters can be changed. Change the color of the embedding diagram using the colored button.<br>
+  <img style="margin-left:30px" width="400" src="../pics/draw_3d_embed.png">
+  <br><br><hr>
+
+<!------------------------------------------------------------------------------------------
+        General 2D control elements
+  ------------------------------------------------------------------------------------------>  
+  <h3><a name="general2d">General 2D control elements</a></h3>
+  <img style="margin-left:30px" width="400"src="../pics/draw_2d.png">
+  <ul class="text">
+    <li>2D visualization can either be in pseudo-cartesian coordinates or as mutual-coordinate-relation diagram.
+    <li>For the mutual-coordinate-relation diagram select coordinates for abscissa and ordinate.
+  </ul>
+  
+  Scaling
+  <ul class="text">
+    <li>The plotting range for the 2D visualization is defined by minimal and maximal abscissa and ordinate values.
+    <li>Cur.pos. represents the current cursor position.</li>
+  </ul>
+  
+  Colors and line properties
+  <ul class="text">
+    <li>'bg color' changes the background color.</li>
+    <li>'grid color' changes the grid color.</li>
+    <li>'line color' changes the line color.</li>
+  </ul>
+  <br>
+</body>
+</html>
+

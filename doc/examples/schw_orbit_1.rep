@@ -1,0 +1,13 @@
+Report for Schwarzschild metric
+	coordinates : (t,r,theta,phi)
+---------------------------------------------------------------
+  physical units ................................. yes
+  Schwarzschild radius ........... r_s = 2GM/c^2 = 2.00000000000000
+  Photon orbit ................... r_ph = 3/2*rs = 3.00000000000000
+  innermost stable circular orbit  r_isco = 3r_s = 6.00000000000000
+                                            beta = 0.50000000000000
+  constant of motion ..................... k = 0.89442719099992
+  constant of motion ..................... h = 4.69371392538019
+  critical angle for null geodesic . ksiCrit = 27.69456145077677
+
+The effective potential is only valid for geodesics in the theta=pi/2 hypersurface.
