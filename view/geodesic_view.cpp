@@ -1687,7 +1687,7 @@ bool GeodesicView::setMetric(m4d::enum_metric metric) {
     if (mObject.currMetric == NULL) {
         return false;
     }
-    mObject.currMetric->print();
+    mObject.currMetric->printF();
 
     return true;
 }
