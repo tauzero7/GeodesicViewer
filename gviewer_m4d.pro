@@ -7,7 +7,7 @@ HOME = $$system(echo $HOME)
 
 ## This path should point to the location
 ## where you have copied the Motion4D library.
-M4D_DIR      = $$TOP_DIR/../Motion4D/
+M4D_DIR      = $$TOP_DIR/../libMotion4D/
 
 ## If your Gnu Scientific Library is not
 ## installed in the standard paths, please
@@ -25,7 +25,7 @@ GSL_LIB_DIR  = $$GSL_DIR/lib
 
 
 ## If you have a big screen
-#DEFINES += USE_BIG_SCREEN
+DEFINES += USE_BIG_SCREEN
 
 ## Shows time needed to integrate
 ## geodesic equation

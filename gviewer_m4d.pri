@@ -72,6 +72,8 @@ CONFIG  += console warn_on
 QT      += core gui opengl script network
 TEMPLATE = app
 
+QMAKE_CXXFLAGS += -std=c++11
+
 #contains(QT_VERSION,^4\\.[0-9]\\..*) {
 #    message("Qt version $${QT_VERSION}.")
 #    QT += webkit
