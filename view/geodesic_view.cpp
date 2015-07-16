@@ -925,7 +925,7 @@ void GeodesicView::execScript(QString filename) {
 }
 
 void GeodesicView::setMetric(QString name) {
-    int index = mObject.metricDB->getMetricNr(name.toStdString());
+    int index = mObject.metricDB->getMetricNr(name.toStdString().c_str());
     if (index == (int)m4d::enum_metric_unknown) {
         return;
     }

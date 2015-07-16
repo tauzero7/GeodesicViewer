@@ -114,7 +114,7 @@ void OpenGL2dModel::setPoints(m4d::enum_draw_type  dtype, bool update) {
         return;
     }
 
-    mNumVerts = mObject.points.size();
+    mNumVerts = static_cast<int>(mObject.points.size());
     mVerts    = new GLfloat[ mNumVerts * 2 ];
 
     GLfloat* vptr = mVerts;

@@ -140,7 +140,7 @@ OpenGL3dModel::setPoints(m4d::enum_draw_type  dtype, bool update) {
         delete [] mLambda;
     }
 
-    mNumVerts = mObject.points.size();
+    mNumVerts = static_cast<int>(mObject.points.size());
     mVerts    = new GLfloat[ mNumVerts * 3 ];
     mLambda   = new GLfloat[ mNumVerts ];
 
@@ -195,9 +195,9 @@ void OpenGL3dModel::setSachsAxes(bool update) {
         delete [] mSachsVerts2;
     }
 
-    mNumSachsVerts1 = mObject.sachs1.size();
-    mNumSachsVerts2 = mObject.sachs2.size();
-    int mv = mObject.points.size();
+    mNumSachsVerts1 = static_cast<int>(mObject.sachs1.size());
+    mNumSachsVerts2 = static_cast<int>(mObject.sachs2.size());
+    int mv = static_cast<int>(mObject.points.size());
 
     mSachsVerts1 = new GLfloat[ mNumSachsVerts1 * 3 * 2 ];
     mSachsVerts2 = new GLfloat[ mNumSachsVerts2 * 3 * 2 ];
@@ -348,7 +348,7 @@ OpenGL3dModel::genEmbed(m4d::Metric* currMetric) {
         return;
     }
 
-    mEmbNumVerts = vertices.size();
+    mEmbNumVerts = static_cast<int>(vertices.size());
 
     mCount = new GLsizei[mEmbCounter];
     mEmbIndices = new unsigned int*[mEmbCounter];
