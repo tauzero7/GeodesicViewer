@@ -13,6 +13,9 @@ M4D_DIR      = $$TOP_DIR/../libMotion4D/
 ## installed in the standard paths, please
 ## fix this variable accordingly.
 GSL_DIR      = #/usr/local/gsl/1.15
+win32 {
+GSL_DIR  = D:/local/amplgsl
+}
 
 ## Do not change these lines
 M4D_SRC_DIR  = $$M4D_DIR/src

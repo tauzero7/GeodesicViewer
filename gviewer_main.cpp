@@ -66,6 +66,9 @@ m4d::Object mObject;
 // ---------------------------------------------------
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
+    QLocale::setDefault(QLocale::C);
+    //QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedStates));
+    // setlocale(LC_NUMERIC, "C");
 
 #if QT_VERSION >= 0x050100
     QApplication::setStyle(QStyleFactory::create("Fusion"));
@@ -73,9 +76,6 @@ int main(int argc, char *argv[]) {
     QStyle *style = new QCleanlooksStyle;
     app.setStyle(style);
 #endif
-
-    // Read e.g. "3.4" as a floating point number.
-    //setlocale(LC_ALL, "C");
 
     QPalette  palette = app.palette();
     palette.setColor(QPalette::AlternateBase, QColor(217, 255, 190));
@@ -86,10 +86,6 @@ int main(int argc, char *argv[]) {
     font.setPointSize(16);
     app.setFont(font);
 #endif
-
-    QLocale::setDefault(QLocale::C);
-    QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedStates));
-    setlocale(LC_ALL, "C");
 
     GeodesicView* view = GeodesicView::getInstance();
     view->show();

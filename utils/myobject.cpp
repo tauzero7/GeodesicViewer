@@ -1026,6 +1026,7 @@ MyObject::drawObject(bool stereo) {
  */
 void
 MyObject::print(FILE* fptr) {
+    char* oldlocale = setlocale(LC_NUMERIC, "C");
     fprintf(fptr, "Type      : %s\n", stl_object_type[mObject.type].toStdString().c_str());
     fprintf(fptr, "val  0-2  : %f %f %f\n", mObject.val[0], mObject.val[1], mObject.val[2]);
     fprintf(fptr, "val  3-5  : %f %f %f\n", mObject.val[3], mObject.val[4], mObject.val[5]);
@@ -1036,6 +1037,7 @@ MyObject::print(FILE* fptr) {
     fprintf(fptr, "color     : %f %f %f %f\n", mObject.color[0], mObject.color[1], mObject.color[2], mObject.color[3]);
     fprintf(fptr, "disp-list : %d\n", mDisplList);
     fprintf(fptr, "quadric   : %s\n\n", (myQuad != NULL ? "yes" : "no"));
+    setlocale(LC_NUMERIC, oldlocale);
 }
 
 /*!
@@ -1043,6 +1045,7 @@ MyObject::print(FILE* fptr) {
  */
 void
 MyObject::printLine(std::string  &line) {
+    char* oldlocale = setlocale(LC_NUMERIC, "C");
     char buf[1024];
     switch (mObject.type) {
         case enum_object_undefined:
@@ -1245,7 +1248,8 @@ MyObject::printLine(std::string  &line) {
     }
     std::stringstream ss;
     ss << buf;
-    line = ss.str();
+    line = ss.str();    
+    setlocale(LC_NUMERIC, oldlocale);
 }
 
 /*! Print syntax of object.
