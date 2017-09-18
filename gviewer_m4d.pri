@@ -45,6 +45,9 @@ include($$M4D_DIR/m4d_sources.pri)
 #QMAKE_CXX       = g++
 #QMAKE_LINK      = g++
 
+CONFIG += c++11
+QMAKE_CXXFLAGS += -std=c++11
+
 ######################################################################  INCLUDE and DEPEND
 INCLUDEPATH +=  . .. $$VIEW_DIR  $$MODEL_DIR $$UTILS_DIR $$M4D_SRC_DIR \
                 $$GSL_DIR/include

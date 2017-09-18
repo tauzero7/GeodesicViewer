@@ -22,6 +22,7 @@
 */
 // -------------------------------------------------------------------------------
 
+#include <QDockWidget>
 #include <QGroupBox>
 #include <QMessageBox>
 #include <QScrollArea>
@@ -925,7 +926,7 @@ void GeodesicView::execScript(QString filename) {
 }
 
 void GeodesicView::setMetric(QString name) {
-    int index = mObject.metricDB->getMetricNr(name.toStdString());
+    int index = mObject.metricDB->getMetricNr(name.toStdString().c_str());
     if (index == (int)m4d::enum_metric_unknown) {
         return;
     }
@@ -1602,7 +1603,7 @@ void GeodesicView::initGUI() {
     * --------------------------------- */
     QGroupBox* grb_metricInt = new QGroupBox("Metric/Integrator/Constants");
     grb_metricInt->setMinimumWidth(DEF_GROUPBOX_WIDTH);
-    grb_metricInt->setMaximumWidth(DEF_GROUPBOX_WIDTH);
+   // grb_metricInt->setMaximumWidth(DEF_GROUPBOX_WIDTH);
     QGridLayout* layout_metricInt = new QGridLayout();
     layout_metricInt -> addWidget(tab_metricInt, 0, 0);
     grb_metricInt->setLayout(layout_metricInt);
@@ -1627,9 +1628,15 @@ void GeodesicView::initGUI() {
 
     QWidget* widget = new QWidget();
     widget->setLayout(layout_complete);
-    widget->setMinimumWidth(DEF_GUI_WIDTH);
-    widget->setMaximumHeight(DEF_GUI_HEIGHT);
-    setCentralWidget(widget);
+//    widget->setMinimumWidth(DEF_GUI_WIDTH);
+//    widget->setMaximumHeight(DEF_GUI_HEIGHT);
+    setCentralWidget(tab_draw);
+
+    QDockWidget* params = new QDockWidget();
+    params->setWidget(scr_area);
+    params->setWindowTitle("Params");
+
+    addDockWidget(Qt::RightDockWidgetArea, params);
 
     setStatusBar(mStatus);
 }
@@ -1687,7 +1694,7 @@ bool GeodesicView::setMetric(m4d::enum_metric metric) {
     if (mObject.currMetric == NULL) {
         return false;
     }
-    mObject.currMetric->print();
+    mObject.currMetric->printF();
 
     return true;
 }

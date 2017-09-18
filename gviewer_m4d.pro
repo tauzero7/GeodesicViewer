@@ -25,7 +25,7 @@ GSL_LIB_DIR  = $$GSL_DIR/lib
 
 
 ## If you have a big screen
-#DEFINES += USE_BIG_SCREEN
+DEFINES += USE_BIG_SCREEN
 
 ## Shows time needed to integrate
 ## geodesic equation
