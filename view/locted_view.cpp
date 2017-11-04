@@ -98,7 +98,9 @@ void LoctedView::adjustCoordNames() {
     }
 
     std::string coordNames[4];
-    mObject.currMetric->getCoordNames(coordNames);
+    for(int i = 0; i < 4; i++) {
+        coordNames[i] = std::string(mObject.currMetric->getCoordName(i));
+    }
 
     for (int i = 0; i < 4; i++) {
         QChar ch = mGreekLetter.toChar(coordNames[i].c_str());

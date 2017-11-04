@@ -258,7 +258,7 @@ void DrawView::updateParams() {
     if (mParams->opengl_emb_params.size() > 0 && mObject.currMetric != NULL) {
         std::map<std::string, double>::iterator mapItr = mParams->opengl_emb_params.begin();
         while (mapItr != mParams->opengl_emb_params.end()) {
-            mObject.currMetric->setEmbeddingParam(mapItr->first, mapItr->second);
+            mObject.currMetric->setEmbeddingParam(mapItr->first.c_str(), mapItr->second);
             mapItr++;
         }
     }
@@ -316,7 +316,9 @@ void DrawView::adjustCoordNames() {
     }
 
     std::string coordNames[4];
-    mObject.currMetric->getCoordNames(coordNames);
+    for(int i = 0; i < 4; i++) {
+        coordNames[i] = std::string(mObject.currMetric->getCoordName(i));
+    }
 
     cob_abscissa->clear();
     cob_ordinate->clear();
@@ -399,7 +401,7 @@ void DrawView::adjustEmbParams() {
         tbw_emb_params->setItem(i, 0, item_name);
 
         double value;
-        mObject.currMetric->getEmbeddingParam(paramNames[i], value);
+        mObject.currMetric->getEmbeddingParam(paramNames[i].c_str(), value);
         DoubleEdit* led_value = new DoubleEdit(DEF_PREC_EMBEDDING, value, 1.0);
         led_value->setObjectName(paramNames[i].c_str());
 
@@ -1102,7 +1104,7 @@ void DrawView::slot_embParamChanged() {
     double value = led->text().toDouble();
 
     if (mObject.currMetric != NULL) {
-        mObject.currMetric->setEmbeddingParam(obj->objectName().toStdString(), value);
+        mObject.currMetric->setEmbeddingParam(obj->objectName().toStdString().c_str(), value);
 
         std::map<std::string, double>::iterator mapItr = mParams->opengl_emb_params.find(obj->objectName().toStdString());
         if (mapItr != mParams->opengl_emb_params.end()) {

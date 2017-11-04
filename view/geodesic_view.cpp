@@ -97,7 +97,7 @@ void GeodesicView::slot_load_setting() {
         return;
     }
 
-    if (!mObject.loadSettings(filename.toStdString(), false)) {
+    if (!mObject.loadSettings(filename.toStdString().c_str(), false)) {
         led_status->setText("load settings failed");
     } else {
         setSetting();
@@ -274,7 +274,7 @@ void GeodesicView::slot_load_all() {
         return;
     }
 
-    if (!mObject.loadSettings(filename.toStdString(), false)) {
+    if (!mObject.loadSettings(filename.toStdString().c_str(), false)) {
         led_status->setText("load settings failed");
     } else {
         QString basefilename = filename.remove(DEF_PROTOCOL_FILE_ENDING);
@@ -740,7 +740,7 @@ void GeodesicView::slot_metricParamChanged() {
     QString paramName = QString(obj->objectName()).replace(QString(".value"), QString(""));
 
     if (mObject.currMetric != NULL) {
-        mObject.currMetric->setParam(paramName.toStdString(), value);
+        mObject.currMetric->setParam(paramName.toStdString().c_str(), value);
         calculateGeodesic();
 
         if (mObject.currMetric->getCurrDrawType(drw_view->getDrawType3DName()) == m4d::enum_draw_embedding) {
@@ -925,7 +925,7 @@ void GeodesicView::execScript(QString filename) {
 }
 
 void GeodesicView::setMetric(QString name) {
-    int index = mObject.metricDB->getMetricNr(name.toStdString().c_str());
+    int index = mObject.metricDB.getMetricNr(name.toStdString().c_str());
     if (index == (int)m4d::enum_metric_unknown) {
         return;
     }
@@ -963,14 +963,14 @@ void GeodesicView::setMetricParam(int num, double val) {
  */
 void GeodesicView::setMetricParam(QString name, double val) {
     if (mObject.currMetric != NULL) {
-        int paramNum = mObject.currMetric->getParamNum(name.toStdString());
+        int paramNum = mObject.currMetric->getParamNum(name.toStdString().c_str());
         if (paramNum < 0) {
             fprintf(stderr, "GeodesicView::setMetricParam() ... parameter name \"%s\" does not exist for the current metric!\n", name.toStdString().c_str());
             return;
         }
         DoubleEdit* led_value = reinterpret_cast<DoubleEdit*>(tbw_metric_params->cellWidget(paramNum, 1));
         led_value->setValue(val);
-        mObject.currMetric->setParam(name.toStdString(), val);
+        mObject.currMetric->setParam(name.toStdString().c_str(), val);
         calculateGeodesic();
 
         if (mObject.currMetric->getCurrDrawType(drw_view->getDrawType3DName()) == m4d::enum_draw_embedding) {
@@ -1123,8 +1123,8 @@ void GeodesicView::initElements() {
     *    metric
     * --------------------------------- */
     cob_metric = new QComboBox();
-    for (int i = 0; i < mObject.metricDB->getNumMetrics(); i++) {
-        cob_metric->addItem(QString(mObject.metricDB->getMetricName(m4d::enum_metric(i)).c_str()));
+    for (int i = 0; i < mObject.metricDB.getNumMetrics(); i++) {
+        cob_metric->addItem(QString(mObject.metricDB.getMetricName(m4d::enum_metric(i))));
     }
     //cob_metric->setMaximumWidth(420);
 
@@ -1682,7 +1682,7 @@ void GeodesicView::initControl() {
  *  \sa m4d::enum_metric.
  */
 bool GeodesicView::setMetric(m4d::enum_metric metric) {
-    mObject.currMetric = mObject.metricDB->getMetric(metric);
+    mObject.currMetric = mObject.metricDB.getMetric(metric);
 
     if (mObject.currMetric == NULL) {
         return false;
@@ -1715,7 +1715,7 @@ bool GeodesicView::setMetricNamesAndCoords() {
         tbw_metric_params->setItem(i, 0, item_name);
 
         double value;
-        mObject.currMetric->getParam(paramNames[i], value);
+        mObject.currMetric->getParam(paramNames[i].c_str(), value);
         DoubleEdit* led_value = new DoubleEdit(DEF_PREC_METRIC_PAR, value, 0.01);
         led_value->setObjectName(QString("%1.%2").arg(paramNames[i].c_str(), "value"));
 
@@ -2024,7 +2024,8 @@ void GeodesicView::calculateGeodesicData() {
  */
 bool GeodesicView::saveSetting(QString filename) {
     QDate dt = QDate::currentDate();
-    if (!mObject.saveSettings(filename.toStdString(), dt.toString(Qt::LocaleDate).toStdString())) {
+    if (!mObject.saveSettings(filename.toStdString().c_str(),
+                              dt.toString(Qt::LocaleDate).toStdString().c_str())) {
         led_status->setText("save settings failed");
         return false;
     }
@@ -2075,7 +2076,7 @@ bool GeodesicView::saveReport(QString filename) {
 /*! Set setting stuff.
   */
 void GeodesicView::setSetting() {
-    cob_metric->setCurrentIndex(cob_metric->findText(mObject.currMetric->getMetricName().c_str(), Qt::MatchExactly));
+    cob_metric->setCurrentIndex(cob_metric->findText(mObject.currMetric->getMetricName(), Qt::MatchExactly));
     setMetricNamesAndCoords();
     drw_view->resetAll();
     drw_view->adjustDrawTypes();
