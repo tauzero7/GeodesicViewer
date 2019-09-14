@@ -1,37 +1,16 @@
-// --------------------------------------------------------------------------------
-/*
-    opengl3d_model.h
-
-  Copyright (c) 2009-2015  Thomas Mueller, Frank Grave
-
-
-   This file is part of the GeodesicViewer.
-
-   The GeodesicViewer is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   The GeodesicViewer is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with the GeodesicViewer.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-/*!  \class  OpenGL3dModel
-     \brief  Render engine for the 3d representation of geodesics based on OpenGL.
-
-*/
-// --------------------------------------------------------------------------------
-
+/**
+ * @file    opengl3d_model.h
+ * @author  Thomas Mueller
+ *
+ * @brief  Render engine for the 3d representation of geodesics based on OpenGL.
+ *
+ * This file is part of GeodesicView.
+ */
 #ifndef OPENGL3D_MODEL_H
 #define OPENGL3D_MODEL_H
 
-#include <QGLWidget>
-#include <QGLShaderProgram>
+#include <QOpenGLWidget>
+#include <QOpenGLShaderProgram>
 #include <QMouseEvent>
 
 #include <gdefs.h>
@@ -43,23 +22,21 @@
 #include <metric/m4dMetric.h>
 #include <extra/m4dObject.h>
 
-
-// ---------------------------------------------------
-//    class definition:   OpenGL3dModel
-// ---------------------------------------------------
-class OpenGL3dModel : public QGLWidget {
+/**
+ * @brief The OpenGL3dModel class
+ */
+class OpenGL3dModel : public QOpenGLWidget {
     Q_OBJECT
 
 public:
     OpenGL3dModel(struct_params* par, QWidget* parent = nullptr);
     virtual ~OpenGL3dModel();
 
-// --------- public methods -----------
 public:
-    void  setPoints(m4d::enum_draw_type  dtype = m4d::enum_draw_pseudocart, bool update = true);
+    void  setPoints(m4d::enum_draw_type  dtype = m4d::enum_draw_pseudocart, bool needUpdate = true);
     void  clearPoints();
 
-    void  setSachsAxes(bool update = true);
+    void  setSachsAxes(bool needUpdate = true);
     void  clearSachsAxes();
 
     void  genEmbed(m4d::Metric* currMetric);
@@ -119,17 +96,16 @@ public:
     void  updateParams();
     void  reset();
 
-// ------------ signals ---------------
 signals:
     void  cameraMoved();
 
-// -------- protected methods ---------
 protected:
-    virtual void  initializeGL();
-    virtual void  paintGL();
-    virtual void  paintGL_mono();
-    virtual void  paintGL_stereo();
-    virtual void  paintGL_axes();
+    virtual void initializeGL();
+    virtual void paintGL();
+    virtual void paintGL_mono();
+    virtual void paintGL_stereo();
+    virtual void paintGL_axes();
+    virtual void resizeGL(int width, int height);
 
     virtual void  keyPressEvent(QKeyEvent* event);
     virtual void  keyReleaseEvent(QKeyEvent* event);
@@ -141,8 +117,6 @@ protected:
     QString  getVertexShaderCode();
     QString  getFragmentShaderCode();
 
-
-// -------- private attributes --------
 private:
     struct_params*     mParams;
     Camera             mCamera;
@@ -172,7 +146,7 @@ private:
     GLfloat*           mSachsVerts2;
     int                mNumSachsVerts2;
     enum_sachs_legs    mSachsLegs;
-    float              mSachsScale;
+    double             mSachsScale;
 
     GLfloat*           mEmbVerts;
     int                mEmbNumVerts;
@@ -210,7 +184,7 @@ private:
     float blueLight[3];
 
     bool              mGLSLsupported;
-    QGLShaderProgram* shader;
+    QOpenGLShaderProgram* shader;
 };
 
-#endif
+#endif // OPENGL3D_MODEL_H

@@ -1,42 +1,21 @@
-// --------------------------------------------------------------------------------
-/*
-    opengl3d_model.cpp
-
-  Copyright (c) 2009-2015  Thomas Mueller, Frank Grave
-
-
-   This file is part of the GeodesicViewer.
-
-   The GeodesicViewer is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   The GeodesicViewer is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with the GeodesicViewer.  If not, see <http://www.gnu.org/licenses/>.
-*/
-// -------------------------------------------------------------------------------
-
+/**
+ * @file    opengl3d_model.cpp
+ * @author  Thomas Mueller
+ *
+ * This file is part of GeodesicView.
+ */
 #include <fstream>
 #include "opengl3d_model.h"
 #include <math/TransCoordinates.h>
 
 extern m4d::Object mObject;
 
-/*! Standard constructor.
- *  \param par : pointer to struct.
- *  \param parent : pointer to parent widget.
- */
+
 OpenGL3dModel::OpenGL3dModel(struct_params* par, QWidget* parent)
-    : QGLWidget(QGLFormat(QGL::DoubleBuffer | QGL::DepthBuffer | QGL::AlphaChannel), parent) {
+    : QOpenGLWidget(parent) {
     mParams = par;
 
-    mCamera.setSizeAndAspect(DEF_OPENGL_WIDTH, DEF_OPENGL_HEIGHT);
+    mCamera.setSize(DEF_OPENGL_WIDTH, DEF_OPENGL_HEIGHT);
     mCamera.setEyePos(m4d::vec3(&mParams->opengl_eye_pos[0]));
     mCamera.setPOI(m4d::vec3(&mParams->opengl_eye_poi[0]));
     mCamera.setVup(m4d::vec3(&mParams->opengl_eye_vup[0]));
@@ -46,9 +25,6 @@ OpenGL3dModel::OpenGL3dModel(struct_params* par, QWidget* parent)
     setFocusPolicy(Qt::ClickFocus);
     mKeyPressed = Qt::Key_No;
 
-    setMinimumSize(DEF_OPENGL_WIDTH, DEF_OPENGL_HEIGHT);
-    setMaximumSize(DEF_OPENGL_WIDTH, DEF_OPENGL_HEIGHT);
-
     mBGcolor = mParams->opengl_bg_color;
     mFGcolor = mParams->opengl_line_color;
 
@@ -56,36 +32,36 @@ OpenGL3dModel::OpenGL3dModel(struct_params* par, QWidget* parent)
     mLineWidth = mParams->opengl_line_width;
 
     mMouseHandle = enum_mouse_rotate;
-    mProjection  = (enum_projection)mParams->opengl_projection;
+    mProjection  = static_cast<enum_projection>(mParams->opengl_projection);
     mDrawStyle   = enum_draw_lines;
 
     // Vertices for the geodesic.
-    mVerts        = NULL;
-    mLambda       = NULL;
+    mVerts        = nullptr;
+    mLambda       = nullptr;
     mNumVerts     = 0;
     mShowNumVerts = 0;
 
     mSachsLegs      = mParams->opengl_sachs_legs;
     mSachsScale     = mParams->opengl_sachs_scale;
-    mSachsVerts1    = NULL;
-    mSachsVerts2    = NULL;
+    mSachsVerts1    = nullptr;
+    mSachsVerts2    = nullptr;
     mNumSachsVerts1 = 0;
     mNumSachsVerts2 = 0;
 
     // Data structures for an embedding diagram.
-    mEmbVerts    = NULL;
+    mEmbVerts    = nullptr;
     mEmbNumVerts = 0;
-    mEmbIndices  = NULL;
+    mEmbIndices  = nullptr;
     mEmbCounter  = 0;
-    mCount       = NULL;
+    mCount       = nullptr;
 
 
     mScaleX = mScaleY = mScaleZ = 1.0;
 
-    mStereo = (bool)mParams->opengl_stereo_use;
-    mUseFog = (bool)mParams->opengl_fog_use;
+    mStereo = (mParams->opengl_stereo_use == 1);
+    mUseFog = (mParams->opengl_fog_use == 1);
     mFogDensity = mParams->opengl_fog_init; //DEF_OPENGL_FOG_DENSITY_INIT;
-    QGLFormat f = format();
+    //QGLFormat f = format();
 
     mPlayRot = true;
     mAnimRotX = DEF_OPENGL_ANIM_ROT_X_INIT;
@@ -115,14 +91,14 @@ OpenGL3dModel::OpenGL3dModel(struct_params* par, QWidget* parent)
 /*! Standard destructor.
  */
 OpenGL3dModel::~OpenGL3dModel() {
-    if (mQuadricAxis != NULL) {
+    if (mQuadricAxis != nullptr) {
         gluDeleteQuadric(mQuadricAxis);
     }
-    mQuadricAxis = NULL;
-    if (mQuadricDisk != NULL) {
+    mQuadricAxis = nullptr;
+    if (mQuadricDisk != nullptr) {
         gluDeleteQuadric(mQuadricDisk);
     }
-    mQuadricDisk = NULL;
+    mQuadricDisk = nullptr;
 }
 
 // ************************************ public methods ********************************
@@ -132,11 +108,11 @@ OpenGL3dModel::~OpenGL3dModel() {
  *  \param  update : update gl.
  */
 void
-OpenGL3dModel::setPoints(m4d::enum_draw_type  dtype, bool update) {
-    if (mVerts != NULL) {
+OpenGL3dModel::setPoints(m4d::enum_draw_type  dtype, bool needUpdate) {
+    if (mVerts != nullptr) {
         delete [] mVerts;
     }
-    if (mLambda != NULL) {
+    if (mLambda != nullptr) {
         delete [] mLambda;
     }
 
@@ -150,48 +126,46 @@ OpenGL3dModel::setPoints(m4d::enum_draw_type  dtype, bool update) {
     mNameOfZaxis = QString("z");
 
     m4d::vec4 tp;
-    for (int i = 0; i < mNumVerts; i++) {
+    for(int i = 0; i < mNumVerts; i++) {
+        size_t idx = static_cast<size_t>(i);
         switch (dtype) {
             case m4d::enum_draw_pseudocart:
-                mObject.currMetric->transToPseudoCart(mObject.points[i], tp);
+                mObject.currMetric->transToPseudoCart(mObject.points[idx], tp);
                 break;
             case m4d::enum_draw_coordinates:
                 break;
             case m4d::enum_draw_embedding:
-                mObject.currMetric->transToEmbedding(mObject.points[i], tp);
+                mObject.currMetric->transToEmbedding(mObject.points[idx], tp);
                 break;
             case m4d::enum_draw_twoplusone:
-                mObject.currMetric->transToTwoPlusOne(mObject.points[i], tp);
+                mObject.currMetric->transToTwoPlusOne(mObject.points[idx], tp);
                 mNameOfZaxis = QString("t");
                 break;
             case m4d::enum_draw_effpoti:
                 break;
             case m4d::enum_draw_custom:
-                mObject.currMetric->transToCustom(mObject.points[i], tp);
+                mObject.currMetric->transToCustom(mObject.points[idx], tp);
                 break;
         }
         *(vptr++) = GLfloat(tp[1]);
         *(vptr++) = GLfloat(tp[2]);
         *(vptr++) = GLfloat(tp[3]);
 
-        *(lptr++) = GLfloat(mObject.lambda[i]);
+        *(lptr++) = GLfloat(mObject.lambda[idx]);
     }
 
     mShowNumVerts = mNumVerts;
-    if (update) {
-        updateGL();
+    if (needUpdate) {
+        update();
     }
 }
 
-/*! Set Sachs axes.
- *  \param data: pointer to object class.
- *  \param update: update OpenGL window.
- */
-void OpenGL3dModel::setSachsAxes(bool update) {
-    if (mSachsVerts1 != NULL) {
+
+void OpenGL3dModel::setSachsAxes(bool needUpdate) {
+    if (mSachsVerts1 != nullptr) {
         delete [] mSachsVerts1;
     }
-    if (mSachsVerts2 != NULL) {
+    if (mSachsVerts2 != nullptr) {
         delete [] mSachsVerts2;
     }
 
@@ -211,20 +185,21 @@ void OpenGL3dModel::setSachsAxes(bool update) {
     double f, l1a, l1b, l2a, l2b;
     int n1 = 0, n2 = 0;
     while (n1 < mNumSachsVerts1 && n2 < mNumSachsVerts2 && n1 < mv) {
+        size_t ni1 = static_cast<size_t>(n1);
+        size_t ni2 = static_cast<size_t>(n2);
         // Umparametrisierung
-        f = mObject.sachs1[n1].x(0) / mObject.dirs[n1].x(0);
-        s1 = mObject.sachs1[n1] - f * mObject.dirs[n1];
-        f = mObject.sachs2[n2].x(0) / mObject.dirs[n2].x(0);
-        s2 = mObject.sachs2[n2] - f * mObject.dirs[n2];
+        f = mObject.sachs1[ni1].x(0) / mObject.dirs[ni1].x(0);
+        s1 = mObject.sachs1[ni1] - f * mObject.dirs[ni1];
+        f = mObject.sachs2[ni2].x(0) / mObject.dirs[ni2].x(0);
+        s2 = mObject.sachs2[ni2] - f * mObject.dirs[ni2];
 
-        m4d::TransCoordinates::toCartesianCoord(mObject.currMetric->getCoordType(), mObject.points[n1], s1, tp, d1);
-        m4d::TransCoordinates::toCartesianCoord(mObject.currMetric->getCoordType(), mObject.points[n1], s2, tp, d2);
+        m4d::TransCoordinates::toCartesianCoord(mObject.currMetric->getCoordType(), mObject.points[ni1], s1, tp, d1);
+        m4d::TransCoordinates::toCartesianCoord(mObject.currMetric->getCoordType(), mObject.points[ni1], s2, tp, d2);
 
         d1 *= mParams->opengl_sachs_scale;
         d2 *= mParams->opengl_sachs_scale;
 
         switch (mParams->opengl_sachs_legs) {
-            default:
             case enum_sachs_legs_right_up:
                 l1a = 0.0;
                 l1b = 1.0;
@@ -274,73 +249,67 @@ void OpenGL3dModel::setSachsAxes(bool update) {
         n2++;
     }
 
-    if (update) {
-        updateGL();
+    if (needUpdate) {
+        update();
     }
 }
 
-void
-OpenGL3dModel::clearSachsAxes() {
-    if (mSachsVerts1 != NULL) {
+
+void OpenGL3dModel::clearSachsAxes() {
+    if (mSachsVerts1 != nullptr) {
         delete [] mSachsVerts1;
     }
-    if (mSachsVerts2 != NULL) {
+    if (mSachsVerts2 != nullptr) {
         delete [] mSachsVerts2;
     }
 
-    mSachsVerts1 = mSachsVerts2 = NULL;
+    mSachsVerts1 = mSachsVerts2 = nullptr;
     mNumSachsVerts1 = mNumSachsVerts2 = 0;
-    updateGL();
+    update();
 }
 
-/*! Delete points.
- */
-void
-OpenGL3dModel::clearPoints() {
-    if (mVerts != NULL) {
+
+void OpenGL3dModel::clearPoints() {
+    if (mVerts != nullptr) {
         delete [] mVerts;
     }
-    mVerts = NULL;
+    mVerts = nullptr;
 
-    if (mLambda != NULL) {
+    if (mLambda != nullptr) {
         delete [] mLambda;
     }
-    mLambda = NULL;
+    mLambda = nullptr;
 
     mNumVerts = 0;
     mShowNumVerts = 0;
-    updateGL();
+    update();
 }
 
 
-/*! Generate embedding vertices.
- *  \param  currMetric : pointer to current metric.
- */
-void
-OpenGL3dModel::genEmbed(m4d::Metric* currMetric) {
-    if (mEmbVerts != NULL) {
+void OpenGL3dModel::genEmbed(m4d::Metric* currMetric) {
+    if (mEmbVerts != nullptr) {
         delete [] mEmbVerts;
     }
-    mEmbVerts = NULL;
+    mEmbVerts = nullptr;
 
-    if (mEmbIndices != NULL) {
+    if (mEmbIndices != nullptr) {
         for (unsigned int j = 0; j < mEmbCounter; j++) {
             delete [] mEmbIndices[j];
         }
         delete [] mEmbIndices;
     }
-    mEmbIndices = NULL;
+    mEmbIndices = nullptr;
     mEmbNumElems = mEmbCounter = 0;
 
-    if (mCount != NULL) {
+    if (mCount != nullptr) {
         delete [] mCount;
     }
-    mCount = NULL;
+    mCount = nullptr;
 
     std::vector<m4d::vec3> vertices;
     std::vector<int>       indices;
 
-    if (currMetric == NULL) {
+    if (currMetric == nullptr) {
         return;
     }
 
@@ -367,117 +336,92 @@ OpenGL3dModel::genEmbed(m4d::Metric* currMetric) {
     }
 
 
-    mEmbVerts = new GLfloat[ mEmbNumVerts * 3 ];
-    GLfloat* vptr = mEmbVerts;
+    mEmbVerts = new float[ mEmbNumVerts * 3 ];
+    float* vptr = mEmbVerts;
 
-    for (int i = 0; i < mEmbNumVerts; i++) {
-        *(vptr++) = GLfloat(vertices[i][0]);
-        *(vptr++) = GLfloat(vertices[i][1]);
-        *(vptr++) = GLfloat(vertices[i][2]);
+    for(int i = 0; i < mEmbNumVerts; i++) {
+        size_t idx = static_cast<size_t>(i);
+        *(vptr++) = static_cast<float>(vertices[idx][0]);
+        *(vptr++) = static_cast<float>(vertices[idx][1]);
+        *(vptr++) = static_cast<float>(vertices[idx][2]);
     }
-    updateGL();
+    update();
 }
 
-/*! Clear embedding vertices.
- */
-void
-OpenGL3dModel::clearEmbed() {
-    if (mEmbVerts != NULL) {
+
+void OpenGL3dModel::clearEmbed() {
+    if (mEmbVerts != nullptr) {
         delete [] mEmbVerts;
     }
-    mEmbVerts = NULL;
+    mEmbVerts = nullptr;
     mEmbNumVerts = 0;
 
-    if (mEmbIndices != NULL) {
+    if (mEmbIndices != nullptr) {
         for (unsigned int j = 0; j < mEmbCounter; j++) {
             delete [] mEmbIndices[j];
         }
         delete [] mEmbIndices;
     }
-    mEmbIndices = NULL;
+    mEmbIndices = nullptr;
 
-    if (mCount != NULL) {
+    if (mCount != nullptr) {
         delete [] mCount;
     }
-    mCount = NULL;
+    mCount = nullptr;
 
     mEmbNumElems = mEmbCounter = 0;
-    updateGL();
+    update();
 }
 
-/*! Set mounse handle.
- *  \param  handle : mouse handle index.
- *  \sa enum_mouse_handle.
- */
-void
-OpenGL3dModel::setMouseHandle(enum_mouse_handle  handle) {
+
+void OpenGL3dModel::setMouseHandle(enum_mouse_handle  handle) {
     mMouseHandle = handle;
 }
 
-/*! Set projection type.
- *  \param proj : projection index.
- *  \sa enum_projection.
- */
-void
-OpenGL3dModel::setProjection(enum_projection    proj) {
+
+void OpenGL3dModel::setProjection(enum_projection proj) {
     mProjection = proj;
-    mParams->opengl_projection = (int)proj;
-    updateGL();
+    mParams->opengl_projection = static_cast<int>(proj);
+    update();
 }
 
-/*! Set field of view.
- *  \param fov : field of view.
- */
-void
-OpenGL3dModel::setFieldOfView(double fov) {
+
+void OpenGL3dModel::setFieldOfView(double fov) {
     mCamera.setFovY(fov);
     mParams->opengl_fov = fov;
-    updateGL();
+    update();
 }
 
-/*! Get field of view.
- *  \return fov.
- */
-double
-OpenGL3dModel::getFieldOfView() {
+
+double OpenGL3dModel::getFieldOfView() {
     return mCamera.getFovY();
 }
 
-/*! Set camera position.
- *  \param pos : camera position.
- */
-void
-OpenGL3dModel::setCameraPos(m4d::vec3 pos) {
+
+void OpenGL3dModel::setCameraPos(m4d::vec3 pos) {
     mCamera.setEyePos(pos);
     mParams->opengl_eye_pos = pos;
-    updateGL();
+    update();
 }
 
-/*! Get camera position.
- *  \return vec3 : camera position.
- */
-m4d::vec3
-OpenGL3dModel::getCameraPos() {
+
+m4d::vec3 OpenGL3dModel::getCameraPos() {
     return mCamera.getEyePos();
 }
 
-/*! Set camera's point of interest.
- *  \param poi : camera's point of interest.
- */
-void
-OpenGL3dModel::setCameraPoi(m4d::vec3 poi) {
+
+void OpenGL3dModel::setCameraPoi(m4d::vec3 poi) {
     mCamera.setPOI(poi);
     mParams->opengl_eye_poi = poi;
-    updateGL();
+    update();
 }
 
-/*! Get camera's point of interest.
- *  \return vec3 : camera's point of interest.
- */
+
 m4d::vec3
 OpenGL3dModel::getCameraPoi() {
     return mCamera.getPOI();
 }
+
 
 void OpenGL3dModel::setCameraVup(m4d::vec3 vup) {
     m4d::vec3 viewDir = mCamera.getDir();
@@ -485,15 +429,15 @@ void OpenGL3dModel::setCameraVup(m4d::vec3 vup) {
 
     mParams->opengl_eye_vup = (viewRight^viewDir).getNormalized();
     mCamera.setVup(mParams->opengl_eye_vup);
-    updateGL();
+    update();
 }
+
 
 m4d::vec3 OpenGL3dModel::getCameraVup() {
     return mParams->opengl_eye_vup;
 }
 
-/*!
- */
+
 void
 OpenGL3dModel::setCameraDirs(m4d::vec3 pos, m4d::vec3 poi, m4d::vec3 vup) {
     mCamera.setEyePos(pos);
@@ -506,8 +450,7 @@ OpenGL3dModel::setCameraDirs(m4d::vec3 pos, m4d::vec3 poi, m4d::vec3 vup) {
     mCamera.setVup(vup);
 }
 
-/*!
- */
+
 void
 OpenGL3dModel::getCameraDirs(m4d::vec3 &pos, m4d::vec3 &poi, m4d::vec3 &vup) {
     pos = mCamera.getEyePos();
@@ -515,20 +458,19 @@ OpenGL3dModel::getCameraDirs(m4d::vec3 &pos, m4d::vec3 &poi, m4d::vec3 &vup) {
     vup = mCamera.getVup();
 }
 
+
 void
 OpenGL3dModel::setCameraSphere(double theta, double phi, double dist) {
     mCamera.moveOnSphere(theta, phi, dist);
 }
+
 
 void
 OpenGL3dModel::getCameraSphere(double &theta, double &phi, double &dist) {
     mCamera.getSphericalEyePos(theta, phi, dist);
 }
 
-/*!
- *  \param type : index of camera predefined values.
- *  \sa enum_camera_predefs.
- */
+
 void
 OpenGL3dModel::setCameraPredefs(enum_camera_predefs  type) {
     m4d::vec3 eye = mCamera.getEyePos();
@@ -569,214 +511,138 @@ OpenGL3dModel::setCameraPredefs(enum_camera_predefs  type) {
     mParams->opengl_eye_vup = vup;
     mParams->opengl_eye_poi = m4d::vec3(0.0, 0.0, 0.0);
 
-    updateGL();
+    update();
 }
 
-/*! Clear all objects.
- */
-void
-OpenGL3dModel::clearAllObjects() {
+
+void OpenGL3dModel::clearAllObjects() {
     if (!mObjects.empty()) {
         mObjects.clear();
     }
-    updateGL();
+    update();
 }
 
-/*! Insert object.
- *  \param obj : pointer to object
- */
-void
-OpenGL3dModel::insertObject(MyObject* obj) {
+
+void OpenGL3dModel::insertObject(MyObject* obj) {
     makeCurrent();
     MyObject* no = new MyObject(*obj);
     mObjects.push_back(no);
-    updateGL();
+    update();
 }
 
-/*! Set foreground color.
- *  \param  col : foreground color.
- */
-void
-OpenGL3dModel::setFGcolor(QColor col) {
+
+void OpenGL3dModel::setFGcolor(QColor col) {
     mFGcolor = col;
-    updateGL();
+    update();
 }
 
-/*! Set background color.
- *  \param  col : background color.
- */
-void
-OpenGL3dModel::setBGcolor(QColor col) {
+
+void OpenGL3dModel::setBGcolor(QColor col) {
     mBGcolor = col;
-    updateGL();
+    update();
 }
 
-/*! Set embedding color.
- *  \param  col : embedding color.
- */
-void
-OpenGL3dModel::setEmbColor(QColor col) {
+
+void OpenGL3dModel::setEmbColor(QColor col) {
     mEmbColor = col;
-    updateGL();
+    update();
 }
 
-/*! Set all colors.
- * \param fgcol : foreground color.
- * \param bgcol : background color.
- * \param embcol : embedding color.
- */
-void
-OpenGL3dModel::setColors(QColor fgcol, QColor bgcol, QColor embcol) {
+
+void OpenGL3dModel::setColors(QColor fgcol, QColor bgcol, QColor embcol) {
     mBGcolor = bgcol;
     mFGcolor = fgcol;
     mEmbColor = embcol;
-    updateGL();
+    update();
 }
 
-/*! Set line width.
- *  \param width : line width/point size.
- */
-void
-OpenGL3dModel::setLineWidth(int width) {
+
+void OpenGL3dModel::setLineWidth(int width) {
     mLineWidth = width;
-    updateGL();
+    update();
 }
 
-/*! Set line anti-aliasing.
- *  \param smooth : 1=doAntialiasing
- */
-void
-OpenGL3dModel::setLineSmooth(int smooth) {
+
+void OpenGL3dModel::setLineSmooth(int smooth) {
     mLineSmooth = smooth;
-    updateGL();
+    update();
 }
 
-/*! Set drawing style.
- *  \param  style : drawing style.
- *  \sa enum_draw_style.
- */
-void
-OpenGL3dModel::setStyle(enum_draw_style  style) {
+
+void OpenGL3dModel::setStyle(enum_draw_style  style) {
     mDrawStyle = style;
 }
 
 
-/*! Set scaling factors.
- *  \param sx : scaling factor for x-direction.
- *  \param sy : scaling factor for y-direction.
- *  \param sz : scaling factor for z-direction.
- */
-void
-OpenGL3dModel::setScaling(double sx, double sy, double sz) {
+void OpenGL3dModel::setScaling(double sx, double sy, double sz) {
     mScaleX = sx;
     mScaleY = sy;
     mScaleZ = sz;
-    updateGL();
+    update();
 }
 
-/*! Get scaling factors.
- *  \param sx : reference to scaling factor for x-direction.
- *  \param sy : reference to scaling factor for y-direction.
- *  \param sz : reference to scaling factor for z-direction.
- */
-void
-OpenGL3dModel::getScaling(double &sx, double &sy, double &sz) {
+void OpenGL3dModel::getScaling(double &sx, double &sy, double &sz) {
     sx = mScaleX;
     sy = mScaleY;
     sz = mScaleZ;
 }
 
-/*! Set camera to stereo/mono mode.
- *  \param useStereo : toggle stereo/mono mode.
- */
-void
-OpenGL3dModel::setStereoCam(bool useStereo) {
+
+void OpenGL3dModel::setStereoCam(bool useStereo) {
     mStereo = useStereo;
-    mParams->opengl_stereo_use = (int)useStereo;
-    updateGL();
+    mParams->opengl_stereo_use = static_cast<int>(useStereo);
+    // updateGL();
 }
 
-/*! Set stereo parameters.
- *  \param sep : eye separation.
- *  \param type : type of stereo glasses.
- *  \sa enum_stereo_glasses.
- */
-void
-OpenGL3dModel::setStereoParams(double sep, enum_stereo_glasses type) {
+void OpenGL3dModel::setStereoParams(double sep, enum_stereo_glasses type) {
     mCamera.setStereoParams(sep, type);
     mParams->opengl_stereo_glasses = type;
     mParams->opengl_stereo_sep     = sep;
-    updateGL();
+    update();
 }
 
-/*! Set stereo type.
- * \param type : stereo projection type.
- */
-void
-OpenGL3dModel::setStereoType(enum_stereo_type type) {
+
+void OpenGL3dModel::setStereoType(enum_stereo_type type) {
     mCamera.setStereoType(type);
     mParams->opengl_stereo_type = type;
-    updateGL();
+    update();
 }
 
-/*! Set artificial fog mode.
- *  \param useFog : use fog or not.
- */
-void
-OpenGL3dModel::setFog(bool useFog) {
+
+void OpenGL3dModel::setFog(bool useFog) {
     mUseFog = useFog;
-    mParams->opengl_fog_use = (int)useFog;
-    updateGL();
+    mParams->opengl_fog_use = static_cast<int>(useFog);
+    update();
 }
 
-/*! Set artificial fog density.
- *  \param density : fog density.
- */
-void
-OpenGL3dModel::setFogDensity(double density) {
+
+void OpenGL3dModel::setFogDensity(double density) {
     mFogDensity = density;
     mParams->opengl_fog_init = mFogDensity;
-    updateGL();
+    update();
 }
 
-/*! Start or stop animation.
- *  \param  play : play or stop animation.
- */
-void
-OpenGL3dModel::playAnimRotation(bool play) {
+
+void OpenGL3dModel::playAnimRotation(bool play) {
     mPlayRot = play;
 }
 
-/*! Set animation parameters for rotation.
- *  \param rx : rotation value around x-axis;
- *  \param ry : rotation value around y-axis;
- *  \param rz : rotation value around z-axis;
- */
-void
-OpenGL3dModel::setAnimRotationParams(double rx, double ry, double rz) {
+
+void OpenGL3dModel::setAnimRotationParams(double rx, double ry, double rz) {
     mAnimRotX = rx;
     mAnimRotY = ry;
     mAnimRotZ = rz;
 }
 
-/*! Get animation parameters for rotation.
- *  \param rx : reference to rotation value around x-axis;
- *  \param ry : reference to rotation value around y-axis;
- *  \param rz : reference to rotation value around z-axis;
- */
-void
-OpenGL3dModel::getAnimRotationParams(double &rx, double &ry, double &rz) {
+
+void OpenGL3dModel::getAnimRotationParams(double &rx, double &ry, double &rz) {
     rx = mAnimRotX;
     ry = mAnimRotY;
     rz = mAnimRotZ;
 }
 
-/*! Rotate camera.
- *  \param msec : milliseconds.
- *  \param local : rotate around local or global axes.
- */
-void
-OpenGL3dModel::doAnimRotation(double msec, bool local) {
+
+void OpenGL3dModel::doAnimRotation(double msec, bool local) {
     if (local) {
         mCamera.fixRotAroundVup(mAnimRotZ * msec * 1e-3);
         mCamera.fixRotAroundRight(mAnimRotX * msec * 1e-3);
@@ -786,29 +652,23 @@ OpenGL3dModel::doAnimRotation(double msec, bool local) {
         mCamera.fixRotAroundX(mAnimRotX * msec * 1e-3);
         mCamera.fixRotAroundY(mAnimRotY * msec * 1e-3);
     }
-    updateGL();
+    update();
 }
 
-/*! Set number of vertices do be drawn.
- *  \param num : number of vertices to be drawn.
- */
-void
-OpenGL3dModel::showNumVerts(int num) {
+
+void OpenGL3dModel::showNumVerts(int num) {
     mShowNumVerts = num;
     if (mShowNumVerts > mNumVerts) {
         mShowNumVerts = mNumVerts;
     }
-    updateGL();
+    update();
 }
 
-/*! Save rgb image.
- *  \param filename : image name.
- */
-bool
-OpenGL3dModel::saveRGBimage(QString filename) {
+
+bool OpenGL3dModel::saveRGBimage(QString filename) {
     unsigned char* buf = new unsigned char[DEF_OPENGL_WIDTH * DEF_OPENGL_HEIGHT * 4];
 
-    updateGL();
+    update();
     glReadBuffer(GL_BACK);
     glReadPixels(0, 0, DEF_OPENGL_WIDTH, DEF_OPENGL_HEIGHT, GL_RGB, GL_UNSIGNED_BYTE, buf);
 
@@ -843,13 +703,11 @@ OpenGL3dModel::saveRGBimage(QString filename) {
     return true;
 }
 
-/*!  Update viewing parameters.
- */
-void
-OpenGL3dModel::updateParams() {
+
+void OpenGL3dModel::updateParams() {
     setCameraDirs(mParams->opengl_eye_pos, mParams->opengl_eye_poi, mParams->opengl_eye_vup);
 
-    mProjection = (enum_projection)mParams->opengl_projection;
+    mProjection = static_cast<enum_projection>(mParams->opengl_projection);
     mCamera.setFovY(mParams->opengl_fov);
     mLineWidth  = mParams->opengl_line_width;
     mLineSmooth = mParams->opengl_line_smooth;
@@ -868,26 +726,20 @@ OpenGL3dModel::updateParams() {
     mScaleX = mParams->opengl_scale_x;
     mScaleY = mParams->opengl_scale_y;
     mScaleZ = mParams->opengl_scale_z;
-    updateGL();
+    update();
 }
 
-/*! Reset.
- */
-void
-OpenGL3dModel::reset() {
+
+void OpenGL3dModel::reset() {
     clearAllObjects();
     clearEmbed();
     clearPoints();
     updateParams();
-    updateGL();
+    update();
 }
 
-// *********************************** protected methods ******************************
-/*!
- *
- */
-void
-OpenGL3dModel::initializeGL() {
+
+void OpenGL3dModel::initializeGL() {
     glShadeModel(GL_SMOOTH);
 
     glEnable(GL_DEPTH_TEST);
@@ -908,7 +760,7 @@ OpenGL3dModel::initializeGL() {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_FALSE);
 
-    mGLSLsupported = QGLShaderProgram::hasOpenGLShaderPrograms();
+    mGLSLsupported = QOpenGLShaderProgram::hasOpenGLShaderPrograms();
 
     fprintf(stderr, "Basic information about graphics board:\n");
     fprintf(stderr, "\tVendor:          %s\n", glGetString(GL_VENDOR));
@@ -917,20 +769,18 @@ OpenGL3dModel::initializeGL() {
     fprintf(stderr, "\tGLSL:            %s\n\n", (mGLSLsupported ? "supported" : "not supported!"));
 
 
-    shader = new QGLShaderProgram();
+    shader = new QOpenGLShaderProgram();
     //shader->addShaderFromSourceFile(QGLShader::Vertex,  "shader/vert.c");
     //shader->addShaderFromSourceFile(QGLShader::Fragment,"shader/frag.c");
 
-    shader->addShaderFromSourceCode(QGLShader::Vertex, getVertexShaderCode());
-    shader->addShaderFromSourceCode(QGLShader::Fragment, getFragmentShaderCode());
+    shader->addShaderFromSourceCode(QOpenGLShader::Vertex, getVertexShaderCode());
+    shader->addShaderFromSourceCode(QOpenGLShader::Fragment, getFragmentShaderCode());
     shader->link();
     // std::cerr << "OpenGL frag log: " << shader->isLinked() << std::endl;
 }
 
-/*!
- */
-void
-OpenGL3dModel::paintGL() {
+
+void OpenGL3dModel::paintGL() {
     switch (mProjection) {
         case enum_proj_perspective:
             mCamera.perspective();
@@ -941,13 +791,14 @@ OpenGL3dModel::paintGL() {
     }
     mCamera.lookAtModelView();
 
-    glClearColor(mBGcolor.redF(), mBGcolor.greenF(), mBGcolor.blueF(), 0.0);
+    glClearColor(static_cast<float>(mBGcolor.redF()), static_cast<float>(mBGcolor.greenF()),
+                 static_cast<float>(mBGcolor.blueF()), 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (mUseFog) {
         glEnable(GL_FOG);
         glFogi(GL_FOG_MODE, GL_EXP2);
-        glFogf(GL_FOG_DENSITY, mFogDensity);
+        glFogf(GL_FOG_DENSITY, static_cast<float>(mFogDensity));
     } else {
         glDisable(GL_FOG);
     }
@@ -969,11 +820,7 @@ OpenGL3dModel::paintGL() {
 }
 
 
-/*!
- *
- */
-void
-OpenGL3dModel::paintGL_mono() {
+void OpenGL3dModel::paintGL_mono() {
     glColor3f(1, 1, 1);
     glScalef(GLfloat(mScaleX), GLfloat(mScaleY), GLfloat(mScaleZ));
 
@@ -997,12 +844,12 @@ OpenGL3dModel::paintGL_mono() {
     * ----------------------- */
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    if (mEmbVerts != NULL && mEmbIndices != NULL) {
+    if (mEmbVerts != nullptr && mEmbIndices != nullptr) {
         glEnable(GL_LINE_SMOOTH);
         if (mStereo) {
             glColor3f(1, 1, 1);
         } else {
-            glColor3f(mEmbColor.redF(), mEmbColor.greenF(), mEmbColor.blueF());
+            glColor3f(static_cast<float>(mEmbColor.redF()), static_cast<float>(mEmbColor.greenF()), static_cast<float>(mEmbColor.blueF()));
         }
         glPointSize(1.0);
         glVertexPointer(3, GL_FLOAT, 0, mEmbVerts);
@@ -1016,7 +863,7 @@ OpenGL3dModel::paintGL_mono() {
         glMultiDrawElements(GL_QUAD_STRIP, mCount, GL_UNSIGNED_INT, (const void**)mEmbIndices, mEmbCounter - 1);
 #else
         for (unsigned int i = 0; i < mEmbCounter - 1; i++) {
-            glDrawElements(GL_QUAD_STRIP, mCount[i], GL_UNSIGNED_INT, (const void**)mEmbIndices[i]);
+            glDrawElements(GL_QUAD_STRIP, mCount[i], GL_UNSIGNED_INT, mEmbIndices[i]);
         }
 #endif // GL_GLEXT_PROTOTYPES
 #endif
@@ -1026,18 +873,18 @@ OpenGL3dModel::paintGL_mono() {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 
-    /* -----------------------
-    *   draw geodesic
-    * ----------------------- */
+    // -----------------------
+    //   draw geodesic
+    // -----------------------
     glLineWidth(mLineWidth);
     if (mLineSmooth == 1) {
         glEnable(GL_LINE_SMOOTH);
     }
 
     if (mStereo) {
-        glColor3f(1, 1, 1);
+        glColor3f(1.0f, 1.0f, 1.0f);
     } else {
-        glColor3f(mFGcolor.redF(), mFGcolor.greenF(), mFGcolor.blueF());
+        glColor3f(static_cast<float>(mFGcolor.redF()), static_cast<float>(mFGcolor.greenF()), static_cast<float>(mFGcolor.blueF()));
     }
 
     glPointSize(mLineWidth);
@@ -1056,23 +903,32 @@ OpenGL3dModel::paintGL_mono() {
 
     glColor3f(1.0, 1.0, 1.0);
 
-    /* -----------------------
-    *   draw Sachs
-    * ----------------------- */
+    // -----------------------
+    //   draw Sachs
+    // -----------------------
     shader->bind();
     if (mStereo) {
         shader->setUniformValue(shader->uniformLocation("colortype"), 0);
     } else {
         shader->setUniformValue(shader->uniformLocation("colortype"), 2);
     }
-    shader->setUniformValue(shader->uniformLocation("col1"), mParams->opengl_leg1_col1.redF(), mParams->opengl_leg1_col1.greenF(), mParams->opengl_leg1_col1.blueF());
-    shader->setUniformValue(shader->uniformLocation("col2"), mParams->opengl_leg1_col2.redF(), mParams->opengl_leg1_col2.greenF(), mParams->opengl_leg1_col2.blueF());
-    shader->setUniformValue(shader->uniformLocation("freq"), mParams->opengl_leg1_freq);
-    shader->setUniformValue(shader->uniformLocation("useFog"), (int)mUseFog);
-    shader->setUniformValue(shader->uniformLocation("fogFactor"), (GLfloat)(-mFogDensity * mFogDensity * 1.442695));
-    shader->setUniformValue(shader->uniformLocation("eyePos"), light_position[0], light_position[1], light_position[2]);
-    int num1, num2;
 
+    shader->setUniformValue("col1",
+        static_cast<float>(mParams->opengl_leg1_col1.redF()),
+        static_cast<float>(mParams->opengl_leg1_col1.greenF()),
+        static_cast<float>(mParams->opengl_leg1_col1.blueF()));
+
+    shader->setUniformValue("col2",
+        static_cast<float>(mParams->opengl_leg1_col2.redF()),
+        static_cast<float>(mParams->opengl_leg1_col2.greenF()),
+        static_cast<float>(mParams->opengl_leg1_col2.blueF()));
+
+    shader->setUniformValue("freq", static_cast<float>(mParams->opengl_leg1_freq));
+    shader->setUniformValue("useFog", static_cast<int>(mUseFog));
+    shader->setUniformValue("fogFactor", static_cast<float>(-mFogDensity * mFogDensity * 1.442695));
+    shader->setUniformValue("eyePos", light_position[0], light_position[1], light_position[2]);
+
+    int num1, num2;
     if (mNumSachsVerts1 > 0) {
         glBegin(GL_QUAD_STRIP);
         for (int i = 0; i < mShowNumVerts; i++) {
@@ -1086,13 +942,22 @@ OpenGL3dModel::paintGL_mono() {
         glEnd();
 
         if (mStereo) {
-            shader->setUniformValue(shader->uniformLocation("colortype"), 1);
+            shader->setUniformValue("colortype", 1);
         } else {
-            shader->setUniformValue(shader->uniformLocation("colortype"), 2);
+            shader->setUniformValue("colortype", 2);
         }
-        shader->setUniformValue(shader->uniformLocation("col1"), mParams->opengl_leg2_col1.redF(), mParams->opengl_leg2_col1.greenF(), mParams->opengl_leg2_col1.blueF());
-        shader->setUniformValue(shader->uniformLocation("col2"), mParams->opengl_leg2_col2.redF(), mParams->opengl_leg2_col2.greenF(), mParams->opengl_leg2_col2.blueF());
-        shader->setUniformValue(shader->uniformLocation("freq"), mParams->opengl_leg2_freq);
+
+        shader->setUniformValue("col1",
+            static_cast<float>(mParams->opengl_leg2_col1.redF()),
+            static_cast<float>(mParams->opengl_leg2_col1.greenF()),
+            static_cast<float>(mParams->opengl_leg2_col1.blueF()));
+
+        shader->setUniformValue("col2",
+            static_cast<float>(mParams->opengl_leg2_col2.redF()),
+            static_cast<float>(mParams->opengl_leg2_col2.greenF()),
+            static_cast<float>(mParams->opengl_leg2_col2.blueF()));
+
+        shader->setUniformValue("freq", static_cast<float>(mParams->opengl_leg2_freq));
         glBegin(GL_QUAD_STRIP);
         for (int i = 0; i < mShowNumVerts; i++) {
             num1 = 6 * i;
@@ -1106,9 +971,9 @@ OpenGL3dModel::paintGL_mono() {
     }
     shader->release();
 
-    /* -----------------------
-    *   draw objects
-    * ----------------------- */
+    // -----------------------
+    //   draw objects
+    // -----------------------
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     if (mWiredObjs) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -1129,19 +994,16 @@ OpenGL3dModel::paintGL_mono() {
                 mObjects[i]->getValue(2, cz);
                 mObjects[i]->getValue(3, size);
                 QFont font;
-                font.setPixelSize((int)size);
-                this->renderText((double)cx, (double)cy, (double)cz, QString(mObjects[i]->getText().c_str()), font);
+                font.setPixelSize(static_cast<int>(size));
+                //this->renderText((double)cx, (double)cy, (double)cz, QString(mObjects[i]->getText().c_str()), font);
             }
         }
         glDisable(GL_LIGHTING);
     }
 }
 
-/*!
- *
- */
-void
-OpenGL3dModel::paintGL_stereo() {
+
+void OpenGL3dModel::paintGL_stereo() {
     glDrawBuffer(GL_BACK);
     glReadBuffer(GL_BACK);
 
@@ -1156,13 +1018,10 @@ OpenGL3dModel::paintGL_stereo() {
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 }
 
-/*!
- *
- */
-void
-OpenGL3dModel::paintGL_axes() {
+
+void OpenGL3dModel::paintGL_axes() {
     mCamera.perspectiveAxes();
-    glViewport(0, 0, (int)(double(DEF_OPENGL_HEIGHT) / 10.0), (int)(double(DEF_OPENGL_HEIGHT) / 10.0));
+    glViewport(0, 0, 100, 100);
     glClear(GL_DEPTH_BUFFER_BIT);
     mCamera.lookAtCenterModelView();
 
@@ -1183,8 +1042,8 @@ OpenGL3dModel::paintGL_axes() {
 
     glPushMatrix();
     glRotatef(90.0, 0.0, 1.0, 0.0);
-    qglColor(textColor);
-    renderText(0.0, 0.0, 1.2, QString("x"));
+   // qglColor(textColor);
+    //renderText(0.0, 0.0, 1.2, QString("x"));
     light_spec[0] = 1.0;
     light_spec[1] = 0.0;
     light_spec[2] = 0.0;
@@ -1199,8 +1058,8 @@ OpenGL3dModel::paintGL_axes() {
 
     glPushMatrix();
     glRotatef(-90.0, 1.0, 0.0, 0.0);
-    qglColor(textColor);
-    renderText(-0.1, 0.1, 1.2, QString("y"));
+   // qglColor(textColor);
+   // renderText(-0.1, 0.1, 1.2, QString("y"));
     light_spec[0] = 0.0;
     light_spec[1] = 1.0;
     light_spec[2] = 0.0;
@@ -1214,8 +1073,8 @@ OpenGL3dModel::paintGL_axes() {
 
 
     glPushMatrix();
-    qglColor(textColor);
-    renderText(-0.1, -0.1, 1.2, mNameOfZaxis);
+   // qglColor(textColor);
+   // renderText(-0.1, -0.1, 1.2, mNameOfZaxis);
     light_spec[0] = 0.0;
     light_spec[1] = 0.0;
     light_spec[2] = 1.0;
@@ -1231,12 +1090,13 @@ OpenGL3dModel::paintGL_axes() {
 }
 
 
+void OpenGL3dModel::resizeGL(int width, int height) {
+    mCamera.setSize(width, height);
+    update();
+}
 
-/*!
- *  \param event : key event.
- */
-void
-OpenGL3dModel::keyPressEvent(QKeyEvent* event) {
+
+void OpenGL3dModel::keyPressEvent(QKeyEvent* event) {
     mKeyPressed = event->key();
 
     if (mKeyPressed == Qt::Key_I) {
@@ -1304,41 +1164,29 @@ OpenGL3dModel::keyPressEvent(QKeyEvent* event) {
         shader->link();
     }
 #endif
-    updateGL();
+    update();
 }
 
-/*!
- *  \param event : key event.
- */
-void
-OpenGL3dModel::keyReleaseEvent(QKeyEvent* event) {
+
+void OpenGL3dModel::keyReleaseEvent(QKeyEvent* event) {
     mKeyPressed = Qt::Key_No;
     event->ignore();
 }
 
-/*!
- *  \param event : mouse event.
- */
-void
-OpenGL3dModel::mousePressEvent(QMouseEvent * event) {
+
+void OpenGL3dModel::mousePressEvent(QMouseEvent * event) {
     mButtonPressed = event->button();
     mLastPos = event->pos();
 }
 
-/*!
- *  \param event : mouse event.
- */
-void
-OpenGL3dModel::mouseReleaseEvent(QMouseEvent * event) {
+
+void OpenGL3dModel::mouseReleaseEvent(QMouseEvent * event) {
     mButtonPressed = Qt::NoButton;
     event->accept();
 }
 
-/*!
- *  \param event : mouse event.
- */
-void
-OpenGL3dModel::mouseMoveEvent(QMouseEvent * event) {
+
+void OpenGL3dModel::mouseMoveEvent(QMouseEvent * event) {
     QPoint dxy = event->pos() - mLastPos;
     mLastPos   = event->pos();
 
@@ -1468,13 +1316,12 @@ OpenGL3dModel::mouseMoveEvent(QMouseEvent * event) {
             break;
         }
     }
-    updateGL();
+
+    update();
 }
 
-/*! Get vertex shader code.
- */
-QString
-OpenGL3dModel::getVertexShaderCode() {
+
+QString OpenGL3dModel::getVertexShaderCode() {
     QString vert;
     vert += "uniform int  useFog;\n";
     vert += "uniform vec3 eyePos;\n";
@@ -1492,10 +1339,7 @@ OpenGL3dModel::getVertexShaderCode() {
 }
 
 
-/*! Get fragment shader code.
- */
-QString
-OpenGL3dModel::getFragmentShaderCode() {
+QString OpenGL3dModel::getFragmentShaderCode() {
     QString frag;
     frag += "uniform int   useFog;\n";
     frag += "uniform float fogFactor;\n";

@@ -216,23 +216,15 @@ Camera::getIntrinsic(double &fovy, double &nearval, double &farval) {
     farval  = mZfar;
 }
 
-/*! Set camera resolution and adjust aspect ratio.
- *  \param width : camera resolution in x-direction
- *  \param height : camera resolution in y-direction
- */
-void
-Camera::setSizeAndAspect(int width, int  height) {
+
+void Camera::setSize(int width, int  height) {
     mWidth  = width;
     mHeight = height;
-    mAspect = double(width) / double(height);
+    mAspect = width / static_cast<double>(height);
 }
 
-/*! Get camera resolution.
- *  \param width : reference to camera resolution in x-direction
- *  \param height : reference to camera resolution in y-direction
- */
-void
-Camera::getSize(int &width, int &height) {
+
+void Camera::getSize(int &width, int &height) {
     width  = mWidth;
     height = mHeight;
 }

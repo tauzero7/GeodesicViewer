@@ -201,7 +201,7 @@ void GeodView::slot_setSachsLegs(int num) {
 
 
 void GeodView::slot_setSachsScale() {
-    mParams->opengl_sachs_scale = led_sachs_scale->text().toFloat();
+    mParams->opengl_sachs_scale = led_sachs_scale->text().toDouble();
     mOpenGL->setSachsAxes(true);
 }
 

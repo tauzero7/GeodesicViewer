@@ -442,14 +442,14 @@ typedef struct _struct_params {
 
     QColor   opengl_leg1_col1;
     QColor   opengl_leg1_col2;
-    float    opengl_leg1_freq;
+    double   opengl_leg1_freq;
     QColor   opengl_leg2_col1;
     QColor   opengl_leg2_col2;
-    float    opengl_leg2_freq;
+    double   opengl_leg2_freq;
 
     enum_sachs_system   opengl_sachs_system;
     enum_sachs_legs     opengl_sachs_legs;
-    float               opengl_sachs_scale;
+    double              opengl_sachs_scale;
 
     double   zoom_step;
 

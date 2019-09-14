@@ -472,7 +472,7 @@ void setStandardParams(struct_params* par) {
     par->opengl_emb_color     = QColor(DEF_OPENGL_EMB_COLOR);
     par->opengl_sachs_system  = enum_sachs_e1e2e3;
     par->opengl_sachs_legs    = enum_sachs_legs_right_up;
-    par->opengl_sachs_scale   = 0.3f;
+    par->opengl_sachs_scale   = 0.3;
 
     double aspect = (DEF_OPENGL_HEIGHT - DEF_DRAW2D_BOTTOM_BORDER) / (double)(DEF_OPENGL_WIDTH - DEF_DRAW2D_LEFT_BORDER);
     par->draw2d_xMin          = DEF_DRAW2D_X_INIT_MIN;

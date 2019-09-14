@@ -89,8 +89,8 @@ public:
     void        setIntrinsic(double fovy, double nearval, double farval);
     void        getIntrinsic(double &fovy, double &nearval, double &farval);
 
-    void        setSizeAndAspect(int width, int  height);
-    void        getSize(int &width, int &height);
+    void setSize(int width, int  height);
+    void getSize(int &width, int &height);
 
     void        fixRotAroundVup(double angle);
     void        fixRotAroundRight(double angle);
