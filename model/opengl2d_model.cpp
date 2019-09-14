@@ -49,7 +49,7 @@ OpenGL2dModel::OpenGL2dModel(struct_params* par, QWidget* parent)
     mDrawStyle = enum_draw_lines;
 
     // Vertices for the geodesic.
-    mVerts        = NULL;
+    mVerts        = nullptr;
     mNumVerts     = 0;
     mShowNumVerts = 0;
     mDrawType     = m4d::enum_draw_pseudocart;
@@ -99,10 +99,10 @@ OpenGL2dModel::~OpenGL2dModel() {
  *  \param  update : update gl.
  */
 void OpenGL2dModel::setPoints(m4d::enum_draw_type  dtype, bool update) {
-    if (mVerts != NULL) {
+    if (mVerts != nullptr) {
         delete [] mVerts;
     }
-    mVerts = NULL;
+    mVerts = nullptr;
     mNumVerts     = 0;
     mShowNumVerts = 0;
     mDrawType     = dtype;
@@ -190,10 +190,10 @@ void OpenGL2dModel::setPoints(m4d::enum_draw_type  dtype, bool update) {
  */
 void
 OpenGL2dModel::clearPoints() {
-    if (mVerts != NULL) {
+    if (mVerts != nullptr) {
         delete [] mVerts;
     }
-    mVerts = NULL;
+    mVerts = nullptr;
 
     mNumVerts = 0;
     mShowNumVerts = 0;
@@ -571,7 +571,7 @@ OpenGL2dModel::paintGL() {
     *   draw effective
     * ----------------------- */
     if (mDrawType == m4d::enum_draw_effpoti) {
-        if (mObject.currMetric != NULL) {
+        if (mObject.currMetric != nullptr) {
             double xstep = (mXmax - mXmin) / (double)DEF_DRAW2D_WIDTH;
             glColor3f(1, 0, 0);
             glBegin(GL_LINE_STRIP);

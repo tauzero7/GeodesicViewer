@@ -37,9 +37,9 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
-#include <QScriptEngine>
 #include <QTextEdit>
 #include <QWidget>
+#include <QJSEngine>
 
 #include <gdefs.h>
 #include <utils/myobject.h>
@@ -60,7 +60,7 @@ public:
     void    writeText(QString text);
     QString getText();
 
-    void  addObjectsToScriptEngine(QScriptEngine* engine);
+    //void  addObjectsToScriptEngine(QScriptEngine* engine);
 
 // ------------ public slots -------------
 public slots:

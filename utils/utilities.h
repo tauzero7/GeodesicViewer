@@ -1,32 +1,11 @@
-// --------------------------------------------------------------------------------
-/*
-    utilities.h
-
-  Copyright (c) 2009-2015  Thomas Mueller, Frank Grave
-
-
-   This file is part of the GeodesicViewer.
-
-   The GeodesicViewer is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   The GeodesicViewer is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with the GeodesicViewer.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-/*!  \file   utilities.h
-     \brief  Utility functions.
-
-*/
-// --------------------------------------------------------------------------------
-
+/**
+ * @file    utilities.h
+ * @author  Thomas Mueller
+ *
+ * @brief  Utility functions.
+ *
+ * This file is part of GeodesicView.
+ */
 #ifndef UTILITIES_H
 #define UTILITIES_H
 
@@ -44,8 +23,19 @@
 void  lua_reg_gvutils(lua_State *L);
 #endif // HAVE_LUA
 
+bool CopyString(const char* src, char*& dest);
 
+bool GetExePath(char*& path);
+bool GetFilePath(const char* filename, char*& path);
+
+/**
+ * @brief Split file into string tokens.
+ * @param filename : name of file
+ * @param tokens : reference of tokens build from the file
+ * @return true : success
+ */
 bool tokenizeFile(const std::string filename, std::vector<std::vector<std::string> > &tokens);
+
 int  readObjectFile(const std::string filename, std::vector<MyObject*>  &objects, bool clear = true);
 int  readObjectsFromTokens(std::vector<std::vector<std::string> > &tokens, std::vector<MyObject*>  &objects);
 

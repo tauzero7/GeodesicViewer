@@ -36,9 +36,9 @@
 #include <QComboBox>
 #include <QLabel>
 #include <QPushButton>
-#include <QScriptEngine>
 #include <QTableWidget>
 #include <QTabWidget>
+#include <QJSEngine>
 
 #include <gdefs.h>
 #include <greek.h>
@@ -72,7 +72,7 @@ public:
     void  setBoostParams(double chi, double ksi, double vel);
     void  resetBoost();
 
-    void  addObjectsToScriptEngine(QScriptEngine* engine);
+   //void  addObjectsToScriptEngine(QScriptEngine* engine);
 
 // ------------- public slots --------------
 public slots:

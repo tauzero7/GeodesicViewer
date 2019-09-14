@@ -36,9 +36,9 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QPushButton>
-#include <QScriptEngine>
 #include <QTextEdit>
 #include <QWidget>
+#include <QJSEngine>
 
 #include <gdefs.h>
 

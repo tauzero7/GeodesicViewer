@@ -1,40 +1,18 @@
-// --------------------------------------------------------------------------------
-/*
-    geodesic_view.h
-
-  Copyright (c) 2009-2015  Thomas Mueller, Frank Grave
-
-
-   This file is part of the GeodesicViewer.
-
-   The GeodesicViewer is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   The GeodesicViewer is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with the GeodesicViewer.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-/*!  \class  GeodesicView
-     \brief  Main GUI of the GeodesicViewer.
-
-*/
-// --------------------------------------------------------------------------------
-
+/**
+ * @file    geodesic_view.h
+ * @author  Thomas Mueller
+ *
+ * @brief  Main GUI of the GeodesicViewer.
+ *
+ * This file is part of GeodesicView.
+ */
 #ifndef GEODESIC_VIEW_H
 #define GEODESIC_VIEW_H
 
 #include <iostream>
 #include <cassert>
 
-
-#include <QtScript>
+#include <QJSEngine>
 #include <QMainWindow>
 #include <QMenuBar>
 #include <QStatusBar>
@@ -67,18 +45,14 @@
 #include "lua/m4dlua.h"
 #endif
 
-// ---------------------------------------------------
-//    class definition:   GeodesicView
-// ---------------------------------------------------
+/**
+ * @brief The GeodesicView class
+ */
 class GeodesicView : public QMainWindow {
     Q_OBJECT
 
-
-    // --------- public methods -----------
 public:
     static GeodesicView* getInstance() {
-       // static CGuard g;
-
         if (!m_instance) {
             m_instance = new GeodesicView();
         }
@@ -89,7 +63,6 @@ public:
     virtual QSize sizeHint() const;
 
 
-    // --------- public slots -----------
 public slots:
     void  slot_load_setting();
     void  slot_save_setting();
@@ -164,10 +137,8 @@ public slots:
     void  addObject(MyObject *obj);
     void  clearAllObjects();
 
-    // --------- protected methods -----------
 protected:
     void  init();
-    void  initElements();
     void  initGUI();
     void  initControl();
     void  initActions();
@@ -203,7 +174,6 @@ protected slots:
 public:
     OpenGL3dModel*  opengl;
 
-    // -------- private attributes --------
 private:
     GeodesicView();
     GeodesicView(const GeodesicView&);
@@ -214,9 +184,9 @@ private:
     class CGuard {
     public:
         ~CGuard() {
-            if (GeodesicView::m_instance != NULL) {
+            if (GeodesicView::m_instance != nullptr) {
                 delete GeodesicView::m_instance;
-                GeodesicView::m_instance = NULL;
+                GeodesicView::m_instance = nullptr;
             }
         }
     };
@@ -225,18 +195,12 @@ private:
 
     struct_params mParams;
 
-    /* ---- 2D/3D drawing ---- */
+    // Tab widget holding 2D and 3D rendering window
     QTabWidget*     tab_draw;
-    QWidget*        wgt_opengl;
-    //OpenGL3dModel*  opengl;
-    QWidget*        wgt_2d;
 
     OpenGL2dModel*  draw2d;
     QAction*        mActionMake3Dactive;
     QAction*        mActionMake2Dactive;
-
-    QLabel*         lab_value;
-    QLabel*         lab_step;
 
 
     /* ---- metric/integrator ---- */
@@ -249,31 +213,19 @@ private:
     QComboBox*      cob_integrator;
     QCheckBox*      chb_stepsize_controlled;
     QCheckBox*      chb_drawstyle;
-    QLabel*         lab_maxpoints;
     QLineEdit*      led_maxpoints;
-    QLabel*         lab_stepsize;
     QLineEdit*      led_stepsize;
-    QLabel*         lab_max_stepsize;
     QLineEdit*      led_max_stepsize;
-    QLabel*         lab_min_stepsize;
     QLineEdit*      led_min_stepsize;
-    QLabel*         lab_eps_abs;
     QLineEdit*      led_eps_abs;
-    QLabel*         lab_eps_rel;
     QLineEdit*      led_eps_rel;
-    QLabel*         lab_constraint_eps;
     QLineEdit*      led_constraint_eps;
-    QLabel*         lab_resize_eps;
     QLineEdit*      led_resize_eps;
-    QLabel*         lab_resize_fac;
     QLineEdit*      led_resize_fac;
     QWidget*        wgt_integrator;
 
-    QLabel*         lab_speed_of_light;
     QLineEdit*      led_speed_of_light;
-    QLabel*         lab_grav_constant;
     QLineEdit*      led_grav_constant;
-    QLabel*         lab_dielectric_perm;
     QLineEdit*      led_dielectric_perm;
     QPushButton*    pub_si_units;
     QPushButton*    pub_geom_units;
@@ -337,13 +289,12 @@ private:
     ProtDialog*     mProtDialog;
 
     /* ---- QtScript ---- */
-    QScriptEngine*  mScriptEngine;
+    //QScriptEngine*  mScriptEngine;
     QAction*        mLoadScript;
 
     /* ---- status bar ---- */
     QStatusBar*     mStatus;
     QLineEdit*      led_status;
-    QLabel*         lab_num_points;
     QLCDNumber*     lcd_num_points;
 #ifdef SHOW_CALC_TIME
     QLabel*         lab_calc_time;

@@ -24,13 +24,6 @@ M4D_LIB_DIR  = $$M4D_DIR/lib
 GSL_LIB_DIR  = $$GSL_DIR/lib
 
 
-## You should not need this...
-#DEFINES += GL_GLEXT_PROTOTYPES
-
-
-## If you have a big screen
-DEFINES += USE_BIG_SCREEN
-
 ## Shows time needed to integrate
 ## geodesic equation
 #DEFINES += SHOW_CALC_TIME
@@ -61,5 +54,5 @@ DEFINES += USE_BIG_SCREEN
 
 
 ## DO NOT CHANGE THIS LINE
-include( gviewer_m4d.pri )
+include(gviewer_m4d.pri)
 

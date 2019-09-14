@@ -1,35 +1,129 @@
-// --------------------------------------------------------------------------------
-/*
-    utilities.cpp
-
-  Copyright (c) 2009-2015  Thomas Mueller, Frank Grave
-
-
-   This file is part of the GeodesicViewer.
-
-   The GeodesicViewer is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   The GeodesicViewer is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with the GeodesicViewer.  If not, see <http://www.gnu.org/licenses/>.
-*/
-// -------------------------------------------------------------------------------
-
-#include "utilities.h"
-
-
-/*! Split file into string tokens.
- *  \param filename : name of file
- *  \param tokens : reference of tokens build from the file
- *  \return true : success
+/**
+ * @file    utilities.cpp
+ * @author  Thomas Mueller
+ *
+ * This file is part of GeodesicView.
  */
+#include "utilities.h"
+#include <unistd.h>
+
+bool CopyString(const char* src, char*& dest) {
+    if (src == nullptr) {
+        return false;
+    }
+
+    if (dest != nullptr) {
+        delete [] dest;
+    }
+    size_t len = strlen(src);
+
+    bool isOkay = true;
+#ifdef _WIN32
+    dest = new char[len + 4];
+    isOkay &= (strncpy_s(dest, len+4, src, len) == NULL);
+#else
+    dest = new char[len + 2];
+    isOkay &= (strcpy(dest, src) != nullptr);
+#endif
+    return isOkay;
+}
+
+
+bool GetExePath(char*& path) {
+    if (path != nullptr) {
+        delete [] path;
+    }
+
+#ifdef _WIN32
+    const unsigned int nSize = MAX_PATH;
+#else
+    const unsigned int nSize = 0xFFFF;
+#endif
+
+    char* cwd = new char[nSize];
+#ifdef _WIN32
+    if (::GetModuleFileNameA(NULL, cwd, nSize)
+            == ERROR_INSUFFICIENT_BUFFER) {
+        cwd[0] = 0;
+    } else {
+        if (::GetLastError() != ERROR_SUCCESS) {
+            cwd[0] = 0;
+        }
+    }
+#elif defined(__APPLE__)
+    char apath[1024];
+    uint32_t asize = sizeof(apath);
+    if (_NSGetExecutablePath(apath, &asize) == 0) {
+        realpath(apath, cwd);
+    }
+    else {
+        cwd[0] = 0;
+    }
+#else
+    char *tmp = new char[nSize];
+    sprintf(tmp, "/proc/%d/exe", getpid());
+    ssize_t size = readlink(tmp, cwd, nSize - 1);
+    if (size >= 0) {
+        cwd[size] = 0;
+    } else {
+        cwd[0] = 0;
+    }
+    delete [] tmp;
+#endif
+
+
+    size_t cwdlen = static_cast<size_t>(strlen(cwd)) + 1;
+    path = new char[cwdlen];
+
+#ifdef _WIN32
+    strcpy_s(path, cwdlen, cwd);
+#else
+    strcpy(path, cwd);
+#endif
+
+    // remove exe name
+    GetFilePath(cwd, path);
+
+    bool isOkay = true;
+    if (cwd[0] == 0) {
+        fprintf(stderr, "Cannot determine current working directory!\n");
+        isOkay = false;
+    }
+    delete [] cwd;
+    return isOkay;
+}
+
+
+bool GetFilePath(const char* filename, char*& path) {
+    std::string fname = std::string(filename);
+    std::string mpath = std::string();
+
+#ifdef _WIN32
+    size_t offset = fname.rfind("\\");
+    if (offset != std::string::npos) {
+        mpath = fname.substr(0, offset) + "\\";
+    }
+    else {
+        offset = fname.rfind("/");
+        if (offset != std::string::npos) {
+            mpath = fname.substr(0, offset) + "/";
+        }
+    }
+#else
+    size_t offset = fname.rfind("/");
+    if (offset == std::string::npos) {
+        mpath = std::string("");
+    }
+    else {
+        mpath = fname.substr(0, offset) + "/";
+    }
+#endif
+
+    CopyString(mpath.c_str(), path);
+    return true;
+}
+
+
 bool tokenizeFile(const std::string filename, std::vector<std::vector<std::string> > &tokens) {
     std::ifstream in(filename.c_str());
 

@@ -47,10 +47,10 @@
 #include <QLabel>
 #include <QLCDNumber>
 #include <QPushButton>
-#include <QScriptEngine>
 #include <QSpinBox>
 #include <QTabWidget>
 #include <QTableWidget>
+#include <QJSEngine>
 
 #include <gdefs.h>
 #include <greek.h>
@@ -99,7 +99,7 @@ public:
 
     void  setGeodLength(int num);
 
-    void  addObjectsToScriptEngine(QScriptEngine* engine);
+    //void  addObjectsToScriptEngine(QScriptEngine* engine);
 
 // ------------ public slots -------------
 public slots:

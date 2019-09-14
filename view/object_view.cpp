@@ -66,10 +66,10 @@ ObjectView::getText() {
 /*! Add object to the script engine.
  * \param engine : pointer to master script engine.
  */
-void ObjectView::addObjectsToScriptEngine(QScriptEngine* engine) {
-    QScriptValue obj = engine->newQObject(this);
-    engine->globalObject().setProperty("obj", obj);
-}
+//void ObjectView::addObjectsToScriptEngine(QScriptEngine* engine) {
+//    QScriptValue obj = engine->newQObject(this);
+//    engine->globalObject().setProperty("obj", obj);
+//}
 
 // ************************************* public slots ***********************************
 

@@ -193,10 +193,10 @@ void LoctedView::resetBoost() {
 /*! Add object to the script engine.
  * \param engine : pointer to master script engine.
  */
-void LoctedView::addObjectsToScriptEngine(QScriptEngine* engine) {
-    QScriptValue lt = engine->newQObject(this);
-    engine->globalObject().setProperty("lt", lt);
-}
+//void LoctedView::addObjectsToScriptEngine(QScriptEngine* engine) {
+//    QScriptValue lt = engine->newQObject(this);
+//    engine->globalObject().setProperty("lt", lt);
+//}
 
 // ************************************* public slots ***********************************
 /*! Set position of observer.

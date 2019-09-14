@@ -1,27 +1,9 @@
-// --------------------------------------------------------------------------------
-/*
-    geodesic_view.cpp
-
-  Copyright (c) 2009-2015  Thomas Mueller, Frank Grave
-
-
-   This file is part of the GeodesicViewer.
-
-   The GeodesicViewer is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   The GeodesicViewer is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with the GeodesicViewer.  If not, see <http://www.gnu.org/licenses/>.
-*/
-// -------------------------------------------------------------------------------
-
+/**
+ * @file    geodesic_view.cpp
+ * @author  Thomas Mueller
+ *
+ * This file is part of GeodesicView.
+ */
 #include <QGroupBox>
 #include <QMessageBox>
 #include <QScrollArea>
@@ -35,23 +17,17 @@ extern m4d::Object mObject;
 #include "lua/m4dlua_utils.h"
 #endif // HAVE_LUA
 
-GeodesicView* GeodesicView::m_instance = NULL;
+GeodesicView* GeodesicView::m_instance = nullptr;
 
-/*! Standard constructor.
- *  \param  data : pointer to data-object.
- *  \param  par : pointer to struct.
- *  \param  parent : pointer to parent widget.
- */
 GeodesicView::GeodesicView()
-    : QMainWindow(0) {
+    : QMainWindow(nullptr) {
 
     setStandardParams(&mParams);
     init();
     //tab_draw->setCurrentIndex(1);
 }
 
-/*!  Standard destructor.
- */
+
 GeodesicView::~GeodesicView() {
     if (!mPointData.empty()) {
         mPointData.clear();
@@ -69,25 +45,16 @@ GeodesicView::~GeodesicView() {
 }
 
 
-// ********************************** public methods *****************************
-/*! This property holds the recommended minimum size for the widget.
- */
-QSize
-GeodesicView::minimumSizeHint() const {
-    return QSize(DEF_GUI_WIDTH, DEF_GUI_HEIGHT);
-}
-
-/*! This property holds the recommended size for the widget.
- */
-QSize
-GeodesicView::sizeHint() const {
+QSize GeodesicView::minimumSizeHint() const {
     return QSize(DEF_GUI_WIDTH, DEF_GUI_HEIGHT);
 }
 
 
-// *********************************** public slots ******************************
-/*! Load parameter setting.
- */
+QSize GeodesicView::sizeHint() const {
+    return QSize(DEF_GUI_WIDTH, DEF_GUI_HEIGHT);
+}
+
+
 void GeodesicView::slot_load_setting() {
     QDir cdir = QDir::current();
     cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
@@ -105,8 +72,7 @@ void GeodesicView::slot_load_setting() {
     }
 }
 
-/*! Save parameter setting.
- */
+
 void GeodesicView::slot_save_setting() {
     QDir cdir = QDir::current();
     cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
@@ -123,8 +89,7 @@ void GeodesicView::slot_save_setting() {
     saveSetting(filename);
 }
 
-/*! Load view parameters.
- */
+
 void GeodesicView::slot_load_vparams() {
     QDir cdir = QDir::current();
     cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
@@ -144,8 +109,7 @@ void GeodesicView::slot_load_vparams() {
     }
 }
 
-/*! Save view parameters.
- */
+
 void GeodesicView::slot_save_vparams() {
     QDir cdir = QDir::current();
     cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
@@ -162,9 +126,7 @@ void GeodesicView::slot_save_vparams() {
     saveParamFile(filename.toStdString(), &mParams);
 }
 
-/*! Reset view parameters.
- *   See also utilities.cpp
- */
+
 void GeodesicView::slot_reset_vparams() {
     mParams.opengl_projection     = 0;
     mParams.opengl_draw3d_type    = m4d::enum_draw_pseudocart;
@@ -213,8 +175,7 @@ void GeodesicView::slot_reset_vparams() {
     calculateGeodesic();
 }
 
-/*! Save 2D image.
- */
+
 void GeodesicView::slot_save_image_2d() {
     QDir cdir = QDir::current();
     QString filename = QFileDialog::getSaveFileName(this, tr("Save 2D image"), cdir.absolutePath(), DEF_2D_FILE_FILTER);
@@ -238,8 +199,7 @@ void GeodesicView::slot_save_image_2d() {
     tab_draw->setCurrentIndex(currIdx);
 }
 
-/*! Save 3D image.
- */
+
 void GeodesicView::slot_save_image_3d() {
     QDir cdir = QDir::current();
     QString filename = QFileDialog::getSaveFileName(this, tr("Save 3D image"), cdir.absolutePath(), DEF_3D_FILE_FILTER);
@@ -263,8 +223,7 @@ void GeodesicView::slot_save_image_3d() {
     tab_draw->setCurrentIndex(currIdx);
 }
 
-/*! Load ini-, cfg-, and obj-files at once.
- */
+
 void GeodesicView::slot_load_all() {
     QDir cdir = QDir::current();
     cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
@@ -296,8 +255,7 @@ void GeodesicView::slot_load_all() {
     }
 }
 
-/*! Open protocoll dialog.
- */
+
 void GeodesicView::slot_prot_dialog() {
     QRect mg = geometry();
     QRect md = mProtDialog->geometry();
@@ -308,8 +266,7 @@ void GeodesicView::slot_prot_dialog() {
     mProtDialog->show();
 }
 
-/*! Write protocoll of the current setting.
- */
+
 void GeodesicView::slot_write_prot() {
     calculateGeodesicData();
 
@@ -411,8 +368,7 @@ void GeodesicView::slot_write_prot() {
     }
 }
 
-/*! Quit program.
- */
+
 void GeodesicView::slot_quit() {
     close();
 }
@@ -450,6 +406,7 @@ void GeodesicView::slot_run_luaScript() {
 }
 #endif // HAVE_LUA
 
+
 void GeodesicView::reset() {
     cob_metric->setCurrentIndex(0);
     slot_setCurrentMetric();
@@ -482,8 +439,7 @@ void GeodesicView::reset() {
     mObject.resetAll();
 }
 
-/*!
- */
+
 void GeodesicView::slot_reset() {
     int button = QMessageBox::question(this, "Reset", "Really reset GeodesicViewer?", QMessageBox::Cancel | QMessageBox::Ok, QMessageBox::Ok);
     if (button != QMessageBox::Ok) {
@@ -493,8 +449,7 @@ void GeodesicView::slot_reset() {
     reset();
 }
 
-/*! Show manual.
- */
+
 void GeodesicView::slot_doc() {
    //if (!mHelpDoc->isVisible()) {
    //    mHelpDoc->show();
@@ -504,14 +459,17 @@ void GeodesicView::slot_doc() {
    //}
 }
 
-/*! Show about message.
- */
+
 void GeodesicView::slot_about() {
-    QMessageBox::about(this, tr("GeodesicViewer") , tr("Copyright (c) 2009-2015, Thomas Mueller, Frank Grave\nVisualization Research Center\nUniversity of Stuttgart, Germany\n\nEmail: Thomas.Mueller@vis.uni-stuttgart.de\n\nDetails about the metrics can be found in the\n\"Catalogue of Spacetimes\"\narXiv:0904.4184 [gr-qc]"));
+    QMessageBox::about(this, tr("GeodesicViewer") ,
+        tr("GeodesicViewer was first developed by Thomas Müller and Frank Grave at "
+           "the Visualization Research Center, University of Stuttgart, Germany (2009-2015).\n\n"
+           "Current contact:\nDr. Thomas Müller\nHaus der Astronomie/Max Planck Institute for Astronomy\n69117 Heidelberg, Germany\n\n"
+           "Email: tmueller@mpia.de\n\n"
+           "Details about the metrics can be found in the\n\"Catalogue of Spacetimes\"\narXiv:0904.4184 [gr-qc]"));
 }
 
-/*! Change active drawing (2d/3d).
- */
+
 void GeodesicView::slot_changeDrawActive() {
     QObject* obj = sender();
     if (obj->objectName() == tr("action3dactive")) {
@@ -524,8 +482,7 @@ void GeodesicView::slot_changeDrawActive() {
     }
 }
 
-/*! Start/stop animation.
- */
+
 void GeodesicView::slot_animate() {
     if (drw_view->isAnimated()) {
         drw_view->animate(false);
@@ -534,8 +491,7 @@ void GeodesicView::slot_animate() {
     }
 }
 
-/*! Load object file.
- */
+
 void GeodesicView::slot_load_objects() {
     QDir cdir = QDir::current();
     cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
@@ -548,8 +504,7 @@ void GeodesicView::slot_load_objects() {
     loadObjects(filename);
 }
 
-/*! Append object file.
- */
+
 void GeodesicView::slot_append_objects() {
     QDir cdir = QDir::current();
     cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
@@ -574,8 +529,7 @@ void GeodesicView::slot_append_objects() {
     }
 }
 
-/*! Save object file.
- */
+
 void GeodesicView::slot_save_objects() {
     if (mObjects.empty()) {
         return;
@@ -596,8 +550,7 @@ void GeodesicView::slot_save_objects() {
     saveObjects(filename);
 }
 
-/*! Show object file.
- */
+
 void GeodesicView::slot_show_objects() {
     //std::cerr << "\n\n\n\n-----------------------GeodesicView::slot_show_objects: " << mObjects.size() <<  "\n";
     if (mObjectView->isVisible()) {
@@ -615,8 +568,7 @@ void GeodesicView::slot_show_objects() {
     }
 }
 
-/*! Objects changed.
- */
+
 void GeodesicView::slot_objChanged() {
     QString text = mObjectView->getText();
     std::vector<std::vector<std::string> > tokens;
@@ -653,8 +605,7 @@ void GeodesicView::slot_objChanged() {
     }
 }
 
-/*! Show report of metric.
- */
+
 void GeodesicView::slot_show_report() {
     std::string text;
     mObject.makeReport(text);
@@ -664,8 +615,7 @@ void GeodesicView::slot_show_report() {
     mReportText->show();
 }
 
-/*! Save report of metric to file.
- */
+
 void GeodesicView::slot_save_report() {
     QDir cdir = QDir::current();
     cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
@@ -682,8 +632,7 @@ void GeodesicView::slot_save_report() {
     saveReport(filename);
 }
 
-/*! Set current metric.
- */
+
 void GeodesicView::slot_setCurrentMetric() {
     int index = cob_metric->currentIndex();
     if (!setMetric(m4d::enum_metric(index))) {
@@ -719,7 +668,7 @@ void GeodesicView::slot_setCurrentMetric() {
     cob_integrator->setCurrentIndex(0);
     setGeodSolver(m4d::enum_integrator(0));
 
-    if (mObject.geodSolver != NULL) {
+    if (mObject.geodSolver != nullptr) {
         mObject.geodSolver->setMetric(mObject.currMetric);
         calculateGeodesic();
     }
@@ -728,8 +677,7 @@ void GeodesicView::slot_setCurrentMetric() {
     led_grav_constant->setText(QString::number(1.0));
 }
 
-/*! Metric parameters have changed.
- */
+
 void GeodesicView::slot_metricParamChanged() {
     QObject* obj = sender();
     DoubleEdit* led = reinterpret_cast<DoubleEdit*>(obj);
@@ -739,7 +687,7 @@ void GeodesicView::slot_metricParamChanged() {
 
     QString paramName = QString(obj->objectName()).replace(QString(".value"), QString(""));
 
-    if (mObject.currMetric != NULL) {
+    if (mObject.currMetric != nullptr) {
         mObject.currMetric->setParam(paramName.toStdString().c_str(), value);
         calculateGeodesic();
 
@@ -749,16 +697,14 @@ void GeodesicView::slot_metricParamChanged() {
     }
 }
 
-/*! Set geodesic solver.
- */
+
 void GeodesicView::slot_setGeodSolver() {
     int index = cob_integrator->currentIndex();
     setGeodSolver(m4d::enum_integrator(index));
     calculateGeodesic();
 }
 
-/*! Set maximum number of points.
- */
+
 void GeodesicView::slot_setMaxNumPoints() {
     mObject.maxNumPoints = led_maxpoints->text().toInt();
     if (mObject.maxNumPoints <= 10) {
@@ -768,10 +714,9 @@ void GeodesicView::slot_setMaxNumPoints() {
     calculateGeodesic();
 }
 
-/*! Set stepsize control for geodesic solver.
- */
+
 void GeodesicView::slot_setStepsizeControl() {
-    if (mObject.geodSolver == NULL) {
+    if (mObject.geodSolver == nullptr) {
         return;
     }
     if (chb_stepsize_controlled->checkState() == Qt::Checked) {
@@ -784,8 +729,7 @@ void GeodesicView::slot_setStepsizeControl() {
     calculateGeodesic();
 }
 
-/*! Set integrator parameters.
- */
+
 void GeodesicView::slot_setIntegratorParams() {
     mObject.stepsize = led_stepsize->text().toDouble();
     mObject.epsAbs   = led_eps_abs->text().toDouble();
@@ -796,8 +740,7 @@ void GeodesicView::slot_setIntegratorParams() {
     calculateGeodesic();
 }
 
-/*! Toggle draw with lines.
- */
+
 void GeodesicView::slot_setDrawWithLines() {
     if (chb_drawstyle->checkState() == Qt::Checked) {
         draw2d->setStyle(enum_draw_lines);
@@ -809,16 +752,14 @@ void GeodesicView::slot_setDrawWithLines() {
     calculateGeodesic();
 }
 
-/*! Set constraint epsilon.
- */
+
 void GeodesicView::slot_setConstraintEps() {
     double eps = led_constraint_eps->text().toDouble();
     mObject.geodSolver->setConstrEps(eps);
     calculateGeodesic();
 }
 
-/*! Set resize epsilon.
- */
+
 void GeodesicView::slot_setResize() {
     double ce  = led_constraint_eps->text().toDouble();
     double eps = led_resize_eps->text().toDouble();
@@ -836,22 +777,19 @@ void GeodesicView::slot_setResize() {
     calculateGeodesic();
 }
 
-/*! Set maximum step size.
- */
+
 void GeodesicView::slot_setMaxStepSize() {
     mObject.geodSolver->setMaxAffineParamStep(led_max_stepsize->text().toDouble());
     calculateGeodesic();
 }
 
-/*! Set maximum step size.
- */
+
 void GeodesicView::slot_setMinStepSize() {
     mObject.geodSolver->setMinAffineParamStep(led_min_stepsize->text().toDouble());
     calculateGeodesic();
 }
 
-/*! Set SI units.
- */
+
 void GeodesicView::slot_setSIunits() {
     led_speed_of_light->setText(QString::number(M4D_SPEED_OF_LIGHT, 'f', 3));
     led_grav_constant->setText(QString::number(M4D_GRAV_CONST));
@@ -859,8 +797,7 @@ void GeodesicView::slot_setSIunits() {
     setUnits(M4D_SPEED_OF_LIGHT, M4D_GRAV_CONST, M4D_DIELECTRIC_PERM);
 }
 
-/*! Set geometric units.
- */
+
 void GeodesicView::slot_setGeomUnits() {
     led_speed_of_light->setText(QString::number(1.0));
     led_grav_constant->setText(QString::number(1.0));
@@ -868,8 +805,7 @@ void GeodesicView::slot_setGeomUnits() {
     setUnits(1.0, 1.0, 1.0);
 }
 
-/*! Set units
- */
+
 void GeodesicView::slot_setUnits() {
     double sol  = led_speed_of_light->text().toDouble();
     double grav = led_grav_constant->text().toDouble();
@@ -877,14 +813,12 @@ void GeodesicView::slot_setUnits() {
     setUnits(sol, grav, dipm);
 }
 
-/*! Calculate geodesic.
- */
+
 void GeodesicView::slot_calcGeodesic() {
     calculateGeodesic();
 }
 
-/*! Set OpenGL colors for line, background, and embedding diagram.
- */
+
 void GeodesicView::slot_setOpenGLcolors() {
     QColor bgcol, fgcol, embcol;
 
@@ -914,33 +848,28 @@ void GeodesicView::execScript(QString filename) {
     QString contents = stream.readAll();
     scriptFile.close();
 
-    QScriptValue result = mScriptEngine->evaluate(contents, filename);
-    if (result.isError()) {
-        QMessageBox::critical(0, "Executing QtScript",
-                              QString::fromLatin1("%0:%1: %2")
-                              .arg(filename)
-                              .arg(result.property("lineNumber").toInt32())
-                              .arg(result.toString()));
-    }
+   // QScriptValue result = mScriptEngine->evaluate(contents, filename);
+   // if (result.isError()) {
+   //     QMessageBox::critical(0, "Executing QtScript",
+   //                           QString::fromLatin1("%0:%1: %2")
+   //                           .arg(filename)
+   //                           .arg(result.property("lineNumber").toInt32())
+   //                           .arg(result.toString()));
+   // }
 }
 
 void GeodesicView::setMetric(QString name) {
     int index = mObject.metricDB.getMetricNr(name.toStdString().c_str());
-    if (index == (int)m4d::enum_metric_unknown) {
+    if (index == static_cast<int>(m4d::enum_metric_unknown)) {
         return;
     }
     cob_metric->setCurrentIndex(index);
     slot_setCurrentMetric();
 }
 
-/*! Set metric parameter.
- *
- *  Use this function only from a script.
- * \param num : parameter number.
- * \param val : parameter value.
- */
+
 void GeodesicView::setMetricParam(int num, double val) {
-    if (mObject.currMetric != NULL) {
+    if (mObject.currMetric != nullptr) {
         int numParams = mObject.currMetric->getNumParams();
         if (num >= 0 && num < numParams) {
             DoubleEdit* led_value = reinterpret_cast<DoubleEdit*>(tbw_metric_params->cellWidget(num, 1));
@@ -955,14 +884,9 @@ void GeodesicView::setMetricParam(int num, double val) {
     }
 }
 
-/*! Set metric parameter.
- *
- *  Use this function only from a script.
- * \param name : parameter name.
- * \param val : parameter value.
- */
+
 void GeodesicView::setMetricParam(QString name, double val) {
-    if (mObject.currMetric != NULL) {
+    if (mObject.currMetric != nullptr) {
         int paramNum = mObject.currMetric->getParamNum(name.toStdString().c_str());
         if (paramNum < 0) {
             fprintf(stderr, "GeodesicView::setMetricParam() ... parameter name \"%s\" does not exist for the current metric!\n", name.toStdString().c_str());
@@ -979,11 +903,7 @@ void GeodesicView::setMetricParam(QString name, double val) {
     }
 }
 
-/*! Set geodesic solver
- *
- *  Use this function only from a script.
- * \param name : solver nickname.
- */
+
 void GeodesicView::setSolver(QString name) {
     unsigned int num = 0;
     while (num < m4d::NUM_GEOD_SOLVERS)     {
@@ -996,12 +916,7 @@ void GeodesicView::setSolver(QString name) {
     }
 }
 
-/*! Set geodesic solver parameters
- *
- *  Use this function only from a script.
- * \param name : parameter name.
- * \param val : parameter value.
- */
+
 void GeodesicView::setSolverParam(QString name, double val) {
     if (name.compare("max points") == 0) {
         led_maxpoints->setText(QString::number(val));
@@ -1055,12 +970,8 @@ void GeodesicView::clearAllObjects() {
     draw2d->clearAllObjects();
 }
 
-// ********************************* protected methods *****************************
 
-/*! Initialize view.
- */
-void GeodesicView::init() {
-    initElements();
+void GeodesicView::init() {    
     initGUI();
 
     initControl();
@@ -1093,257 +1004,7 @@ void GeodesicView::init() {
 #endif
 }
 
-/*! Initialize view elements.
- */
-void GeodesicView::initElements() {
-    lab_value = new QLabel("value");
-    lab_step  = new QLabel("step");
 
-    /* ---------------------------------
-    *    drawing
-    * --------------------------------- */
-    opengl = new OpenGL3dModel(&mParams);
-    wgt_opengl = new QWidget();
-    QGridLayout* layout_opengl = new QGridLayout();
-    layout_opengl -> addWidget(opengl, 0, 0);
-    wgt_opengl->setLayout(layout_opengl);
-
-    draw2d = new OpenGL2dModel(&mParams);
-    wgt_2d = new QWidget();
-    QGridLayout* layout_2d = new QGridLayout();
-    layout_2d -> addWidget(draw2d, 0, 0);
-    wgt_2d->setLayout(layout_2d);
-
-    tab_draw = new QTabWidget();
-    tab_draw -> addTab(wgt_opengl, tr("OpenGL 3D"));
-    tab_draw -> addTab(wgt_2d, tr("Draw 2D"));
-
-
-    /* ---------------------------------
-    *    metric
-    * --------------------------------- */
-    cob_metric = new QComboBox();
-    for (int i = 0; i < mObject.metricDB.getNumMetrics(); i++) {
-        cob_metric->addItem(QString(mObject.metricDB.getMetricName(m4d::enum_metric(i))));
-    }
-    //cob_metric->setMaximumWidth(420);
-
-    tbw_metric_params = new QTableWidget(1, 3);
-    QStringList tbw_metric_headers = QStringList() << "Name" << "Value" << "Step";
-    tbw_metric_params->setHorizontalHeaderLabels(tbw_metric_headers);
-    tbw_metric_params->setAlternatingRowColors(true);
-    tbw_metric_params->setMaximumWidth(430);
-    wgt_metric = new QWidget();
-
-    QGridLayout*  layout_metric = new QGridLayout();
-    layout_metric -> addWidget(cob_metric, 0, 0);
-    layout_metric -> addWidget(tbw_metric_params, 1, 0);
-    wgt_metric->setLayout(layout_metric);
-
-
-    /* ---------------------------------
-    *    integrator
-    * --------------------------------- */
-    cob_integrator = new QComboBox();
-    //cob_integrator->setMinimumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
-    for (unsigned int i = 0; i < m4d::NUM_GEOD_SOLVERS; i++) {
-        cob_integrator->addItem(QString(m4d::stl_solver_names[i]));
-    }
-
-    chb_stepsize_controlled = new QCheckBox("stepsize controlled");
-    chb_stepsize_controlled->setCheckState(Qt::Unchecked);
-    chb_stepsize_controlled->setEnabled(false);
-
-    chb_drawstyle = new QCheckBox("draw with lines");
-    chb_drawstyle->setCheckState(Qt::Checked);
-
-    lab_maxpoints = new QLabel("max points");
-    led_maxpoints = new QLineEdit(QString::number(DEF_MAX_NUM_POINTS));
-    led_maxpoints->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
-    led_maxpoints->setValidator(new QIntValidator(led_maxpoints));
-
-    lab_stepsize  = new QLabel("step size");
-    led_stepsize  = new QLineEdit(QString::number(mObject.stepsize));
-    led_stepsize->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
-    led_stepsize->setValidator(new QDoubleValidator(led_stepsize));
-
-    lab_max_stepsize = new QLabel("max step");
-    led_max_stepsize = new QLineEdit(QString::number(mObject.max_stepsize));
-    led_max_stepsize->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
-    led_max_stepsize->setValidator(new QDoubleValidator(led_max_stepsize));
-    led_max_stepsize->setEnabled(false);
-
-    lab_min_stepsize = new QLabel("min step");
-    led_min_stepsize = new QLineEdit(QString::number(mObject.min_stepsize));
-    led_min_stepsize->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
-    led_min_stepsize->setValidator(new QDoubleValidator(led_min_stepsize));
-    led_min_stepsize->setEnabled(false);
-
-    lab_eps_abs   = new QLabel("eps abs");
-    led_eps_abs   = new QLineEdit(QString::number(mObject.epsAbs));
-    led_eps_abs->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
-    led_eps_abs->setValidator(new QDoubleValidator(led_eps_abs));
-    led_eps_abs->setEnabled(false);
-
-    lab_eps_rel   = new QLabel("eps rel");
-    led_eps_rel   = new QLineEdit(QString::number(mObject.epsRel));
-    led_eps_rel->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
-    led_eps_rel->setValidator(new QDoubleValidator(led_eps_rel));
-    led_eps_rel->setEnabled(false);
-
-    lab_constraint_eps = new QLabel("constr. eps");
-    led_constraint_eps = new QLineEdit(QString::number(DEF_CONSTRAINT_EPSILON));
-    led_constraint_eps->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
-    led_constraint_eps->setValidator(new QDoubleValidator(led_constraint_eps));
-
-    lab_resize_eps = new QLabel("resize eps");
-    led_resize_eps = new QLineEdit(QString::number(DEF_RESIZE_EPSILON));
-    led_resize_eps->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
-    led_resize_eps->setValidator(new QDoubleValidator(led_resize_eps));
-
-    lab_resize_fac = new QLabel("resize fac");
-    led_resize_fac = new QLineEdit(QString::number(DEF_RESIZE_FACTOR));
-    led_resize_fac->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
-    led_resize_fac->setValidator(new QDoubleValidator(led_resize_fac));
-    led_resize_fac->setEnabled(false);
-
-    wgt_integrator = new QWidget();
-
-    QGridLayout*  layout_integrator = new QGridLayout();
-    layout_integrator -> addWidget(cob_integrator, 0, 0, 1, 4);
-    layout_integrator -> addWidget(chb_stepsize_controlled, 1, 2, 1, 2);
-    layout_integrator -> addWidget(chb_drawstyle, 1, 0, 1, 2);
-    layout_integrator -> addWidget(lab_maxpoints, 2, 0);
-    layout_integrator -> addWidget(led_maxpoints, 2, 1);
-    layout_integrator -> addWidget(lab_stepsize,  3, 0);
-    layout_integrator -> addWidget(led_stepsize , 3, 1);
-    layout_integrator -> addWidget(lab_max_stepsize, 4, 2);
-    layout_integrator -> addWidget(led_max_stepsize, 4, 3);
-    //  layout_integrator -> addWidget( lab_min_stepsize, 4, 2 );
-    //  layout_integrator -> addWidget( led_min_stepsize, 4, 3 );
-
-    layout_integrator -> addWidget(lab_eps_abs,  2, 2);
-    layout_integrator -> addWidget(led_eps_abs , 2, 3);
-    layout_integrator -> addWidget(lab_eps_rel,  3, 2);
-    layout_integrator -> addWidget(led_eps_rel , 3, 3);
-    layout_integrator -> addWidget(lab_constraint_eps, 4, 0);
-    layout_integrator -> addWidget(led_constraint_eps, 4, 1);
-    /*
-    layout_integrator -> addWidget( lab_resize_eps, 6, 0 );
-    layout_integrator -> addWidget( led_resize_eps, 6, 1 );
-    layout_integrator -> addWidget( lab_resize_fac, 6, 2 );
-    layout_integrator -> addWidget( led_resize_fac, 6, 3 );
-    */
-    wgt_integrator->setLayout(layout_integrator);
-
-
-    /* ---------------------------------
-    *    constants
-    * --------------------------------- */
-    lab_speed_of_light = new QLabel("SpeedOfLight");
-    led_speed_of_light = new QLineEdit(QString::number(1.0));
-    led_speed_of_light->setValidator(new QDoubleValidator(led_speed_of_light));
-    led_speed_of_light->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
-    lab_grav_constant  = new QLabel("GravConstant");
-    led_grav_constant  = new QLineEdit(QString::number(1.0));
-    led_grav_constant->setValidator(new QDoubleValidator(led_grav_constant));
-    led_grav_constant->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
-    lab_dielectric_perm = new QLabel("DielectricPerm");
-    led_dielectric_perm = new QLineEdit(QString::number(1.0));
-    led_dielectric_perm->setValidator(new QDoubleValidator(led_dielectric_perm));
-    led_dielectric_perm->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
-
-    pub_si_units  = new QPushButton("SI units");
-    pub_si_units->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
-    pub_geom_units = new QPushButton("Geom units");
-    pub_geom_units->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
-    wgt_constants = new QWidget();
-
-    QGridLayout* layout_constants = new QGridLayout();
-    layout_constants -> addWidget(lab_speed_of_light, 0, 0);
-    layout_constants -> addWidget(led_speed_of_light, 0, 1);
-    layout_constants -> addWidget(lab_grav_constant,  1, 0);
-    layout_constants -> addWidget(led_grav_constant,  1, 1);
-    layout_constants -> addWidget(lab_dielectric_perm,  2, 0);
-    layout_constants -> addWidget(led_dielectric_perm,  2, 1);
-    layout_constants -> addWidget(pub_si_units,       3, 1);
-    layout_constants -> addWidget(pub_geom_units,     4, 1);
-    wgt_constants->setLayout(layout_constants);
-
-
-    /* ---------------------------------
-    *    tab:  metric / integrator
-    * --------------------------------- */
-    tab_metricInt = new QTabWidget;
-    tab_metricInt -> addTab(wgt_metric, tr("Metric"));
-    tab_metricInt -> addTab(wgt_integrator, tr("Integrator"));
-    tab_metricInt -> addTab(wgt_constants, tr("Constants"));
-    tab_metricInt->setMaximumHeight(220);
-    tab_metricInt->setMinimumWidth(DEF_TOOLS_WIDTH);
-    tab_metricInt->setMaximumWidth(DEF_TOOLS_WIDTH);
-
-
-    /* ---------------------------------
-    *    local tetrad
-    * --------------------------------- */
-    lct_view = new LoctedView();
-
-
-    /* ---------------------------------
-    *    geodesic
-    * --------------------------------- */
-    mOglJacobi = new OpenGLJacobiModel(&mParams);
-    geo_view = new GeodView(&mParams, opengl, mOglJacobi);
-#ifdef WIN32  //Warum das hier nötig unter Windows ist weiß ich nicht so recht, aber so wird das CompassDial richtig dargestellt.
-    geo_view->setMinimumWidth(530);
-#endif
-
-    /* ---------------------------------
-    *    draw handling
-    * --------------------------------- */
-    drw_view = new DrawView(opengl, draw2d, mOglJacobi, &mParams);
-
-
-    mObjectView = new ObjectView;
-    mReportText = new ReportDialog();
-    mProtDialog = new ProtDialog;
-
-
-    /* ---------------------------------
-    *    status bar
-    * --------------------------------- */
-#ifdef SHOW_CALC_TIME
-    lab_calc_time = new QLabel("calc time");
-    lcd_calc_time = new QLCDNumber();
-    lcd_calc_time->setSegmentStyle(QLCDNumber::Filled);
-    lcd_calc_time->display(0);
-#endif
-
-    lab_num_points = new QLabel("# points");
-    lcd_num_points = new QLCDNumber();
-    //lcd_num_points->setDigitCount(6);
-    lcd_num_points->setSegmentStyle(QLCDNumber::Filled);
-    lcd_num_points->display(0);
-
-
-    led_status = new QLineEdit();
-    led_status->setEnabled(false);
-    led_status->setMaximumWidth(400);
-
-    mStatus = new QStatusBar();
-#ifdef SHOW_CALC_TIME
-    mStatus->addPermanentWidget(lab_calc_time);
-    mStatus->addPermanentWidget(lcd_calc_time);
-#endif
-    mStatus->addPermanentWidget(lab_num_points);
-    mStatus->addPermanentWidget(lcd_num_points);
-    mStatus->addPermanentWidget(led_status);
-
-    //mHelpDoc = new DocView();
-}
-
-/*! Initialize actions.
- */
 void GeodesicView::initActions() {
     /* ------------------
     *  File actions
@@ -1502,8 +1163,7 @@ void GeodesicView::initActions() {
     connect(mLoadScript, SIGNAL(triggered()), this, SLOT(slot_executeScript()));
 }
 
-/*! Initialize menu bar.
- */
+
 void GeodesicView::initMenus() {
     /* ---- File menu ---- */
     mFileMenu = menuBar() -> addMenu("&File");
@@ -1549,25 +1209,23 @@ void GeodesicView::initMenus() {
     mHelpMenu -> addAction(mActionAbout);
 }
 
-/*! Initialize scripting.
-  */
+
 void GeodesicView::initScripting() {
-    mScriptEngine = new QScriptEngine();
-
-    QScriptValue gv = mScriptEngine->newQObject(this);
-    mScriptEngine->globalObject().setProperty("gv", gv);
-
-    QScriptValue draw2dHandle = mScriptEngine->newQObject(draw2d);
-    mScriptEngine->globalObject().setProperty("view2d", draw2dHandle);
-
-    lct_view->addObjectsToScriptEngine(mScriptEngine);
-    geo_view->addObjectsToScriptEngine(mScriptEngine);
-    drw_view->addObjectsToScriptEngine(mScriptEngine);
-    mObjectView->addObjectsToScriptEngine(mScriptEngine);
+  //  mScriptEngine = new QScriptEngine();
+  //
+  //  QScriptValue gv = mScriptEngine->newQObject(this);
+  //  mScriptEngine->globalObject().setProperty("gv", gv);
+  //
+  //  QScriptValue draw2dHandle = mScriptEngine->newQObject(draw2d);
+  //  mScriptEngine->globalObject().setProperty("view2d", draw2dHandle);
+  //
+  //  lct_view->addObjectsToScriptEngine(mScriptEngine);
+  //  geo_view->addObjectsToScriptEngine(mScriptEngine);
+  //  drw_view->addObjectsToScriptEngine(mScriptEngine);
+  //  mObjectView->addObjectsToScriptEngine(mScriptEngine);
 }
 
-/*! Initialize status tips.
- */
+
 void GeodesicView::initStatusTips() {
 #ifdef SHOW_STATUS_TIPS
     cob_metric         -> setStatusTip(tr("Select a space-time metric."));
@@ -1582,24 +1240,181 @@ void GeodesicView::initStatusTips() {
 #endif
 }
 
-/*! Construct graphical user interface.
- */
+
 void GeodesicView::initGUI() {
-    QGridLayout*  layout_complete = new QGridLayout();
+    // ---------------------------------
+    //   drawing
+    // ---------------------------------
+    opengl = new OpenGL3dModel(&mParams);
+    QFrame* wgt_opengl = new QFrame();
+    QGridLayout* layout_opengl = new QGridLayout();
+    layout_opengl -> addWidget(opengl, 0, 0);
+    wgt_opengl->setLayout(layout_opengl);
 
+    draw2d = new OpenGL2dModel(&mParams);
+    QFrame* wgt_2d = new QFrame();
+    QGridLayout* layout_2d = new QGridLayout();
+    layout_2d -> addWidget(draw2d, 0, 0);
+    wgt_2d->setLayout(layout_2d);
 
-    QScrollArea*  scr_area = new QScrollArea();
-    scr_area->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    scr_area->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    QFrame*       frame    = new QFrame();
-    frame->setContentsMargins(0, 0, 0, 0);
-    QVBoxLayout*  layout_frame = new QVBoxLayout();
-    layout_frame->setAlignment(Qt::AlignRight);
+    tab_draw = new QTabWidget();
+    tab_draw->addTab(wgt_opengl, tr("OpenGL 3D"));
+    tab_draw->addTab(wgt_2d, tr("Draw 2D"));
+
 
 
     /* ---------------------------------
     *    metric/integrator
     * --------------------------------- */
+    cob_metric = new QComboBox();
+    for (int i = 0; i < mObject.metricDB.getNumMetrics(); i++) {
+        cob_metric->addItem(QString(mObject.metricDB.getMetricName(m4d::enum_metric(i))));
+    }
+    //cob_metric->setMaximumWidth(420);
+
+    tbw_metric_params = new QTableWidget(1, 3);
+    QStringList tbw_metric_headers = QStringList() << "Name" << "Value" << "Step";
+    tbw_metric_params->setHorizontalHeaderLabels(tbw_metric_headers);
+    tbw_metric_params->setAlternatingRowColors(true);
+    tbw_metric_params->setMaximumWidth(430);
+    wgt_metric = new QWidget();
+
+    QGridLayout*  layout_metric = new QGridLayout();
+    layout_metric -> addWidget(cob_metric, 0, 0);
+    layout_metric -> addWidget(tbw_metric_params, 1, 0);
+    wgt_metric->setLayout(layout_metric);
+
+
+    cob_integrator = new QComboBox();
+    //cob_integrator->setMinimumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
+    for (unsigned int i = 0; i < m4d::NUM_GEOD_SOLVERS; i++) {
+        cob_integrator->addItem(QString(m4d::stl_solver_names[i]));
+    }
+
+    chb_stepsize_controlled = new QCheckBox("stepsize controlled");
+    chb_stepsize_controlled->setCheckState(Qt::Unchecked);
+    chb_stepsize_controlled->setEnabled(false);
+
+    chb_drawstyle = new QCheckBox("draw with lines");
+    chb_drawstyle->setCheckState(Qt::Checked);
+
+    QLabel* lab_maxpoints = new QLabel("max points");
+    led_maxpoints = new QLineEdit(QString::number(DEF_MAX_NUM_POINTS));
+    led_maxpoints->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
+    led_maxpoints->setValidator(new QIntValidator(led_maxpoints));
+
+    QLabel* lab_stepsize  = new QLabel("step size");
+    led_stepsize  = new QLineEdit(QString::number(mObject.stepsize));
+    led_stepsize->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
+    led_stepsize->setValidator(new QDoubleValidator(led_stepsize));
+
+    QLabel* lab_max_stepsize = new QLabel("max step");
+    led_max_stepsize = new QLineEdit(QString::number(mObject.max_stepsize));
+    led_max_stepsize->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
+    led_max_stepsize->setValidator(new QDoubleValidator(led_max_stepsize));
+    led_max_stepsize->setEnabled(false);
+
+    QLabel* lab_min_stepsize = new QLabel("min step");
+    led_min_stepsize = new QLineEdit(QString::number(mObject.min_stepsize));
+    led_min_stepsize->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
+    led_min_stepsize->setValidator(new QDoubleValidator(led_min_stepsize));
+    led_min_stepsize->setEnabled(false);
+
+    QLabel* lab_eps_abs   = new QLabel("eps abs");
+    led_eps_abs   = new QLineEdit(QString::number(mObject.epsAbs));
+    led_eps_abs->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
+    led_eps_abs->setValidator(new QDoubleValidator(led_eps_abs));
+    led_eps_abs->setEnabled(false);
+
+    QLabel* lab_eps_rel   = new QLabel("eps rel");
+    led_eps_rel   = new QLineEdit(QString::number(mObject.epsRel));
+    led_eps_rel->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
+    led_eps_rel->setValidator(new QDoubleValidator(led_eps_rel));
+    led_eps_rel->setEnabled(false);
+
+    QLabel* lab_constraint_eps = new QLabel("constr. eps");
+    led_constraint_eps = new QLineEdit(QString::number(DEF_CONSTRAINT_EPSILON));
+    led_constraint_eps->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
+    led_constraint_eps->setValidator(new QDoubleValidator(led_constraint_eps));
+
+    QLabel* lab_resize_eps = new QLabel("resize eps");
+    led_resize_eps = new QLineEdit(QString::number(DEF_RESIZE_EPSILON));
+    led_resize_eps->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
+    led_resize_eps->setValidator(new QDoubleValidator(led_resize_eps));
+
+    QLabel* lab_resize_fac = new QLabel("resize fac");
+    led_resize_fac = new QLineEdit(QString::number(DEF_RESIZE_FACTOR));
+    led_resize_fac->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
+    led_resize_fac->setValidator(new QDoubleValidator(led_resize_fac));
+    led_resize_fac->setEnabled(false);
+
+    wgt_integrator = new QWidget();
+
+    QGridLayout*  layout_integrator = new QGridLayout();
+    layout_integrator -> addWidget(cob_integrator, 0, 0, 1, 4);
+    layout_integrator -> addWidget(chb_stepsize_controlled, 1, 2, 1, 2);
+    layout_integrator -> addWidget(chb_drawstyle, 1, 0, 1, 2);
+    layout_integrator -> addWidget(lab_maxpoints, 2, 0);
+    layout_integrator -> addWidget(led_maxpoints, 2, 1);
+    layout_integrator -> addWidget(lab_stepsize,  3, 0);
+    layout_integrator -> addWidget(led_stepsize , 3, 1);
+    layout_integrator -> addWidget(lab_max_stepsize, 4, 2);
+    layout_integrator -> addWidget(led_max_stepsize, 4, 3);
+    //  layout_integrator -> addWidget( lab_min_stepsize, 4, 2 );
+    //  layout_integrator -> addWidget( led_min_stepsize, 4, 3 );
+
+    layout_integrator -> addWidget(lab_eps_abs,  2, 2);
+    layout_integrator -> addWidget(led_eps_abs , 2, 3);
+    layout_integrator -> addWidget(lab_eps_rel,  3, 2);
+    layout_integrator -> addWidget(led_eps_rel , 3, 3);
+    layout_integrator -> addWidget(lab_constraint_eps, 4, 0);
+    layout_integrator -> addWidget(led_constraint_eps, 4, 1);
+    /*
+    layout_integrator -> addWidget( lab_resize_eps, 6, 0 );
+    layout_integrator -> addWidget( led_resize_eps, 6, 1 );
+    layout_integrator -> addWidget( lab_resize_fac, 6, 2 );
+    layout_integrator -> addWidget( led_resize_fac, 6, 3 );
+    */
+    wgt_integrator->setLayout(layout_integrator);
+
+    QLabel* lab_speed_of_light = new QLabel("SpeedOfLight");
+    led_speed_of_light = new QLineEdit(QString::number(1.0));
+    led_speed_of_light->setValidator(new QDoubleValidator(led_speed_of_light));
+    led_speed_of_light->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
+    QLabel* lab_grav_constant  = new QLabel("GravConstant");
+    led_grav_constant  = new QLineEdit(QString::number(1.0));
+    led_grav_constant->setValidator(new QDoubleValidator(led_grav_constant));
+    led_grav_constant->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
+    QLabel* lab_dielectric_perm = new QLabel("DielectricPerm");
+    led_dielectric_perm = new QLineEdit(QString::number(1.0));
+    led_dielectric_perm->setValidator(new QDoubleValidator(led_dielectric_perm));
+    led_dielectric_perm->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
+
+    pub_si_units  = new QPushButton("SI units");
+    pub_si_units->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
+    pub_geom_units = new QPushButton("Geom units");
+    pub_geom_units->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
+    wgt_constants = new QWidget();
+
+    QGridLayout* layout_constants = new QGridLayout();
+    layout_constants -> addWidget(lab_speed_of_light, 0, 0);
+    layout_constants -> addWidget(led_speed_of_light, 0, 1);
+    layout_constants -> addWidget(lab_grav_constant,  1, 0);
+    layout_constants -> addWidget(led_grav_constant,  1, 1);
+    layout_constants -> addWidget(lab_dielectric_perm,  2, 0);
+    layout_constants -> addWidget(led_dielectric_perm,  2, 1);
+    layout_constants -> addWidget(pub_si_units,       3, 1);
+    layout_constants -> addWidget(pub_geom_units,     4, 1);
+    wgt_constants->setLayout(layout_constants);
+
+    tab_metricInt = new QTabWidget;
+    tab_metricInt -> addTab(wgt_metric, tr("Metric"));
+    tab_metricInt -> addTab(wgt_integrator, tr("Integrator"));
+    tab_metricInt -> addTab(wgt_constants, tr("Constants"));
+    tab_metricInt->setMaximumHeight(220);
+    tab_metricInt->setMinimumWidth(DEF_TOOLS_WIDTH);
+    tab_metricInt->setMaximumWidth(DEF_TOOLS_WIDTH);
+
     QGroupBox* grb_metricInt = new QGroupBox("Metric/Integrator/Constants");
     grb_metricInt->setMinimumWidth(DEF_GROUPBOX_WIDTH);
     grb_metricInt->setMaximumWidth(DEF_GROUPBOX_WIDTH);
@@ -1608,34 +1423,101 @@ void GeodesicView::initGUI() {
     grb_metricInt->setLayout(layout_metricInt);
 
 
+    // ---------------------------
+    //  local tetrad view
+    // ---------------------------
+    lct_view = new LoctedView();
+
+
+
     /* ---------------------------------
-    *    layout_frame
+    *    geodesic
     * --------------------------------- */
+    mOglJacobi = new OpenGLJacobiModel(&mParams);
+    geo_view = new GeodView(&mParams, opengl, mOglJacobi);
+#ifdef WIN32  //Warum das hier nötig unter Windows ist weiß ich nicht so recht, aber so wird das CompassDial richtig dargestellt.
+    geo_view->setMinimumWidth(530);
+#endif
+
+
+
+    /* ---------------------------------
+    *    draw handling
+    * --------------------------------- */
+    drw_view = new DrawView(opengl, draw2d, mOglJacobi, &mParams);
+
+
+    mObjectView = new ObjectView;
+    mReportText = new ReportDialog();
+    mProtDialog = new ProtDialog;
+
+    // ---------------------------------
+    //  parameter frame
+    // ---------------------------------
+    QScrollArea*  scr_area = new QScrollArea();
+    scr_area->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    scr_area->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    QFrame* frame = new QFrame();
+    frame->setContentsMargins(0, 0, 0, 0);
+
+    QVBoxLayout* layout_frame = new QVBoxLayout();
+    layout_frame->setAlignment(Qt::AlignRight);
     layout_frame -> addWidget(grb_metricInt);
     layout_frame -> addWidget(lct_view);
     layout_frame -> addWidget(geo_view);
     layout_frame -> addWidget(drw_view);
-
     frame->setLayout(layout_frame);
     scr_area->setWidget(frame);
 
-    /* ---------------------------------
-    *    layout_complete
-    * --------------------------------- */
-    layout_complete -> addWidget(tab_draw, 0, 0);
-    layout_complete -> addWidget(scr_area, 0, 1);
+    // ---------------------------------
+    //  layout complete
+    // ---------------------------------
+    QGridLayout* layout_complete = new QGridLayout();
+    layout_complete->addWidget(tab_draw, 0, 0);
+    layout_complete->addWidget(scr_area, 0, 1);
+    layout_complete->setColumnStretch(0, 10);
 
     QWidget* widget = new QWidget();
     widget->setLayout(layout_complete);
     widget->setMinimumWidth(DEF_GUI_WIDTH);
-    widget->setMaximumHeight(DEF_GUI_HEIGHT);
+    widget->setMinimumHeight(DEF_GUI_HEIGHT);
     setCentralWidget(widget);
+
+
+    // ---------------------------
+    //    status bar
+    // ---------------------------
+#ifdef SHOW_CALC_TIME
+    lab_calc_time = new QLabel("calc time");
+    lcd_calc_time = new QLCDNumber();
+    lcd_calc_time->setSegmentStyle(QLCDNumber::Filled);
+    lcd_calc_time->display(0);
+#endif
+
+    QLabel* lab_num_points = new QLabel("# points");
+    lcd_num_points = new QLCDNumber();
+    //lcd_num_points->setDigitCount(6);
+    lcd_num_points->setSegmentStyle(QLCDNumber::Filled);
+    lcd_num_points->display(0);
+
+    led_status = new QLineEdit();
+    led_status->setEnabled(false);
+    led_status->setMaximumWidth(400);
+
+    mStatus = new QStatusBar();
+#ifdef SHOW_CALC_TIME
+    mStatus->addPermanentWidget(lab_calc_time);
+    mStatus->addPermanentWidget(lcd_calc_time);
+#endif
+    mStatus->addPermanentWidget(lab_num_points);
+    mStatus->addPermanentWidget(lcd_num_points);
+    mStatus->addPermanentWidget(led_status);
 
     setStatusBar(mStatus);
 }
 
-/*! Connect signals and slots.
- */
+
 void GeodesicView::initControl() {
     connect(tab_draw, SIGNAL(currentChanged(int)), this, SLOT(slot_calcGeodesic()));
 
@@ -1677,14 +1559,11 @@ void GeodesicView::initControl() {
     connect(mProtDialog, SIGNAL(emitWriteProt()), this, SLOT(slot_write_prot()));
 }
 
-/*! Set current metric.
- *  \param  metric : metric enum.
- *  \sa m4d::enum_metric.
- */
+
 bool GeodesicView::setMetric(m4d::enum_metric metric) {
     mObject.currMetric = mObject.metricDB.getMetric(metric);
 
-    if (mObject.currMetric == NULL) {
+    if (mObject.currMetric == nullptr) {
         return false;
     }
     mObject.currMetric->printF();
@@ -1692,14 +1571,13 @@ bool GeodesicView::setMetric(m4d::enum_metric metric) {
     return true;
 }
 
-/*! Set metric names and coordinates.
- */
+
 bool GeodesicView::setMetricNamesAndCoords() {
     for (int i = tbw_metric_params->rowCount(); i >= 0; --i) {
         tbw_metric_params->removeRow(0);
     }
 
-    if (mObject.currMetric == NULL) {
+    if (mObject.currMetric == nullptr) {
         return false;
     }
 
@@ -1744,16 +1622,13 @@ bool GeodesicView::setMetricNamesAndCoords() {
     return true;
 }
 
-/*! Set geodesic solver.
- *  \param type : integrator enum.
- *  \sa m4d::enum_integrator.
- */
+
 bool GeodesicView::setGeodSolver(m4d::enum_integrator  type) {
-    if (mObject.currMetric == NULL) {
+    if (mObject.currMetric == nullptr) {
         return false;
     }
 
-    if (mObject.geodSolver != NULL) {
+    if (mObject.geodSolver != nullptr) {
         delete mObject.geodSolver;
     }
     mObject.geodSolverType = type;
@@ -1855,13 +1730,9 @@ bool GeodesicView::setGeodSolver(m4d::enum_integrator  type) {
     return true;
 }
 
-/*! Set units.
- * \param sol : speed of light.
- * \param grav : gravitational constant.
- * \param diperm : dielectric permittivity.
- */
+
 void GeodesicView::setUnits(const double sol, const double grav, const double diperm) {
-    if (mObject.currMetric != NULL) {
+    if (mObject.currMetric != nullptr) {
         mObject.currMetric->setUnits(sol, grav, diperm);
     }
 
@@ -1871,10 +1742,9 @@ void GeodesicView::setUnits(const double sol, const double grav, const double di
     calculateGeodesic();
 }
 
-/*! Calculate geodesic...
- */
+
 void GeodesicView::calculateGeodesic() {
-    if ((mObject.currMetric == NULL) || (mObject.geodSolver == NULL)) {
+    if ((mObject.currMetric == nullptr) || (mObject.geodSolver == nullptr)) {
         return;
     }
 
@@ -1985,10 +1855,9 @@ void GeodesicView::calculateGeodesic() {
 #endif
 }
 
-/*! Calculate geodesic.
- */
+
 void GeodesicView::calculateGeodesicData() {
-    if ((mObject.currMetric != NULL) && (mObject.geodSolver != NULL)) {
+    if ((mObject.currMetric != nullptr) && (mObject.geodSolver != nullptr)) {
         double eta = 1.0;
         double y0  = 1.0;
 
@@ -2019,9 +1888,7 @@ void GeodesicView::calculateGeodesicData() {
     }
 }
 
-/*!
- *  \param filename : settings file name.
- */
+
 bool GeodesicView::saveSetting(QString filename) {
     QDate dt = QDate::currentDate();
     if (!mObject.saveSettings(filename.toStdString().c_str(),
@@ -2033,9 +1900,6 @@ bool GeodesicView::saveSetting(QString filename) {
 }
 
 
-/*!
- *  \param filename : objects file name.
- */
 bool GeodesicView::saveObjects(QString filename) {
     QFile outFile(filename);
     if (!outFile.open(QFile::WriteOnly | QFile::Text)) {
@@ -2053,9 +1917,7 @@ bool GeodesicView::saveObjects(QString filename) {
     return true;
 }
 
-/*!
- *  \param filename : report file name.
- */
+
 bool GeodesicView::saveReport(QString filename) {
     std::string text;
     mObject.makeReport(text);
@@ -2073,8 +1935,7 @@ bool GeodesicView::saveReport(QString filename) {
     return true;
 }
 
-/*! Set setting stuff.
-  */
+
 void GeodesicView::setSetting() {
     cob_metric->setCurrentIndex(cob_metric->findText(mObject.currMetric->getMetricName(), Qt::MatchExactly));
     setMetricNamesAndCoords();
@@ -2113,8 +1974,7 @@ void GeodesicView::setSetting() {
     mObject.currMetric->setUnits(mObject.speed_of_light, mObject.grav_constant, mObject.dielectric_perm);
 }
 
-/*! Load objects
- */
+
 void GeodesicView::loadObjects(QString filename) {
     if (!mObjects.empty()) {
         mObjects.clear();
@@ -2134,10 +1994,6 @@ void GeodesicView::loadObjects(QString filename) {
 }
 
 
-// ********************************** protected slots *****************************
-
-/*!
- */
 void GeodesicView::closeEvent(QCloseEvent * event) {
     int button = QMessageBox::question(this, "Quit", "Really quit GeodesicViewer?", QMessageBox::Cancel | QMessageBox::Ok, QMessageBox::Ok);
     if (button == QMessageBox::Ok) {
@@ -2151,6 +2007,7 @@ void GeodesicView::closeEvent(QCloseEvent * event) {
     }
 }
 
+
 void GeodesicView::slot_newConnect() {
     mSocket = mServer->nextPendingConnection();
     mSocket->setSocketOption(QAbstractSocket::LowDelayOption, QVariant(1));
@@ -2159,9 +2016,11 @@ void GeodesicView::slot_newConnect() {
     std::cerr << "new connection\n";
 }
 
+
 void GeodesicView::slot_disconn() {
     // nothing
 }
+
 
 void GeodesicView::slot_readData() {
     QByteArray block = mSocket->read(4096);

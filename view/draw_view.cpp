@@ -519,13 +519,13 @@ void DrawView::setGeodLength(int num) {
 }
 
 
-void DrawView::addObjectsToScriptEngine(QScriptEngine* engine) {
-    QScriptValue drawView = engine->newQObject(this);
-    engine->globalObject().setProperty("dh", drawView);
-
-    QScriptValue sliAnimGeodLength = engine->newQObject(sli_anim_geodlength);
-    engine->globalObject().setProperty("ShowPoints", sliAnimGeodLength);
-}
+//void DrawView::addObjectsToScriptEngine(QScriptEngine* engine) {
+//    QScriptValue drawView = engine->newQObject(this);
+//    engine->globalObject().setProperty("dh", drawView);
+//
+//    QScriptValue sliAnimGeodLength = engine->newQObject(sli_anim_geodlength);
+//    engine->globalObject().setProperty("ShowPoints", sliAnimGeodLength);
+//}
 
 // ************************************* public slots ***********************************
 /*! Set draw3d type.

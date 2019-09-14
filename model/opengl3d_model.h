@@ -51,7 +51,7 @@ class OpenGL3dModel : public QGLWidget {
     Q_OBJECT
 
 public:
-    OpenGL3dModel(struct_params* par, QWidget* parent = 0);
+    OpenGL3dModel(struct_params* par, QWidget* parent = nullptr);
     virtual ~OpenGL3dModel();
 
 // --------- public methods -----------

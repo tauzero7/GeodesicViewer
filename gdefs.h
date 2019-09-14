@@ -67,25 +67,13 @@
 /* -----------------------------------
  *   GUI definitions
  * ----------------------------------- */
-
-#ifdef  USE_BIG_SCREEN
-#define  DEF_GUI_WIDTH      1590
-#define  DEF_GUI_HEIGHT     1000
-#define  DEF_DRAW2D_WIDTH   1030
-#define  DEF_OPENGL_WIDTH   1030
-#define  DEF_OPENGL_HEIGHT   900
-#define  DEF_TOOLS_WIDTH     480
-#define  DEF_GROUPBOX_WIDTH  500
-#else
-#define  DEF_GUI_WIDTH      1270
-#define  DEF_GUI_HEIGHT      700
+#define  DEF_GUI_WIDTH       800
+#define  DEF_GUI_HEIGHT      500
 #define  DEF_DRAW2D_WIDTH    720
 #define  DEF_OPENGL_WIDTH    720
 #define  DEF_OPENGL_HEIGHT   590
 #define  DEF_TOOLS_WIDTH     460
 #define  DEF_GROUPBOX_WIDTH  480
-#endif
-
 
 #define  DEF_MAXIMUM_ELEM_HEIGHT  20
 #define  DEF_MAXIMUM_LE_S_WIDTH  150

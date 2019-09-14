@@ -1,37 +1,17 @@
-// --------------------------------------------------------------------------------
-/*
-    geod_view.h
-
-  Copyright (c) 2009-2015  Thomas Mueller, Frank Grave
-
-
-   This file is part of the GeodesicViewer.
-
-   The GeodesicViewer is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   The GeodesicViewer is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with the GeodesicViewer.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-/*!  \class  GeodView
-     \brief  View for geodesic manipulation.
+/**
+ * @file    geod_view.h
+ * @author  Thomas Mueller
+ *
+ * @brief  iew for geodesic manipulation.
 
         The initial direction of a geodesic is defined with respect to the local
         reference frame given in the LocalTetrad window. With the initial
         angles &xi; and %chi; the four-vector of a null geodesic reads
         \f[ \mathbf{k} = \mathbf{e}_{(0)} + \sin\chi\cos\xi\mathbf{e}_{(1)} + \sin\chi\sin\xi\mathbf{e}_{(2)} + \cos\chi\mathbf{e}_{(3)}.\f]
      <img src="../pics/geodesic.png"> \sa lab_geod_timedir
-*/
-// --------------------------------------------------------------------------------
-
+ *
+ * This file is part of GeodesicView.
+ */
 #ifndef GEOD_VIEW_H
 #define GEOD_VIEW_H
 
@@ -40,8 +20,8 @@
 #include <QComboBox>
 #include <QLabel>
 #include <QRadioButton>
-#include <QScriptEngine>
 #include <QTabWidget>
+#include <QJSEngine>
 
 #include <compass_dial.h>
 
@@ -54,20 +34,24 @@
 #include <m4dGlobalDefs.h>
 #include <extra/m4dObject.h>
 
-// ---------------------------------------------------
-//    class definition:   GeodView
-// ---------------------------------------------------
+
 class GeodView : public QWidget {
     Q_OBJECT
 
 public:
+    /**
+     * @brief Standard constructor.
+     * @param par
+     * @param opengl
+     * @param openglJacobi
+     * @param parent
+     */
     GeodView(struct_params* par,
-             OpenGL3dModel*  opengl, OpenGLJacobiModel*  openglJacobi, QWidget* parent = 0);
+        OpenGL3dModel*  opengl, OpenGLJacobiModel*  openglJacobi, QWidget* parent = nullptr);
     ~GeodView();
 
-    // ------------ public methods -------------
 public:
-    void  addObjectsToScriptEngine(QScriptEngine* engine);
+    //void  addObjectsToScriptEngine(QScriptEngine* engine);
     void  resetAll();
     void  updateData();
     void  updateParams();
@@ -88,12 +72,10 @@ public slots:
     void  setTimeDirection(int dir);
     void  setVelocity(double val);
 
-
 signals:
     void  calcGeodesic();
     void  changeGeodType();
 
-    // ----------- protected slots -----------
 protected slots:
     void  slot_setTimeDirection();
     void  slot_setGeodType();
@@ -109,7 +91,7 @@ protected slots:
 
     void  slot_setShowJacobi();
 
-    // ----------- protected methods -----------
+
 protected:
     void  init();
     void  initElements();
@@ -119,7 +101,7 @@ protected:
 
     void  setInitDir();
 
-    // ----------- private attributes ----------
+
 private:
     struct_params* mParams;
     QLabel*        lab_value;
@@ -145,19 +127,14 @@ private:
     CompassDial*   cps_chi;
 
     // Sachsbasis
-    QLabel*        lab_sachs_orientation;
     QComboBox*     cob_sachs_orientation;
-    QLabel*        lab_sachs_legs;
     QComboBox*     cob_sachs_legs;
-    QLabel*        lab_sachs_leg1;
     QPushButton*   pub_sachs_leg1_col1;
     QPushButton*   pub_sachs_leg1_col2;
     QLineEdit*     led_sachs_leg1_freq;
-    QLabel*        lab_sachs_leg2;
     QPushButton*   pub_sachs_leg2_col1;
     QPushButton*   pub_sachs_leg2_col2;
     QLineEdit*     led_sachs_leg2_freq;
-    QLabel*        lab_sachs_scale;
     QLineEdit*     led_sachs_scale;
 
     // Jacobi
