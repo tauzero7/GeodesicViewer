@@ -11,20 +11,21 @@
 #include <mach-o/dyld.h>
 #endif
 
-bool CopyString(const char* src, char*& dest) {
+bool CopyString(const char* src, char*& dest)
+{
     if (src == nullptr) {
         return false;
     }
 
     if (dest != nullptr) {
-        delete [] dest;
+        delete[] dest;
     }
     size_t len = strlen(src);
 
     bool isOkay = true;
 #ifdef _WIN32
     dest = new char[len + 4];
-    isOkay &= (strncpy_s(dest, len+4, src, len) == NULL);
+    isOkay &= (strncpy_s(dest, len + 4, src, len) == NULL);
 #else
     dest = new char[len + 2];
     isOkay &= (strcpy(dest, src) != nullptr);
@@ -32,10 +33,10 @@ bool CopyString(const char* src, char*& dest) {
     return isOkay;
 }
 
-
-bool GetExePath(char*& path) {
+bool GetExePath(char*& path)
+{
     if (path != nullptr) {
-        delete [] path;
+        delete[] path;
     }
 
 #ifdef _WIN32
@@ -47,7 +48,7 @@ bool GetExePath(char*& path) {
     char* cwd = new char[nSize];
 #ifdef _WIN32
     if (::GetModuleFileNameA(NULL, cwd, nSize)
-            == ERROR_INSUFFICIENT_BUFFER) {
+        == ERROR_INSUFFICIENT_BUFFER) {
         cwd[0] = 0;
     } else {
         if (::GetLastError() != ERROR_SUCCESS) {
@@ -59,12 +60,11 @@ bool GetExePath(char*& path) {
     uint32_t asize = sizeof(apath);
     if (_NSGetExecutablePath(apath, &asize) == 0) {
         realpath(apath, cwd);
-    }
-    else {
+    } else {
         cwd[0] = 0;
     }
 #else
-    char *tmp = new char[nSize];
+    char* tmp = new char[nSize];
     sprintf(tmp, "/proc/%d/exe", getpid());
     ssize_t size = readlink(tmp, cwd, nSize - 1);
     if (size >= 0) {
@@ -72,9 +72,8 @@ bool GetExePath(char*& path) {
     } else {
         cwd[0] = 0;
     }
-    delete [] tmp;
+    delete[] tmp;
 #endif
-
 
     size_t cwdlen = static_cast<size_t>(strlen(cwd)) + 1;
     path = new char[cwdlen];
@@ -93,12 +92,12 @@ bool GetExePath(char*& path) {
         fprintf(stderr, "Cannot determine current working directory!\n");
         isOkay = false;
     }
-    delete [] cwd;
+    delete[] cwd;
     return isOkay;
 }
 
-
-bool GetFilePath(const char* filename, char*& path) {
+bool GetFilePath(const char* filename, char*& path)
+{
     std::string fname = std::string(filename);
     std::string mpath = std::string();
 
@@ -106,8 +105,7 @@ bool GetFilePath(const char* filename, char*& path) {
     size_t offset = fname.rfind("\\");
     if (offset != std::string::npos) {
         mpath = fname.substr(0, offset) + "\\";
-    }
-    else {
+    } else {
         offset = fname.rfind("/");
         if (offset != std::string::npos) {
             mpath = fname.substr(0, offset) + "/";
@@ -117,8 +115,7 @@ bool GetFilePath(const char* filename, char*& path) {
     size_t offset = fname.rfind("/");
     if (offset == std::string::npos) {
         mpath = std::string("");
-    }
-    else {
+    } else {
         mpath = fname.substr(0, offset) + "/";
     }
 #endif
@@ -127,8 +124,8 @@ bool GetFilePath(const char* filename, char*& path) {
     return true;
 }
 
-
-bool tokenizeFile(const std::string filename, std::vector<std::vector<std::string> > &tokens) {
+bool tokenizeFile(const std::string filename, std::vector<std::vector<std::string>>& tokens)
+{
     std::ifstream in(filename.c_str());
 
     if (!in) {
@@ -149,7 +146,6 @@ bool tokenizeFile(const std::string filename, std::vector<std::vector<std::strin
             ignoreLine = true;
         }
 
-
         if (!ignoreLine) {
             std::string buf;
             std::stringstream ss(line);
@@ -168,19 +164,19 @@ bool tokenizeFile(const std::string filename, std::vector<std::vector<std::strin
     return true;
 }
 
-
 /*! Read object file.
  *  \param filename : name of file
  *  \param objects : reference to object list
  *  \param clear : if true then clear object list
  * \return number of objects
  */
-int readObjectFile(const std::string filename, std::vector<MyObject*>  &objects, bool clear) {
+int readObjectFile(const std::string filename, std::vector<MyObject*>& objects, bool clear)
+{
     if (clear && !objects.empty()) {
         objects.clear();
     }
 
-    std::vector<std::vector<std::string> > tokens;
+    std::vector<std::vector<std::string>> tokens;
     if (!tokenizeFile(filename, tokens)) {
         return 0;
     }
@@ -193,13 +189,14 @@ int readObjectFile(const std::string filename, std::vector<MyObject*>  &objects,
  * \param objects : reference to object list
  * \return number of objects
  */
-int readObjectsFromTokens(std::vector<std::vector<std::string> > &tokens, std::vector<MyObject*>  &objects) {
+int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::vector<MyObject*>& objects)
+{
     MyObject* obj;
     for (unsigned int i = 0; i < tokens.size(); i++) {
         //std::cerr << tokens[i][0] << std::endl;
-        /* ------------------------------
-         *     text2d
-         * ------------------------------ */
+        // ------------------------------
+        //     text2d
+        // ------------------------------
         if (tokens[i][0] == stl_object_type[enum_object_text2d].toStdString() && tokens[i].size() > 4) {
             obj = new MyObject();
             if (tokens[i].size() > 7) {
@@ -209,9 +206,9 @@ int readObjectsFromTokens(std::vector<std::vector<std::string> > &tokens, std::v
             obj->create_2d_text(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), tokens[i][3], atof(tokens[i][4].c_str()));
             objects.push_back(obj);
         }
-        /* ------------------------------
-         *     text3d
-         * ------------------------------ */
+        // ------------------------------
+        //     text3d
+        // ------------------------------
         else if (tokens[i][0] == stl_object_type[enum_object_text3d].toStdString() && tokens[i].size() > 5) {
             obj = new MyObject();
             if (tokens[i].size() > 8) {
@@ -221,9 +218,9 @@ int readObjectsFromTokens(std::vector<std::vector<std::string> > &tokens, std::v
             obj->create_3d_text(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()), tokens[i][4], atof(tokens[i][5].c_str()));
             objects.push_back(obj);
         }
-        /* ------------------------------
-         *     sphere2d
-         * ------------------------------ */
+        // ------------------------------
+        //     sphere2d
+        // ------------------------------
         else if (tokens[i][0] == stl_object_type[enum_object_sphere2d].toStdString() && tokens[i].size() > 5) {
             obj = new MyObject();
             if (tokens[i].size() > 8) {
@@ -233,9 +230,9 @@ int readObjectsFromTokens(std::vector<std::vector<std::string> > &tokens, std::v
             obj->create_2d_sphere(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()), atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()));
             objects.push_back(obj);
         }
-        /* ------------------------------
-         *     sphere3d
-         * ------------------------------ */
+        // ------------------------------
+        //     sphere3d
+        // ------------------------------
         else if (tokens[i][0] == stl_object_type[enum_object_sphere3d].toStdString() && tokens[i].size() > 6) {
             obj = new MyObject();
             if (tokens[i].size() > 10) {
@@ -247,9 +244,9 @@ int readObjectsFromTokens(std::vector<std::vector<std::string> > &tokens, std::v
             obj->create_3d_sphere(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()), atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()));
             objects.push_back(obj);
         }
-        /* ------------------------------
-         *     box2d
-         * ------------------------------ */
+        // ------------------------------
+        //     box2d
+        // ------------------------------
         else if (tokens[i][0] == stl_object_type[enum_object_box2d].toStdString() && tokens[i].size() > 5) {
             obj = new MyObject();
             if (tokens[i].size() > 8) {
@@ -259,9 +256,9 @@ int readObjectsFromTokens(std::vector<std::vector<std::string> > &tokens, std::v
             obj->create_2d_box(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()), atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()));
             objects.push_back(obj);
         }
-        /* ------------------------------
-         *     box3d
-         * ------------------------------ */
+        // ------------------------------
+        //     box3d
+        // ------------------------------
         else if (tokens[i][0] == stl_object_type[enum_object_box3d].toStdString() && tokens[i].size() > 7) {
             obj = new MyObject();
             if (tokens[i].size() > 10) {
@@ -271,9 +268,9 @@ int readObjectsFromTokens(std::vector<std::vector<std::string> > &tokens, std::v
             obj->create_3d_box(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()), atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()), atof(tokens[i][7].c_str()));
             objects.push_back(obj);
         }
-        /* ------------------------------
-         *     line2d
-         * ------------------------------ */
+        // ------------------------------
+        //     line2d
+        // ------------------------------
         else if (tokens[i][0] == stl_object_type[enum_object_line2d].toStdString() && tokens[i].size() > 5) {
             obj = new MyObject();
             if (tokens[i].size() > 8) {
@@ -283,9 +280,9 @@ int readObjectsFromTokens(std::vector<std::vector<std::string> > &tokens, std::v
             obj->create_2d_line(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()), atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()));
             objects.push_back(obj);
         }
-        /* ------------------------------
-         *     line3d
-         * ------------------------------ */
+        // ------------------------------
+        //     line3d
+        // ------------------------------
         else if (tokens[i][0] == stl_object_type[enum_object_line3d].toStdString() && tokens[i].size() > 7) {
             obj = new MyObject();
             if (tokens[i].size() > 10) {
@@ -295,9 +292,9 @@ int readObjectsFromTokens(std::vector<std::vector<std::string> > &tokens, std::v
             obj->create_3d_line(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()), atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()), atof(tokens[i][7].c_str()));
             objects.push_back(obj);
         }
-        /* ------------------------------
-         *     quad2d
-         * ------------------------------ */
+        // ------------------------------
+        //     quad2d
+        // ------------------------------
         else if (tokens[i][0] == stl_object_type[enum_object_quad2d].toStdString() && tokens[i].size() > 9) {
             obj = new MyObject();
             if (tokens[i].size() > 13) {
@@ -309,9 +306,9 @@ int readObjectsFromTokens(std::vector<std::vector<std::string> > &tokens, std::v
             obj->create_2d_quad(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()), atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()), atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()));
             objects.push_back(obj);
         }
-        /* ------------------------------
-         *     plane3d
-         * ------------------------------ */
+        // ------------------------------
+        //     plane3d
+        // ------------------------------
         else if (tokens[i][0] == stl_object_type[enum_object_plane3d].toStdString() && tokens[i].size() > 9) {
             obj = new MyObject();
             if (tokens[i].size() > 13) {
@@ -321,13 +318,13 @@ int readObjectsFromTokens(std::vector<std::vector<std::string> > &tokens, std::v
             }
 
             obj->create_3d_plane(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
-                                 atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
-                                 atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()));
+                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
+                atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()));
             objects.push_back(obj);
         }
-        /* ------------------------------
-         *     disk2d
-         * ------------------------------ */
+        // ------------------------------
+        //     disk2d
+        // ------------------------------
         else if (tokens[i][0] == stl_object_type[enum_object_disk2d].toStdString() && tokens[i].size() > 4) {
             obj = new MyObject();
             if (tokens[i].size() > 7) {
@@ -337,9 +334,9 @@ int readObjectsFromTokens(std::vector<std::vector<std::string> > &tokens, std::v
             obj->create_2d_disk(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()), atof(tokens[i][4].c_str()));
             objects.push_back(obj);
         }
-        /* ------------------------------
-         *     disk3d
-         * ------------------------------ */
+        // ------------------------------
+        //     disk3d
+        // ------------------------------
         else if (tokens[i][0] == stl_object_type[enum_object_disk3d].toStdString() && tokens[i].size() > 9) {
             obj = new MyObject();
             if (tokens[i].size() > 14) {
@@ -349,14 +346,14 @@ int readObjectsFromTokens(std::vector<std::vector<std::string> > &tokens, std::v
             }
 
             obj->create_3d_disk(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
-                                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
-                                atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()),
-                                atof(tokens[i][10].c_str()));
+                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
+                atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()),
+                atof(tokens[i][10].c_str()));
             objects.push_back(obj);
         }
-        /* ------------------------------
-         *     cylinder3d
-         * ------------------------------ */
+        // ------------------------------
+        //     cylinder3d
+        // ------------------------------
         else if (tokens[i][0] == stl_object_type[enum_object_cylinder3d].toStdString() && tokens[i].size() > 10) {
             obj = new MyObject();
             if (tokens[i].size() > 14) {
@@ -366,14 +363,14 @@ int readObjectsFromTokens(std::vector<std::vector<std::string> > &tokens, std::v
             }
 
             obj->create_3d_cylinder(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
-                                    atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
-                                    atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()),
-                                    atof(tokens[i][9].c_str()), atof(tokens[i][10].c_str()));
+                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
+                atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()),
+                atof(tokens[i][9].c_str()), atof(tokens[i][10].c_str()));
             objects.push_back(obj);
         }
-        /* ------------------------------
-         *     torus3d
-         * ------------------------------ */
+        // ------------------------------
+        //     torus3d
+        // ------------------------------
         else if (tokens[i][0] == stl_object_type[enum_object_torus3d].toStdString() && tokens[i].size() > 10) {
             obj = new MyObject();
             if (tokens[i].size() > 14) {
@@ -383,14 +380,14 @@ int readObjectsFromTokens(std::vector<std::vector<std::string> > &tokens, std::v
             }
 
             obj->create_3d_torus(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
-                                 atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
-                                 atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()),
-                                 atof(tokens[i][9].c_str()), atof(tokens[i][10].c_str()));
+                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
+                atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()),
+                atof(tokens[i][9].c_str()), atof(tokens[i][10].c_str()));
             objects.push_back(obj);
         }
-        /* ------------------------------
-         *     tube3d
-         * ------------------------------ */
+        // ------------------------------
+        //     tube3d
+        // ------------------------------
         else if (tokens[i][0] == stl_object_type[enum_object_tube3d].toStdString() && tokens[i].size() > 14) {
             obj = new MyObject();
             if (tokens[i].size() > 18) {
@@ -400,20 +397,18 @@ int readObjectsFromTokens(std::vector<std::vector<std::string> > &tokens, std::v
             }
 
             obj->create_3d_tube(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
-                                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
-                                atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()),
-                                atof(tokens[i][10].c_str()), atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()),
-                                atof(tokens[i][13].c_str()), atof(tokens[i][14].c_str()));
+                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
+                atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()),
+                atof(tokens[i][10].c_str()), atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()),
+                atof(tokens[i][13].c_str()), atof(tokens[i][14].c_str()));
             objects.push_back(obj);
         }
     }
     return (int)objects.size();
 }
 
-/*!  Set stanrd parameters
- *  \param par: pointer to parameter structure.
- */
-void setStandardParams(struct_params* par) {
+void setStandardParams(struct_params* par)
+{
     par->filename = std::string();
 
     par->axis_orientation = 0;
@@ -425,75 +420,75 @@ void setStandardParams(struct_params* par) {
     par->geod_vel_init = DEF_INIT_VEL;
     par->geod_vel_step = DEF_INIT_VEL_STEP;
 
-    par->opengl_projection     = 0;
-    par->opengl_draw3d_type    = m4d::enum_draw_pseudocart;
+    par->opengl_projection = 0;
+    par->opengl_draw3d_type = m4d::enum_draw_pseudocart;
 
     if (!par->opengl_emb_params.empty()) {
         par->opengl_emb_params.clear();
     }
 
-    par->opengl_eye_pos        = m4d::vec3(DEF_INIT_EYE_POS_X, DEF_INIT_EYE_POS_Y, DEF_INIT_EYE_POS_Z);
-    par->opengl_eye_pos_step   = 0.1;
-    par->opengl_eye_poi        = m4d::vec3(DEF_INIT_POI_X, DEF_INIT_POI_Y, DEF_INIT_POI_Z);
-    par->opengl_eye_poi_step   = 0.1;
-    par->opengl_eye_vup        = m4d::vec3(DEF_INIT_VUP_X, DEF_INIT_VUP_Y, DEF_INIT_VUP_Z);
-    par->opengl_eye_dir        = par->opengl_eye_poi - par->opengl_eye_pos;
+    par->opengl_eye_pos = m4d::vec3(DEF_INIT_EYE_POS_X, DEF_INIT_EYE_POS_Y, DEF_INIT_EYE_POS_Z);
+    par->opengl_eye_pos_step = 0.1;
+    par->opengl_eye_poi = m4d::vec3(DEF_INIT_POI_X, DEF_INIT_POI_Y, DEF_INIT_POI_Z);
+    par->opengl_eye_poi_step = 0.1;
+    par->opengl_eye_vup = m4d::vec3(DEF_INIT_VUP_X, DEF_INIT_VUP_Y, DEF_INIT_VUP_Z);
+    par->opengl_eye_dir = par->opengl_eye_poi - par->opengl_eye_pos;
     par->opengl_eye_dir.normalize();
-    par->opengl_fov            = DEF_INIT_FOV;
-    par->opengl_fov_step       = 0.1;
+    par->opengl_fov = DEF_INIT_FOV;
+    par->opengl_fov_step = 0.1;
 
-    par->opengl_stereo_use     = 0;
+    par->opengl_stereo_use = 0;
     par->opengl_stereo_glasses = enum_stereo_red_cyan;
-    par->opengl_stereo_type    = (enum_stereo_type)DEF_STEREO_TYPE;
-    par->opengl_stereo_sep     = DEF_STEREO_SEP;
-    par->opengl_stereo_step    = DEF_STEREO_STEP;
+    par->opengl_stereo_type = (enum_stereo_type)DEF_STEREO_TYPE;
+    par->opengl_stereo_sep = DEF_STEREO_SEP;
+    par->opengl_stereo_step = DEF_STEREO_STEP;
 
-    par->opengl_fog_use       = 0;
-    par->opengl_fog_init      = DEF_OPENGL_FOG_DENSITY_INIT;
-    par->opengl_fog_step      = DEF_OPENGL_FOG_STEP;
+    par->opengl_fog_use = 0;
+    par->opengl_fog_init = DEF_OPENGL_FOG_DENSITY_INIT;
+    par->opengl_fog_step = DEF_OPENGL_FOG_STEP;
 
-    par->opengl_scale_x       = 1.0;
-    par->opengl_scale_y       = 1.0;
-    par->opengl_scale_z       = 1.0;
+    par->opengl_scale_x = 1.0;
+    par->opengl_scale_y = 1.0;
+    par->opengl_scale_z = 1.0;
 
-    par->opengl_anim_local    = 0;
-    par->opengl_anim_rot_x    = DEF_OPENGL_ANIM_ROT_X_INIT;
-    par->opengl_anim_rot_y    = DEF_OPENGL_ANIM_ROT_Y_INIT;
-    par->opengl_anim_rot_z    = DEF_OPENGL_ANIM_ROT_Z_INIT;
+    par->opengl_anim_local = 0;
+    par->opengl_anim_rot_x = DEF_OPENGL_ANIM_ROT_X_INIT;
+    par->opengl_anim_rot_y = DEF_OPENGL_ANIM_ROT_Y_INIT;
+    par->opengl_anim_rot_z = DEF_OPENGL_ANIM_ROT_Z_INIT;
 
-    par->opengl_line_color    = QColor(DEF_OPENGL_LINE_COLOR);
-    par->opengl_line_width    = DEF_OPENGL_LINE_WIDTH;
-    par->opengl_bg_color      = QColor(DEF_OPENGL_BG_COLOR);
-    par->opengl_line_smooth   = 0;
+    par->opengl_line_color = QColor(DEF_OPENGL_LINE_COLOR);
+    par->opengl_line_width = DEF_OPENGL_LINE_WIDTH;
+    par->opengl_bg_color = QColor(DEF_OPENGL_BG_COLOR);
+    par->opengl_line_smooth = 0;
 
-    par->opengl_leg1_col1     = QColor(DEF_OPENGL_LEG1_COL1);
-    par->opengl_leg1_col2     = QColor(DEF_OPENGL_LEG1_COL2);
-    par->opengl_leg1_freq     = DEF_OPENGL_LEG1_FREQ;
-    par->opengl_leg2_col1     = QColor(DEF_OPENGL_LEG2_COL1);
-    par->opengl_leg2_col2     = QColor(DEF_OPENGL_LEG2_COL2);
-    par->opengl_leg2_freq     = DEF_OPENGL_LEG2_FREQ;
+    par->opengl_leg1_col1 = QColor(DEF_OPENGL_LEG1_COL1);
+    par->opengl_leg1_col2 = QColor(DEF_OPENGL_LEG1_COL2);
+    par->opengl_leg1_freq = DEF_OPENGL_LEG1_FREQ;
+    par->opengl_leg2_col1 = QColor(DEF_OPENGL_LEG2_COL1);
+    par->opengl_leg2_col2 = QColor(DEF_OPENGL_LEG2_COL2);
+    par->opengl_leg2_freq = DEF_OPENGL_LEG2_FREQ;
 
-    par->opengl_emb_color     = QColor(DEF_OPENGL_EMB_COLOR);
-    par->opengl_sachs_system  = enum_sachs_e1e2e3;
-    par->opengl_sachs_legs    = enum_sachs_legs_right_up;
-    par->opengl_sachs_scale   = 0.3;
+    par->opengl_emb_color = QColor(DEF_OPENGL_EMB_COLOR);
+    par->opengl_sachs_system = enum_sachs_e1e2e3;
+    par->opengl_sachs_legs = enum_sachs_legs_right_up;
+    par->opengl_sachs_scale = 0.3;
 
     double aspect = (DEF_OPENGL_HEIGHT - DEF_DRAW2D_BOTTOM_BORDER) / (double)(DEF_OPENGL_WIDTH - DEF_DRAW2D_LEFT_BORDER);
-    par->draw2d_xMin          = DEF_DRAW2D_X_INIT_MIN;
-    par->draw2d_xMax          = DEF_DRAW2D_X_INIT_MAX;
-    par->draw2d_yMin          = -(DEF_DRAW2D_X_INIT_MAX - DEF_DRAW2D_X_INIT_MIN) * 0.5 * aspect;
-    par->draw2d_yMax          = (DEF_DRAW2D_X_INIT_MAX - DEF_DRAW2D_X_INIT_MIN) * 0.5 * aspect;
+    par->draw2d_xMin = DEF_DRAW2D_X_INIT_MIN;
+    par->draw2d_xMax = DEF_DRAW2D_X_INIT_MAX;
+    par->draw2d_yMin = -(DEF_DRAW2D_X_INIT_MAX - DEF_DRAW2D_X_INIT_MIN) * 0.5 * aspect;
+    par->draw2d_yMax = (DEF_DRAW2D_X_INIT_MAX - DEF_DRAW2D_X_INIT_MIN) * 0.5 * aspect;
 
-    par->draw2d_bg_color      = QColor(DEF_DRAW2D_BG_COLOR);
-    par->draw2d_line_color    = QColor(DEF_DRAW2D_LINE_COLOR);
-    par->draw2d_line_width    = DEF_OPENGL_LINE_WIDTH;
-    par->draw2d_line_smooth   = 0;
+    par->draw2d_bg_color = QColor(DEF_DRAW2D_BG_COLOR);
+    par->draw2d_line_color = QColor(DEF_DRAW2D_LINE_COLOR);
+    par->draw2d_line_width = DEF_OPENGL_LINE_WIDTH;
+    par->draw2d_line_smooth = 0;
 
-    par->draw2d_grid_color    = QColor(DEF_DRAW2D_GRID_COLOR);
+    par->draw2d_grid_color = QColor(DEF_DRAW2D_GRID_COLOR);
 
     par->draw2d_representation = (m4d::enum_draw_type)0;
-    par->draw2d_abscissa       = 0;
-    par->draw2d_ordinate       = 0;
+    par->draw2d_abscissa = 0;
+    par->draw2d_ordinate = 0;
 }
 
 /*! Load cfg-parameter file.
@@ -501,8 +496,9 @@ void setStandardParams(struct_params* par) {
  *  \param par      : pointer to parameter structure.
  *  \return true : successfull.
  */
-bool loadParamFile(const std::string filename, struct_params* par) {
-    std::vector<std::vector<std::string> > tokens;
+bool loadParamFile(const std::string filename, struct_params* par)
+{
+    std::vector<std::vector<std::string>> tokens;
     if (!tokenizeFile(filename, tokens)) {
         return false;
     }
@@ -632,7 +628,8 @@ bool loadParamFile(const std::string filename, struct_params* par) {
  *  \param par      : pointer to parameter structure.
  *  \return true : successfull.
  */
-bool saveParamFile(const std::string filename, struct_params* par) {
+bool saveParamFile(const std::string filename, struct_params* par)
+{
     FILE* fptr = NULL;
 #ifdef _WIN32
     fopen_s(&fptr, filename.c_str(), "w");
@@ -715,12 +712,13 @@ bool saveParamFile(const std::string filename, struct_params* par) {
 }
 
 #ifdef HAVE_LUA
-int setGVObject(lua_State *) {
+int setGVObject(lua_State*)
+{
     return 0;
 }
 
-
-void  lua_reg_gvutils(lua_State *L) {
+void lua_reg_gvutils(lua_State* L)
+{
     lua_register(L, "SetGVObject", setGVObject);
 }
 

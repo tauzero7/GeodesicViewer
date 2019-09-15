@@ -9,9 +9,9 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 
-#include <iostream>
 #include <cstring>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 #include <vector>
 
@@ -20,7 +20,7 @@
 #ifdef HAVE_LUA
 #include "lua/m4dlua.h"
 #include "lua/m4dlua_utils.h"
-void  lua_reg_gvutils(lua_State *L);
+void lua_reg_gvutils(lua_State* L);
 #endif // HAVE_LUA
 
 bool CopyString(const char* src, char*& dest);
@@ -34,10 +34,10 @@ bool GetFilePath(const char* filename, char*& path);
  * @param tokens : reference of tokens build from the file
  * @return true : success
  */
-bool tokenizeFile(const std::string filename, std::vector<std::vector<std::string> > &tokens);
+bool tokenizeFile(const std::string filename, std::vector<std::vector<std::string>>& tokens);
 
-int  readObjectFile(const std::string filename, std::vector<MyObject*>  &objects, bool clear = true);
-int  readObjectsFromTokens(std::vector<std::vector<std::string> > &tokens, std::vector<MyObject*>  &objects);
+int readObjectFile(const std::string filename, std::vector<MyObject*>& objects, bool clear = true);
+int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::vector<MyObject*>& objects);
 
 void setStandardParams(struct_params* par);
 bool loadParamFile(const std::string filename, struct_params* par);

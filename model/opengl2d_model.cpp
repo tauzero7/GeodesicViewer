@@ -4,16 +4,17 @@
  *
  * This file is part of GeodesicView.
  */
-#include <fstream>
+#include "opengl2d_model.h"
 #include <QApplication>
 #include <QDesktopWidget>
-#include "opengl2d_model.h"
+#include <fstream>
 #include <math/TransCoordinates.h>
 
 extern m4d::Object mObject;
 
 OpenGL2dModel::OpenGL2dModel(struct_params* par, QWidget* parent)
-    : QOpenGLWidget(parent) {
+    : QOpenGLWidget(parent)
+{
     mParams = par;
 
     mButtonPressed = Qt::NoButton;
@@ -24,22 +25,22 @@ OpenGL2dModel::OpenGL2dModel(struct_params* par, QWidget* parent)
     mWinSize[1] = DEF_OPENGL_HEIGHT;
     mAspect = (mWinSize[0] - DEF_DRAW2D_BOTTOM_BORDER) / static_cast<double>(mWinSize[1] - DEF_DRAW2D_LEFT_BORDER);
 
-    mBGcolor   = mParams->draw2d_bg_color;
-    mFGcolor   = mParams->draw2d_line_color;
+    mBGcolor = mParams->draw2d_bg_color;
+    mFGcolor = mParams->draw2d_line_color;
     mLineWidth = mParams->draw2d_line_width;
     mDrawStyle = enum_draw_lines;
 
     // Vertices for the geodesic.
-    mVerts        = nullptr;
-    mNumVerts     = 0;
+    mVerts = nullptr;
+    mNumVerts = 0;
     mShowNumVerts = 0;
-    mDrawType     = m4d::enum_draw_pseudocart;
+    mDrawType = m4d::enum_draw_pseudocart;
 
     mXmin = mParams->draw2d_xMin;
     mXmax = mParams->draw2d_xMax;
     mYmin = mParams->draw2d_yMin;
     mYmax = mParams->draw2d_yMax;
-    mShowZoom  = false;
+    mShowZoom = false;
 
     mXstepIdx = DEF_DRAW2D_X_STEP;
     mYstepIdx = DEF_DRAW2D_Y_STEP;
@@ -67,18 +68,19 @@ OpenGL2dModel::OpenGL2dModel(struct_params* par, QWidget* parent)
     setMouseTracking(true);
 }
 
-OpenGL2dModel::~OpenGL2dModel() {
+OpenGL2dModel::~OpenGL2dModel()
+{
 }
 
-
-void OpenGL2dModel::setPoints(m4d::enum_draw_type  dtype, bool needUpdate) {
+void OpenGL2dModel::setPoints(m4d::enum_draw_type dtype, bool needUpdate)
+{
     if (mVerts != nullptr) {
-        delete [] mVerts;
+        delete[] mVerts;
     }
     mVerts = nullptr;
-    mNumVerts     = 0;
+    mNumVerts = 0;
     mShowNumVerts = 0;
-    mDrawType     = dtype;
+    mDrawType = dtype;
 
     if (dtype == m4d::enum_draw_effpoti) {
         if (needUpdate) {
@@ -88,68 +90,68 @@ void OpenGL2dModel::setPoints(m4d::enum_draw_type  dtype, bool needUpdate) {
     }
 
     mNumVerts = static_cast<int>(mObject.points.size());
-    mVerts    = new GLfloat[ mNumVerts * 2 ];
+    mVerts = new GLfloat[mNumVerts * 2];
 
     GLfloat* vptr = mVerts;
 
     m4d::vec4 tp;
     for (int i = 0; i < mNumVerts; i++) {
         switch (dtype) {
-            case m4d::enum_draw_pseudocart: {
-                mObject.currMetric->transToPseudoCart(mObject.points[i], tp);
-                *(vptr++) = GLfloat(tp[1]);
-                *(vptr++) = GLfloat(tp[2]);
+        case m4d::enum_draw_pseudocart: {
+            mObject.currMetric->transToPseudoCart(mObject.points[i], tp);
+            *(vptr++) = GLfloat(tp[1]);
+            *(vptr++) = GLfloat(tp[2]);
+            break;
+        }
+        case m4d::enum_draw_coordinates: {
+            switch (mAbscissa) {
+            case enum_draw_coord_x0:
+            case enum_draw_coord_x1:
+            case enum_draw_coord_x2:
+            case enum_draw_coord_x3:
+                *(vptr++) = GLfloat(mObject.points[i].x((int)mAbscissa));
+                break;
+            case enum_draw_lambda:
+                *(vptr++) = GLfloat(mObject.lambda[i]);
+                break;
+            case enum_draw_coord_dx0:
+            case enum_draw_coord_dx1:
+            case enum_draw_coord_dx2:
+            case enum_draw_coord_dx3:
+                *(vptr++) = GLfloat(mObject.dirs[i].x(((int)mAbscissa) - 5));
                 break;
             }
-            case m4d::enum_draw_coordinates: {
-                switch (mAbscissa) {
-                    case enum_draw_coord_x0:
-                    case enum_draw_coord_x1:
-                    case enum_draw_coord_x2:
-                    case enum_draw_coord_x3:
-                        *(vptr++) = GLfloat(mObject.points[i].x((int)mAbscissa));
-                        break;
-                    case enum_draw_lambda:
-                        *(vptr++) = GLfloat(mObject.lambda[i]);
-                        break;
-                    case enum_draw_coord_dx0:
-                    case enum_draw_coord_dx1:
-                    case enum_draw_coord_dx2:
-                    case enum_draw_coord_dx3:
-                        *(vptr++) = GLfloat(mObject.dirs[i].x(((int)mAbscissa) - 5));
-                        break;
-                }
-                switch (mOrdinate) {
-                    case enum_draw_coord_x0:
-                    case enum_draw_coord_x1:
-                    case enum_draw_coord_x2:
-                    case enum_draw_coord_x3:
-                        *(vptr++) = GLfloat(mObject.points[i].x((int)mOrdinate));
-                        break;
-                    case enum_draw_lambda:
-                        *(vptr++) = GLfloat(mObject.lambda[i]);
-                        break;
-                    case enum_draw_coord_dx0:
-                    case enum_draw_coord_dx1:
-                    case enum_draw_coord_dx2:
-                    case enum_draw_coord_dx3:
-                        *(vptr++) = GLfloat(mObject.dirs[i].x(((int)mOrdinate) - 5));
-                        break;
-                }
+            switch (mOrdinate) {
+            case enum_draw_coord_x0:
+            case enum_draw_coord_x1:
+            case enum_draw_coord_x2:
+            case enum_draw_coord_x3:
+                *(vptr++) = GLfloat(mObject.points[i].x((int)mOrdinate));
+                break;
+            case enum_draw_lambda:
+                *(vptr++) = GLfloat(mObject.lambda[i]);
+                break;
+            case enum_draw_coord_dx0:
+            case enum_draw_coord_dx1:
+            case enum_draw_coord_dx2:
+            case enum_draw_coord_dx3:
+                *(vptr++) = GLfloat(mObject.dirs[i].x(((int)mOrdinate) - 5));
                 break;
             }
-            case m4d::enum_draw_embedding:
-                break;
-            case m4d::enum_draw_twoplusone:
-                break;
-            case m4d::enum_draw_effpoti:
-                break;
-            case m4d::enum_draw_custom: {
-                mObject.currMetric->transToCustom(mObject.points[i], tp);
-                *(vptr++) = GLfloat(tp[1]);
-                *(vptr++) = GLfloat(tp[2]);
-                break;
-            }
+            break;
+        }
+        case m4d::enum_draw_embedding:
+            break;
+        case m4d::enum_draw_twoplusone:
+            break;
+        case m4d::enum_draw_effpoti:
+            break;
+        case m4d::enum_draw_custom: {
+            mObject.currMetric->transToCustom(mObject.points[i], tp);
+            *(vptr++) = GLfloat(tp[1]);
+            *(vptr++) = GLfloat(tp[2]);
+            break;
+        }
         }
     }
 
@@ -159,10 +161,10 @@ void OpenGL2dModel::setPoints(m4d::enum_draw_type  dtype, bool needUpdate) {
     }
 }
 
-
-void OpenGL2dModel::clearPoints() {
+void OpenGL2dModel::clearPoints()
+{
     if (mVerts != nullptr) {
-        delete [] mVerts;
+        delete[] mVerts;
     }
     mVerts = nullptr;
 
@@ -171,14 +173,14 @@ void OpenGL2dModel::clearPoints() {
     update();
 }
 
-
-void OpenGL2dModel::setAbsOrd(enum_draw_coord_num  absNum,  enum_draw_coord_num  ordNum) {
+void OpenGL2dModel::setAbsOrd(enum_draw_coord_num absNum, enum_draw_coord_num ordNum)
+{
     mAbscissa = absNum;
     mOrdinate = ordNum;
 }
 
-
-void OpenGL2dModel::setScaling(double xMin, double xMax, double yMin, double yMax) {
+void OpenGL2dModel::setScaling(double xMin, double xMax, double yMin, double yMax)
+{
     mXmin = xMin;
     mXmax = xMax;
     mYmin = yMin;
@@ -190,16 +192,16 @@ void OpenGL2dModel::setScaling(double xMin, double xMax, double yMin, double yMa
     update();
 }
 
-
-void OpenGL2dModel::getScaling(double &xMin, double &xMax, double &yMin, double &yMax) {
+void OpenGL2dModel::getScaling(double& xMin, double& xMax, double& yMin, double& yMax)
+{
     xMin = mXmin;
     xMax = mXmax;
     yMin = mYmin;
     yMax = mYmax;
 }
 
-
-void OpenGL2dModel::center() {
+void OpenGL2dModel::center()
+{
     double deltaX = (mXmax - mXmin) * 0.5;
     double deltaY = (mYmax - mYmin) * 0.5;
 
@@ -210,8 +212,8 @@ void OpenGL2dModel::center() {
     setLattice();
 }
 
-
-void OpenGL2dModel::setStepIdx(int xidx, int yidx) {
+void OpenGL2dModel::setStepIdx(int xidx, int yidx)
+{
     mXstepIdx = xidx;
     mYstepIdx = yidx;
     mXstep = dbl_draw2d_steps[xidx].toDouble();
@@ -220,73 +222,73 @@ void OpenGL2dModel::setStepIdx(int xidx, int yidx) {
     update();
 }
 
-
-void OpenGL2dModel::getStepIdx(int &xidx, int &yidx) {
+void OpenGL2dModel::getStepIdx(int& xidx, int& yidx)
+{
     xidx = mXstepIdx;
     yidx = mYstepIdx;
 }
 
-
-void OpenGL2dModel::clearAllObjects() {
+void OpenGL2dModel::clearAllObjects()
+{
     if (!mObjects.empty()) {
         mObjects.clear();
     }
     update();
 }
 
-
-void OpenGL2dModel::insertObject(MyObject* obj) {
+void OpenGL2dModel::insertObject(MyObject* obj)
+{
     makeCurrent();
     MyObject* no = new MyObject(*obj);
     mObjects.push_back(no);
     update();
 }
 
-
-void OpenGL2dModel::setFGcolor(QColor col) {
+void OpenGL2dModel::setFGcolor(QColor col)
+{
     mFGcolor = col;
     update();
 }
 
-
-void OpenGL2dModel::setBGcolor(QColor col) {
+void OpenGL2dModel::setBGcolor(QColor col)
+{
     mBGcolor = col;
     update();
 }
 
-
-void OpenGL2dModel::setGridColor(QColor col) {
+void OpenGL2dModel::setGridColor(QColor col)
+{
     mGridColor = col;
     update();
 }
 
-
-void OpenGL2dModel::setColors(QColor fgcol, QColor bgcol, QColor gridcol) {
+void OpenGL2dModel::setColors(QColor fgcol, QColor bgcol, QColor gridcol)
+{
     mBGcolor = bgcol;
     mFGcolor = fgcol;
     mGridColor = gridcol;
     update();
 }
 
-
-void OpenGL2dModel::setLineWidth(int width) {
+void OpenGL2dModel::setLineWidth(int width)
+{
     mLineWidth = width;
     update();
 }
 
-
-void OpenGL2dModel::setLineSmooth(int smooth) {
+void OpenGL2dModel::setLineSmooth(int smooth)
+{
     mLineSmooth = smooth;
     update();
 }
 
-
-void OpenGL2dModel::setStyle(enum_draw_style  style) {
+void OpenGL2dModel::setStyle(enum_draw_style style)
+{
     mDrawStyle = style;
 }
 
-
-void OpenGL2dModel::showNumVerts(int num) {
+void OpenGL2dModel::showNumVerts(int num)
+{
     mShowNumVerts = num;
     if (mShowNumVerts < 0) {
         mShowNumVerts = 0;
@@ -296,8 +298,8 @@ void OpenGL2dModel::showNumVerts(int num) {
     update();
 }
 
-
-bool OpenGL2dModel::saveRGBimage(QString filename) {
+bool OpenGL2dModel::saveRGBimage(QString filename)
+{
     unsigned char* buf = new unsigned char[DEF_OPENGL_WIDTH * DEF_OPENGL_HEIGHT * 4];
 
     update();
@@ -332,20 +334,20 @@ bool OpenGL2dModel::saveRGBimage(QString filename) {
     out.close();
     */
 
-    delete [] buf;
+    delete[] buf;
     return true;
 }
 
-
-void OpenGL2dModel::updateParams() {
-    mLineWidth  = mParams->draw2d_line_width;
+void OpenGL2dModel::updateParams()
+{
+    mLineWidth = mParams->draw2d_line_width;
     mLineSmooth = mParams->draw2d_line_smooth;
-    mBGcolor    = mParams->draw2d_bg_color;
-    mFGcolor    = mParams->draw2d_line_color;
-    mGridColor  = mParams->draw2d_grid_color;
+    mBGcolor = mParams->draw2d_bg_color;
+    mFGcolor = mParams->draw2d_line_color;
+    mGridColor = mParams->draw2d_grid_color;
 
-    mAbscissa   = (enum_draw_coord_num)mParams->draw2d_abscissa;
-    mOrdinate   = (enum_draw_coord_num)mParams->draw2d_ordinate;
+    mAbscissa = (enum_draw_coord_num)mParams->draw2d_abscissa;
+    mOrdinate = (enum_draw_coord_num)mParams->draw2d_ordinate;
 
     adjust();
     getTightLattice();
@@ -353,14 +355,13 @@ void OpenGL2dModel::updateParams() {
     update();
 }
 
-
-void OpenGL2dModel::getCurrPos(double &x, double &y) {
+void OpenGL2dModel::getCurrPos(double& x, double& y)
+{
     getXY(mLastPos, x, y);
 }
 
-
-void
-OpenGL2dModel::reset() {
+void OpenGL2dModel::reset()
+{
     clearAllObjects();
     clearPoints();
     mDrawType = m4d::enum_draw_pseudocart;
@@ -368,8 +369,8 @@ OpenGL2dModel::reset() {
     update();
 }
 
-
-void OpenGL2dModel::initializeGL() {
+void OpenGL2dModel::initializeGL()
+{
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -378,8 +379,8 @@ void OpenGL2dModel::initializeGL() {
     mDPIFactor[1] = QApplication::desktop()->devicePixelRatioF();
 }
 
-
-void OpenGL2dModel::paintGL() {
+void OpenGL2dModel::paintGL()
+{
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // -----------------------
@@ -395,7 +396,7 @@ void OpenGL2dModel::paintGL() {
         glVertex2f((float)(x * mXstep), 0.6f);
         glVertex2f((float)(x * mXstep), 1.0f);
         glEnd();
-       // renderText(x * mXstep, 0.1, 0.0, QString::number(x * mXstep), mTicksFont);
+        // renderText(x * mXstep, 0.1, 0.0, QString::number(x * mXstep), mTicksFont);
     }
 
     glLoadIdentity();
@@ -406,7 +407,7 @@ void OpenGL2dModel::paintGL() {
         glVertex2f(0.6f, y * mYstep);
         glVertex2f(1.0f, y * mYstep);
         glEnd();
-       // renderText(0.1, y * mYstep, 0.0, QString::number(y * mYstep), mTicksFont);
+        // renderText(0.1, y * mYstep, 0.0, QString::number(y * mYstep), mTicksFont);
     }
 
     glMatrixMode(GL_PROJECTION);
@@ -446,7 +447,7 @@ void OpenGL2dModel::paintGL() {
                     mObjects[i]->getValue(2, size);
                     QFont font;
                     font.setPixelSize((int)size);
-                   // this->renderText((double)cx, (double)cy, 0.0, QString(mObjects[i]->getText().c_str()), font);
+                    // this->renderText((double)cx, (double)cy, 0.0, QString(mObjects[i]->getText().c_str()), font);
                 }
             }
         }
@@ -515,15 +516,15 @@ void OpenGL2dModel::paintGL() {
     }
 }
 
-
-void OpenGL2dModel::resizeGL(int width, int height) {
+void OpenGL2dModel::resizeGL(int width, int height)
+{
     mWinSize[0] = static_cast<int>(width * mDPIFactor[0]);
     mWinSize[1] = static_cast<int>(height * mDPIFactor[1]);
     update();
 }
 
-
-void OpenGL2dModel::drawLattice() {
+void OpenGL2dModel::drawLattice()
+{
     glLineStipple(1, 0x1111);
     glEnable(GL_LINE_STIPPLE);
 
@@ -553,8 +554,8 @@ void OpenGL2dModel::drawLattice() {
     glEnd();
 }
 
-
-void OpenGL2dModel::keyPressEvent(QKeyEvent* event) {
+void OpenGL2dModel::keyPressEvent(QKeyEvent* event)
+{
     mKeyPressed = event->key();
 
     if (mKeyPressed == Qt::Key_C) {
@@ -582,14 +583,14 @@ void OpenGL2dModel::keyPressEvent(QKeyEvent* event) {
     update();
 }
 
-
-void OpenGL2dModel::keyReleaseEvent(QKeyEvent* event) {
+void OpenGL2dModel::keyReleaseEvent(QKeyEvent* event)
+{
     mKeyPressed = Qt::Key_No;
     event->ignore();
 }
 
-
-void OpenGL2dModel::mousePressEvent(QMouseEvent * event) {
+void OpenGL2dModel::mousePressEvent(QMouseEvent* event)
+{
     mButtonPressed = event->button();
     mLastPos = event->pos();
     mLastPos.setX(mLastPos.x() * mDPIFactor[0]);
@@ -603,8 +604,8 @@ void OpenGL2dModel::mousePressEvent(QMouseEvent * event) {
     }
 }
 
-
-void OpenGL2dModel::mouseReleaseEvent(QMouseEvent * event) {
+void OpenGL2dModel::mouseReleaseEvent(QMouseEvent* event)
+{
     mButtonPressed = Qt::NoButton;
     event->accept();
 
@@ -630,13 +631,13 @@ void OpenGL2dModel::mouseReleaseEvent(QMouseEvent * event) {
     }
 }
 
-
-void OpenGL2dModel::mouseMoveEvent(QMouseEvent * event) {
+void OpenGL2dModel::mouseMoveEvent(QMouseEvent* event)
+{
     QPoint cp = event->pos();
     cp.setX(static_cast<int>(cp.x() * mDPIFactor[0]));
     cp.setY(static_cast<int>(cp.y() * mDPIFactor[1]));
     QPoint dxy = cp - mLastPos;
-    mLastPos   = cp;
+    mLastPos = cp;
 
     if (mButtonPressed == Qt::LeftButton) {
         mXmin -= dxy.x() * mFactorX;
@@ -664,20 +665,20 @@ void OpenGL2dModel::mouseMoveEvent(QMouseEvent * event) {
     update();
 }
 
-
-void OpenGL2dModel::getXY(QPoint pos, double &x, double &y) {
+void OpenGL2dModel::getXY(QPoint pos, double& x, double& y)
+{
     x = (pos.x() - DEF_DRAW2D_LEFT_BORDER) / static_cast<double>(mWinSize[0] - DEF_DRAW2D_LEFT_BORDER) * (mXmax - mXmin) + mXmin;
     y = (mWinSize[1] - DEF_DRAW2D_BOTTOM_BORDER - pos.y()) / static_cast<double>(mWinSize[1] - DEF_DRAW2D_BOTTOM_BORDER) * (mYmax - mYmin) + mYmin;
 }
 
-
-void OpenGL2dModel::adjust() {
+void OpenGL2dModel::adjust()
+{
     mFactorX = (mXmax - mXmin) / static_cast<double>(mWinSize[0] - DEF_DRAW2D_LEFT_BORDER);
     mFactorY = (mYmax - mYmin) / static_cast<double>(mWinSize[1] - DEF_DRAW2D_BOTTOM_BORDER);
 }
 
-
-void OpenGL2dModel::getTightLattice() {
+void OpenGL2dModel::getTightLattice()
+{
     double pXstep = (mXmax - mXmin) / (double)DEF_DRAW2D_X_STEP;
     double pYstep = (mYmax - mYmin) / (double)DEF_DRAW2D_Y_STEP;
 
@@ -704,8 +705,8 @@ void OpenGL2dModel::getTightLattice() {
     mYstep = mStepList[mYstepIdx];
 }
 
-
-void OpenGL2dModel::setLattice() {
+void OpenGL2dModel::setLattice()
+{
     //bool hasChanged = false;
 
     int pixStepX = floor(mXstep / mFactorX);
@@ -747,7 +748,7 @@ void OpenGL2dModel::setLattice() {
     // fprintf(stderr,"%d %d  %d %d  %f %f\n",pixStepX,pixStepY,mXstepIdx,mYstepIdx,mXstep,mYstep);
 
     xStart = floor(mXmin / mXstep) + 1;
-    xEnd   = floor(mXmax / mXstep) + 1;
+    xEnd = floor(mXmax / mXstep) + 1;
     yStart = floor(mYmin / mYstep) + 1;
-    yEnd   = floor(mYmax / mYstep) + 1;
+    yEnd = floor(mYmax / mYstep) + 1;
 }

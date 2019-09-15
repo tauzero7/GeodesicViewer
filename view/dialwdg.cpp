@@ -25,10 +25,9 @@
 #include "dialwdg.h"
 
 #ifndef RAD_TO_DEG
-#define RAD_TO_DEG  57.295779513082320875
-#define DEG_TO_RAD  0.017453292519943295770
+#define RAD_TO_DEG 57.295779513082320875
+#define DEG_TO_RAD 0.017453292519943295770
 #endif
-
 
 /*! Constructor of the DialWidget
  * \param initValue : initial value.
@@ -36,27 +35,29 @@
  * \param parent : parent widget.
  */
 DialWidget::DialWidget(double initValue, double step, QWidget* parent)
-    : QWidget(parent) {
+    : QWidget(parent)
+{
     mInitValue = initValue;
     if (step == 0.0) {
         mStep = 0.01;
     } else {
         mStep = step;
     }
-    arcMax  = 360.0;
+    arcMax = 360.0;
 }
 
 /*!
  */
-DialWidget::~DialWidget() {
+DialWidget::~DialWidget()
+{
 }
-
 
 // *********************************** public methods *********************************
 
 /*!
  */
-void DialWidget::reset() {
+void DialWidget::reset()
+{
     mValue = mInitValue;
     repaint();
 }
@@ -64,14 +65,16 @@ void DialWidget::reset() {
 /*! Set compass range.
  * \param valMax : maximum value
  */
-void DialWidget::setMax(double valMax) {
+void DialWidget::setMax(double valMax)
+{
     arcMax = valMax;
 }
 
 /*! Set value.
  * \param val : value
  */
-void DialWidget::setValue(double val) {
+void DialWidget::setValue(double val)
+{
     mValue = val;
     if (mValue < 0.0) {
         mValue += arcMax;
@@ -81,11 +84,11 @@ void DialWidget::setValue(double val) {
     repaint();
 }
 
-
 /*! Set step.
  * \param step : step value
  */
-void DialWidget::setStep(double step) {
+void DialWidget::setStep(double step)
+{
     if (step != 0.0) {
         mStep = step;
     }
@@ -95,15 +98,18 @@ void DialWidget::setStep(double step) {
  * \return value
  */
 double
-DialWidget::value() {
+DialWidget::value()
+{
     return mValue;
 }
 
-void DialWidget::doStep(int step) {
+void DialWidget::doStep(int step)
+{
     setValue(mValue + step * mStep);
 }
 
-void DialWidget::setInitialValue(double value) {
+void DialWidget::setInitialValue(double value)
+{
     mInitValue = value;
 }
 
@@ -112,8 +118,9 @@ void DialWidget::setInitialValue(double value) {
 /*! Show event
  *  \param event : show event.
  */
-void DialWidget::showEvent(QShowEvent * event) {
-    dspWidth  = width();
+void DialWidget::showEvent(QShowEvent* event)
+{
+    dspWidth = width();
     dspHeight = height();
     dspRadius = ((dspWidth > dspHeight) ? dspHeight : dspWidth) / 2 - 2;
     dspCenter = QPoint(dspWidth / 2 - 2, dspHeight / 2);
@@ -123,7 +130,8 @@ void DialWidget::showEvent(QShowEvent * event) {
 
 /*! Paint event
  */
-void DialWidget::paintEvent(QPaintEvent *) {
+void DialWidget::paintEvent(QPaintEvent*)
+{
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
 
@@ -177,7 +185,8 @@ void DialWidget::paintEvent(QPaintEvent *) {
 /*! Mouse move event
  *  \param event : mouse event.
  */
-void DialWidget::mouseMoveEvent(QMouseEvent *event) {
+void DialWidget::mouseMoveEvent(QMouseEvent* event)
+{
     QPoint pos = event->pos() - dspCenter;
     posToAngle(pos);
     repaint();
@@ -187,7 +196,8 @@ void DialWidget::mouseMoveEvent(QMouseEvent *event) {
 /*! Mouse press event
  *  \param event : mouse event.
  */
-void DialWidget::mousePressEvent(QMouseEvent *event) {
+void DialWidget::mousePressEvent(QMouseEvent* event)
+{
     if (event->button() == Qt::LeftButton) {
         QPoint pos = event->pos() - dspCenter;
         posToAngle(pos);
@@ -197,7 +207,8 @@ void DialWidget::mousePressEvent(QMouseEvent *event) {
 
 /*! Wheel event
  */
-void DialWidget::wheelEvent(QWheelEvent *event) {
+void DialWidget::wheelEvent(QWheelEvent* event)
+{
     int delta = event->delta();
     doStep((delta > 0 ? 1 : -1));
     repaint();
@@ -207,8 +218,9 @@ void DialWidget::wheelEvent(QWheelEvent *event) {
 /*! Transform pointer position to angle.
  * \param pos : pointer position.
  */
-void DialWidget::posToAngle(QPoint pos) {
-    mValue = angle = floor((atan2((double) - pos.x(), (double)pos.y()) + M_PI) * RAD_TO_DEG / mStep) * mStep;
+void DialWidget::posToAngle(QPoint pos)
+{
+    mValue = angle = floor((atan2((double)-pos.x(), (double)pos.y()) + M_PI) * RAD_TO_DEG / mStep) * mStep;
     if (angle < 0.0) {
         mValue = 0.0;
     }

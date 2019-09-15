@@ -17,7 +17,7 @@
 
 class MApplication : public QApplication {
 public:
-    MApplication(int &argc, char **argv, char* exePath);
+    MApplication(int& argc, char** argv, char* exePath);
 };
 
 #endif // MAPPLICATION_H

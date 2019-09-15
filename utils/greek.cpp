@@ -1,51 +1,23 @@
-// --------------------------------------------------------------------------------
-/*
-    greek.cpp
-
-  Copyright (c) 2009-2015  Thomas Mueller, Frank Grave
-
-
-   This file is part of the GeodesicViewer.
-
-   The GeodesicViewer is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   The GeodesicViewer is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with the GeodesicViewer.  If not, see <http://www.gnu.org/licenses/>.
-*/
-// -------------------------------------------------------------------------------
-
-#include <QString>
+/**
+ * @file    greek.cpp
+ * @author  Thomas Mueller
+ *
+ * This file is part of GeodesicView.
+ */
 #include "greek.h"
+#include <QString>
 
-
-// ---------------------------------------------------
-//constructur/destructor
-// ---------------------------------------------------
-GreekLetter::GreekLetter() {
+GreekLetter::GreekLetter()
+{
     init();
 }
 
-GreekLetter::~GreekLetter() {
-
+GreekLetter::~GreekLetter()
+{
 }
 
-
-// *********************************** public methods ******************************
-/**
- * convert string representation of greek character to unicode char
- * @param greekName greek character as string
- * @return unicode char
- */
-QChar
-GreekLetter::toChar(QString greekName) {
+QChar GreekLetter::toChar(QString greekName)
+{
     QHash<QString, QChar>::const_iterator i = mCharHash.find(greekName);
 
     if (i != mCharHash.end()) {
@@ -57,12 +29,8 @@ GreekLetter::toChar(QString greekName) {
     }
 }
 
-// ******************************** protected methods ******************************
-/**
- * start up
- */
-void
-GreekLetter::init() {
+void GreekLetter::init()
+{
     mCharHash.insert(QString("alpha"), char_alpha);
     mCharHash.insert(QString("beta"), char_beta);
     mCharHash.insert(QString("gamma"), char_gamma);
@@ -112,4 +80,3 @@ GreekLetter::init() {
     mCharHash.insert(QString("Psi"), char_Psi);
     mCharHash.insert(QString("Omega"), char_Omega);
 }
-

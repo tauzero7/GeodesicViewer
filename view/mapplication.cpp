@@ -8,11 +8,11 @@
 #include <QFile>
 #include <QTextStream>
 
-MApplication::MApplication(int &argc, char **argv, char* exePath) :
-  QApplication(argc, argv)
+MApplication::MApplication(int& argc, char** argv, char* exePath)
+    : QApplication(argc, argv)
 {
     setStyle(QStyleFactory::create("Fusion"));
-    
+
     DarkPalette darkPalette;
     setPalette(darkPalette);
 
@@ -25,7 +25,7 @@ MApplication::MApplication(int &argc, char **argv, char* exePath) :
     QFile cssFile(cssFilename);
     if (cssFile.open(QFile::ReadOnly)) {
         QTextStream styleIn(&cssFile);
-        while(!styleIn.atEnd()) {
+        while (!styleIn.atEnd()) {
             QString line = styleIn.readLine();
             if (!line.startsWith('#')) {
                 cssStyle += line;
@@ -33,8 +33,7 @@ MApplication::MApplication(int &argc, char **argv, char* exePath) :
         }
         cssFile.close();
         setStyleSheet(cssStyle);
-    }
-    else {
+    } else {
         fprintf(stderr, "Could not open stylesheet file '%s'.\n", cssFilename.toStdString().c_str());
     }
 }

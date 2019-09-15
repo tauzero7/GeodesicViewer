@@ -1,32 +1,11 @@
-// --------------------------------------------------------------------------------
-/*
-    greek.h
-
-  Copyright (c) 2009-2015  Thomas Mueller, Frank Grave
-
-
-   This file is part of the GeodesicViewer.
-
-   The GeodesicViewer is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   The GeodesicViewer is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with the GeodesicViewer.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-/*!  \class  GreekLetter
-     \brief  Transform greek letters into symbols.
-
-*/
-// --------------------------------------------------------------------------------
-
+/**
+ * @file    greek.h
+ * @author  Thomas Mueller
+ *
+ * @brief  Greek letters
+ *
+ * This file is part of GeodesicView.
+ */
 #ifndef GREEK_LETTERS
 #define GREEK_LETTERS
 
@@ -34,8 +13,6 @@
 #include <QHash>
 #include <string>
 
-
-//greek letters
 static QChar char_alpha(0x03B1);
 static QChar char_beta(0x03B2);
 static QChar char_gamma(0x03B3);
@@ -87,8 +64,6 @@ static QChar char_Chi(0x03A7);
 static QChar char_Psi(0x03A8);
 static QChar char_Omega(0x03A9);
 
-
-
 class GreekLetter {
 public:
     GreekLetter();
@@ -100,35 +75,7 @@ protected:
     void init();
 
 private:
-    QHash<QString,QChar> mCharHash;
+    QHash<QString, QChar> mCharHash;
 };
 
-
-
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

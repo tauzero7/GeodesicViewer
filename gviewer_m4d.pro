@@ -12,10 +12,9 @@ M4D_DIR      = $$TOP_DIR/../libMotion4D/
 ## If your Gnu Scientific Library is not
 ## installed in the standard paths, please
 ## fix this variable accordingly.
-GSL_DIR = /Users/tmueller/local/gsl/2.5
-win32 {
-GSL_DIR  = D:/local/amplgsl
-}
+unix: GSL_DIR = /usr/local/gsl/2.4
+macx: GSL_DIR = /Users/tmueller/local/gsl/2.5
+win32: GSL_DIR  = D:/local/amplgsl
 
 ## Do not change these lines
 M4D_SRC_DIR  = $$M4D_DIR/src

@@ -1,84 +1,52 @@
-// --------------------------------------------------------------------------------
-/*
-    ledpub_widget.cpp
-
-  Copyright (c) 2009-2015  Thomas Mueller, Frank Grave
-
-
-   This file is part of the GeodesicViewer.
-
-   The GeodesicViewer is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   The GeodesicViewer is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with the GeodesicViewer.  If not, see <http://www.gnu.org/licenses/>.
-*/
-// -------------------------------------------------------------------------------
-
-#include <QHBoxLayout>
+/**
+ * @file    ledpub_widget.cpp
+ * @author  Thomas Mueller
+ *
+ * This file is part of GeodesicView.
+ */
 #include "ledpub_widget.h"
+#include <QHBoxLayout>
 
-// ---------------------------------------------------
-//    constructur/destructor
-// ---------------------------------------------------
 LedPub::LedPub(bool loadDir, QWidget* parent)
-    : QWidget(parent) {
+    : QWidget(parent)
+{
     mLoadDir = loadDir;
     mDirPath = QString();
     init();
 }
 
-LedPub::~LedPub() {
+LedPub::~LedPub()
+{
 }
 
-// ********************************** public methods *****************************
-/*! Set name.
- * \param filename : name of file.
- */
-void LedPub::setName(QString filename) {
+void LedPub::setName(QString filename)
+{
     led_text->setText(filename);
 }
 
-/*! Get name.
- * \return name of file.
- */
-QString LedPub::getName() {
+QString LedPub::getName()
+{
     return led_text->text();
 }
 
-/*! Set directory path.
- * \param path : name of path.
- */
-void LedPub::setDirPath(QString path) {
+void LedPub::setDirPath(QString path)
+{
     mDirPath = path;
 }
 
-/*! Get directory path.
- * \return name of path.
- */
-QString LedPub::getDirPath() {
+QString LedPub::getDirPath()
+{
     return mDirPath;
 }
 
-/*!
- */
-void LedPub::setEnabled(bool enable) {
+void LedPub::setEnabled(bool enable)
+{
     led_text->setEnabled(enable);
     pub_file->setEnabled(enable);
 }
 
-
-// *********************************** public slots ******************************
-/*! Load file
- */
-void LedPub::slot_load_file() {
+void LedPub::slot_load_file()
+{
     QString name, path;
 
     if (mLoadDir) {
@@ -101,19 +69,15 @@ void LedPub::slot_load_file() {
     }
 }
 
-// ********************************* protected methods *****************************
-
-/*! Initialize view.
- */
-void LedPub::init() {
+void LedPub::init()
+{
     initElements();
     initGUI();
     initControl();
 }
 
-/*! Initialize view elements.
- */
-void LedPub::initElements() {
+void LedPub::initElements()
+{
     led_text = new QLineEdit();
     led_text->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     pub_file = new QPushButton("...");
@@ -121,9 +85,8 @@ void LedPub::initElements() {
     pub_file->setMaximumWidth(30);
 }
 
-/*! Construct graphical user interface.
- */
-void LedPub::initGUI() {
+void LedPub::initGUI()
+{
     QHBoxLayout* layout = new QHBoxLayout();
 
     layout->addWidget(led_text);
@@ -133,8 +96,7 @@ void LedPub::initGUI() {
     setLayout(layout);
 }
 
-/*! Connect signals and slots.
- */
-void LedPub::initControl() {
+void LedPub::initControl()
+{
     connect(pub_file, SIGNAL(pressed()), this, SLOT(slot_load_file()));
 }
