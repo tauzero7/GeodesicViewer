@@ -120,7 +120,7 @@ protected:
 private:
     struct_params*     mParams;
     Camera             mCamera;
-
+    double             mDPIFactor[2];
     enum_mouse_handle  mMouseHandle;
     enum_projection    mProjection;
     enum_draw_style    mDrawStyle;

@@ -5,6 +5,8 @@
  * This file is part of GeodesicView.
  */
 #include <fstream>
+#include <QApplication>
+#include <QDesktopWidget>
 #include "opengl2d_model.h"
 #include <math/TransCoordinates.h>
 
@@ -371,6 +373,9 @@ void OpenGL2dModel::initializeGL() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+    mDPIFactor[0] = QApplication::desktop()->devicePixelRatioF();
+    mDPIFactor[1] = QApplication::desktop()->devicePixelRatioF();
 }
 
 
@@ -512,8 +517,8 @@ void OpenGL2dModel::paintGL() {
 
 
 void OpenGL2dModel::resizeGL(int width, int height) {
-    mWinSize[0] = width;
-    mWinSize[1] = height;
+    mWinSize[0] = static_cast<int>(width * mDPIFactor[0]);
+    mWinSize[1] = static_cast<int>(height * mDPIFactor[1]);
     update();
 }
 
@@ -587,6 +592,8 @@ void OpenGL2dModel::keyReleaseEvent(QKeyEvent* event) {
 void OpenGL2dModel::mousePressEvent(QMouseEvent * event) {
     mButtonPressed = event->button();
     mLastPos = event->pos();
+    mLastPos.setX(mLastPos.x() * mDPIFactor[0]);
+    mLastPos.setY(mLastPos.y() * mDPIFactor[1]);
 
     if (mButtonPressed == Qt::RightButton) {
         getXY(mLastPos, mZoomXul, mZoomYul);
@@ -625,8 +632,11 @@ void OpenGL2dModel::mouseReleaseEvent(QMouseEvent * event) {
 
 
 void OpenGL2dModel::mouseMoveEvent(QMouseEvent * event) {
-    QPoint dxy = event->pos() - mLastPos;
-    mLastPos   = event->pos();
+    QPoint cp = event->pos();
+    cp.setX(static_cast<int>(cp.x() * mDPIFactor[0]));
+    cp.setY(static_cast<int>(cp.y() * mDPIFactor[1]));
+    QPoint dxy = cp - mLastPos;
+    mLastPos   = cp;
 
     if (mButtonPressed == Qt::LeftButton) {
         mXmin -= dxy.x() * mFactorX;
@@ -656,14 +666,14 @@ void OpenGL2dModel::mouseMoveEvent(QMouseEvent * event) {
 
 
 void OpenGL2dModel::getXY(QPoint pos, double &x, double &y) {
-    x = (double)(pos.x() - DEF_DRAW2D_LEFT_BORDER) / (DEF_OPENGL_WIDTH - DEF_DRAW2D_LEFT_BORDER) * (mXmax - mXmin) + mXmin;
-    y = (double)(DEF_OPENGL_HEIGHT - DEF_DRAW2D_BOTTOM_BORDER - pos.y()) / (DEF_OPENGL_HEIGHT - DEF_DRAW2D_BOTTOM_BORDER) * (mYmax - mYmin) + mYmin;
+    x = (pos.x() - DEF_DRAW2D_LEFT_BORDER) / static_cast<double>(mWinSize[0] - DEF_DRAW2D_LEFT_BORDER) * (mXmax - mXmin) + mXmin;
+    y = (mWinSize[1] - DEF_DRAW2D_BOTTOM_BORDER - pos.y()) / static_cast<double>(mWinSize[1] - DEF_DRAW2D_BOTTOM_BORDER) * (mYmax - mYmin) + mYmin;
 }
 
 
 void OpenGL2dModel::adjust() {
-    mFactorX = (mXmax - mXmin) / (double)(DEF_OPENGL_WIDTH - DEF_DRAW2D_LEFT_BORDER);
-    mFactorY = (mYmax - mYmin) / (double)(DEF_OPENGL_HEIGHT - DEF_DRAW2D_BOTTOM_BORDER);
+    mFactorX = (mXmax - mXmin) / static_cast<double>(mWinSize[0] - DEF_DRAW2D_LEFT_BORDER);
+    mFactorY = (mYmax - mYmin) / static_cast<double>(mWinSize[1] - DEF_DRAW2D_BOTTOM_BORDER);
 }
 
 

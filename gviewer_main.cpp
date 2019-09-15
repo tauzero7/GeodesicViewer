@@ -44,6 +44,8 @@ int main(int argc, char *argv[]) {
     char* exePath = nullptr;
     GetExePath(exePath);
 
+    QApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
+
     MApplication app(argc, argv, exePath);
     if (exePath != nullptr) {
         delete [] exePath;

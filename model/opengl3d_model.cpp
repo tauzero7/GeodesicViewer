@@ -5,6 +5,8 @@
  * This file is part of GeodesicView.
  */
 #include <fstream>
+#include <QApplication>
+#include <QDesktopWidget>
 #include "opengl3d_model.h"
 #include <math/TransCoordinates.h>
 
@@ -777,6 +779,9 @@ void OpenGL3dModel::initializeGL() {
     shader->addShaderFromSourceCode(QOpenGLShader::Fragment, getFragmentShaderCode());
     shader->link();
     // std::cerr << "OpenGL frag log: " << shader->isLinked() << std::endl;
+
+    mDPIFactor[0] = QApplication::desktop()->devicePixelRatioF();
+    mDPIFactor[1] = QApplication::desktop()->devicePixelRatioF();
 }
 
 
@@ -1091,7 +1096,7 @@ void OpenGL3dModel::paintGL_axes() {
 
 
 void OpenGL3dModel::resizeGL(int width, int height) {
-    mCamera.setSize(width, height);
+    mCamera.setSize(static_cast<int>(width * mDPIFactor[0]), static_cast<int>(height * mDPIFactor[1]));
     update();
 }
 
@@ -1176,7 +1181,10 @@ void OpenGL3dModel::keyReleaseEvent(QKeyEvent* event) {
 
 void OpenGL3dModel::mousePressEvent(QMouseEvent * event) {
     mButtonPressed = event->button();
-    mLastPos = event->pos();
+    QPoint cp = event->pos();
+    cp.setX(static_cast<int>(cp.x() * mDPIFactor[0]));
+    cp.setY(static_cast<int>(cp.y() * mDPIFactor[1]));
+    mLastPos = cp;
 }
 
 
@@ -1187,8 +1195,11 @@ void OpenGL3dModel::mouseReleaseEvent(QMouseEvent * event) {
 
 
 void OpenGL3dModel::mouseMoveEvent(QMouseEvent * event) {
-    QPoint dxy = event->pos() - mLastPos;
-    mLastPos   = event->pos();
+    QPoint cp = event->pos();
+    cp.setX(static_cast<int>(cp.x() * mDPIFactor[0]));
+    cp.setY(static_cast<int>(cp.y() * mDPIFactor[1]));
+    QPoint dxy = cp - mLastPos;
+    mLastPos   = cp;
 
     switch (mMouseHandle) {
         /* ------------------------------

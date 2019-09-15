@@ -103,7 +103,12 @@
 
 #include <gdefs.h>
 #include <m4dGlobalDefs.h>
+
+#ifdef __APPLE__
+#include <OpenGL/glu.h>
+#else
 #include <GL/glu.h>
+#endif
 
 const GLfloat color_white[4] = {1.0,1.0,1.0,1.0};
 

@@ -7,6 +7,10 @@
 #include "utilities.h"
 #include <unistd.h>
 
+#ifdef __APPLE__
+#include <mach-o/dyld.h>
+#endif
+
 bool CopyString(const char* src, char*& dest) {
     if (src == nullptr) {
         return false;

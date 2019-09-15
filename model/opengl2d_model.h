@@ -90,6 +90,7 @@ private:
     struct_params*     mParams;
 
     int                mWinSize[2];
+    double             mDPIFactor[2];
     enum_mouse_handle  mMouseHandle;
     enum_draw_style    mDrawStyle;
 
