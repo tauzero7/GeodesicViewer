@@ -1,47 +1,26 @@
-// --------------------------------------------------------------------------------
-/*
-    opengl2d_model.cpp
-
-  Copyright (c) 2010  Thomas Mueller
-
-
-   This file is part of the GeodesicViewer.
-
-   The GeodesicViewer is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   The GeodesicViewer is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with the GeodesicViewer.  If not, see <http://www.gnu.org/licenses/>.
-*/
-// -------------------------------------------------------------------------------
-
+/**
+ * @file    opengl2d_model.cpp
+ * @author  Thomas Mueller
+ *
+ * This file is part of GeodesicView.
+ */
 #include <fstream>
 #include "opengl2d_model.h"
 #include <math/TransCoordinates.h>
 
 extern m4d::Object mObject;
 
-/*! Standard constructor.
- *  \param par : pointer to struct.
- *  \param parent : pointer to parent widget.
- */
 OpenGL2dModel::OpenGL2dModel(struct_params* par, QWidget* parent)
-    : QGLWidget(QGLFormat(QGL::DoubleBuffer | QGL::DepthBuffer | QGL::AlphaChannel), parent) {
+    : QOpenGLWidget(parent) {
     mParams = par;
 
     mButtonPressed = Qt::NoButton;
     setFocusPolicy(Qt::ClickFocus);
     mKeyPressed = Qt::Key_No;
 
-    setMinimumSize(DEF_OPENGL_WIDTH, DEF_OPENGL_HEIGHT);
-    setMaximumSize(DEF_OPENGL_WIDTH, DEF_OPENGL_HEIGHT);
+    mWinSize[0] = DEF_OPENGL_WIDTH;
+    mWinSize[1] = DEF_OPENGL_HEIGHT;
+    mAspect = (mWinSize[0] - DEF_DRAW2D_BOTTOM_BORDER) / static_cast<double>(mWinSize[1] - DEF_DRAW2D_LEFT_BORDER);
 
     mBGcolor   = mParams->draw2d_bg_color;
     mFGcolor   = mParams->draw2d_line_color;
@@ -54,7 +33,6 @@ OpenGL2dModel::OpenGL2dModel(struct_params* par, QWidget* parent)
     mShowNumVerts = 0;
     mDrawType     = m4d::enum_draw_pseudocart;
 
-    mAspect = (DEF_OPENGL_HEIGHT - DEF_DRAW2D_BOTTOM_BORDER) / (double)(DEF_OPENGL_WIDTH - DEF_DRAW2D_LEFT_BORDER);
     mXmin = mParams->draw2d_xMin;
     mXmax = mParams->draw2d_xMax;
     mYmin = mParams->draw2d_yMin;
@@ -87,18 +65,11 @@ OpenGL2dModel::OpenGL2dModel(struct_params* par, QWidget* parent)
     setMouseTracking(true);
 }
 
-/*! Standard destructor.
- */
 OpenGL2dModel::~OpenGL2dModel() {
 }
 
-// ************************************ public methods ********************************
-/*! Set geodesic points.
- *  \param  data : pointer to object.
- *  \param  dtype : type of drawing.
- *  \param  update : update gl.
- */
-void OpenGL2dModel::setPoints(m4d::enum_draw_type  dtype, bool update) {
+
+void OpenGL2dModel::setPoints(m4d::enum_draw_type  dtype, bool needUpdate) {
     if (mVerts != nullptr) {
         delete [] mVerts;
     }
@@ -108,8 +79,8 @@ void OpenGL2dModel::setPoints(m4d::enum_draw_type  dtype, bool update) {
     mDrawType     = dtype;
 
     if (dtype == m4d::enum_draw_effpoti) {
-        if (update) {
-            updateGL();
+        if (needUpdate) {
+            update();
         }
         return;
     }
@@ -181,15 +152,13 @@ void OpenGL2dModel::setPoints(m4d::enum_draw_type  dtype, bool update) {
     }
 
     mShowNumVerts = mNumVerts;
-    if (update) {
-        updateGL();
+    if (needUpdate) {
+        update();
     }
 }
 
-/*! Delete points.
- */
-void
-OpenGL2dModel::clearPoints() {
+
+void OpenGL2dModel::clearPoints() {
     if (mVerts != nullptr) {
         delete [] mVerts;
     }
@@ -197,25 +166,17 @@ OpenGL2dModel::clearPoints() {
 
     mNumVerts = 0;
     mShowNumVerts = 0;
-    updateGL();
+    update();
 }
 
-/*!
- */
-void
-OpenGL2dModel::setAbsOrd(enum_draw_coord_num  absNum,  enum_draw_coord_num  ordNum) {
+
+void OpenGL2dModel::setAbsOrd(enum_draw_coord_num  absNum,  enum_draw_coord_num  ordNum) {
     mAbscissa = absNum;
     mOrdinate = ordNum;
 }
 
-/*! Set scaling parameters
- *  \param xMin : xmin
- *  \param xMax : xmax
- *  \param yMin : ymin
- *  \param yMax : ymax
- */
-void
-OpenGL2dModel::setScaling(double xMin, double xMax, double yMin, double yMax) {
+
+void OpenGL2dModel::setScaling(double xMin, double xMax, double yMin, double yMax) {
     mXmin = xMin;
     mXmax = xMax;
     mYmin = yMin;
@@ -224,27 +185,19 @@ OpenGL2dModel::setScaling(double xMin, double xMax, double yMin, double yMax) {
 
     adjust();
     setLattice();
-    updateGL();
+    update();
 }
 
-/*! Set scaling parameters
- *  \param xMin : reference to xmin
- *  \param xMax : reference to xmax
- *  \param yMin : reference to ymin
- *  \param yMax : reference to ymax
- */
-void
-OpenGL2dModel::getScaling(double &xMin, double &xMax, double &yMin, double &yMax) {
+
+void OpenGL2dModel::getScaling(double &xMin, double &xMax, double &yMin, double &yMax) {
     xMin = mXmin;
     xMax = mXmax;
     yMin = mYmin;
     yMax = mYmax;
 }
 
-/*! Center view
- */
-void
-OpenGL2dModel::center() {
+
+void OpenGL2dModel::center() {
     double deltaX = (mXmax - mXmin) * 0.5;
     double deltaY = (mYmax - mYmin) * 0.5;
 
@@ -255,135 +208,97 @@ OpenGL2dModel::center() {
     setLattice();
 }
 
-/*!
- */
-void
-OpenGL2dModel::setStepIdx(int xidx, int yidx) {
+
+void OpenGL2dModel::setStepIdx(int xidx, int yidx) {
     mXstepIdx = xidx;
     mYstepIdx = yidx;
     mXstep = dbl_draw2d_steps[xidx].toDouble();
     mYstep = dbl_draw2d_steps[yidx].toDouble();
     setLattice();
-    updateGL();
+    update();
 }
 
-void
-OpenGL2dModel::getStepIdx(int &xidx, int &yidx) {
+
+void OpenGL2dModel::getStepIdx(int &xidx, int &yidx) {
     xidx = mXstepIdx;
     yidx = mYstepIdx;
 }
 
-/*! Clear all objects.
- */
-void
-OpenGL2dModel::clearAllObjects() {
+
+void OpenGL2dModel::clearAllObjects() {
     if (!mObjects.empty()) {
         mObjects.clear();
     }
-    updateGL();
+    update();
 }
 
-/*! Insert object.
- *  \param obj : pointer to object
- */
-void
-OpenGL2dModel::insertObject(MyObject* obj) {
+
+void OpenGL2dModel::insertObject(MyObject* obj) {
     makeCurrent();
     MyObject* no = new MyObject(*obj);
     mObjects.push_back(no);
-
-    updateGL();
+    update();
 }
 
-/*! Set foreground color.
- *  \param  col : foreground color.
- */
-void
-OpenGL2dModel::setFGcolor(QColor col) {
+
+void OpenGL2dModel::setFGcolor(QColor col) {
     mFGcolor = col;
-    updateGL();
+    update();
 }
 
-/*! Set background color.
- *  \param  col : background color.
- */
-void
-OpenGL2dModel::setBGcolor(QColor col) {
+
+void OpenGL2dModel::setBGcolor(QColor col) {
     mBGcolor = col;
-    updateGL();
+    update();
 }
 
-/*! Set grid color.
- *  \param  col : grid color.
- */
-void
-OpenGL2dModel::setGridColor(QColor col) {
+
+void OpenGL2dModel::setGridColor(QColor col) {
     mGridColor = col;
-    updateGL();
+    update();
 }
 
-/*! Set all colors.
- * \param fgcol : foreground color.
- * \param bgcol : background color.
- * \param gridcol : grid color.
- */
-void
-OpenGL2dModel::setColors(QColor fgcol, QColor bgcol, QColor gridcol) {
+
+void OpenGL2dModel::setColors(QColor fgcol, QColor bgcol, QColor gridcol) {
     mBGcolor = bgcol;
     mFGcolor = fgcol;
     mGridColor = gridcol;
-    updateGL();
+    update();
 }
 
-/*! Set line width.
- *  \param width : line width/point size.
- */
-void
-OpenGL2dModel::setLineWidth(int width) {
+
+void OpenGL2dModel::setLineWidth(int width) {
     mLineWidth = width;
-    updateGL();
+    update();
 }
 
-/*! Set line anti-aliasing.
- *  \param smooth : 1=doAntialiasing
- */
-void
-OpenGL2dModel::setLineSmooth(int smooth) {
+
+void OpenGL2dModel::setLineSmooth(int smooth) {
     mLineSmooth = smooth;
-    updateGL();
+    update();
 }
 
-/*! Set drawing style.
- *  \param  style : drawing style.
- *  \sa enum_draw_style.
- */
-void
-OpenGL2dModel::setStyle(enum_draw_style  style) {
+
+void OpenGL2dModel::setStyle(enum_draw_style  style) {
     mDrawStyle = style;
 }
 
-/*! Set number of vertices do be drawn.
- *  \param num : number of vertices to be drawn.
- */
-void
-OpenGL2dModel::showNumVerts(int num) {
+
+void OpenGL2dModel::showNumVerts(int num) {
     mShowNumVerts = num;
     if (mShowNumVerts < 0) {
         mShowNumVerts = 0;
     } else if (mShowNumVerts > mNumVerts) {
         mShowNumVerts = mNumVerts;
     }
-    updateGL();
+    update();
 }
 
-/*! Save rgb image.
- *  \param filename : image name.
- */
-bool
-OpenGL2dModel::saveRGBimage(QString filename) {
+
+bool OpenGL2dModel::saveRGBimage(QString filename) {
     unsigned char* buf = new unsigned char[DEF_OPENGL_WIDTH * DEF_OPENGL_HEIGHT * 4];
 
-    updateGL();
+    update();
     glReadBuffer(GL_BACK);
     glReadPixels(0, 0, DEF_OPENGL_WIDTH, DEF_OPENGL_HEIGHT, GL_RGB, GL_UNSIGNED_BYTE, buf);
 
@@ -419,10 +334,8 @@ OpenGL2dModel::saveRGBimage(QString filename) {
     return true;
 }
 
-/*!  Update viewing parameters.
- */
-void
-OpenGL2dModel::updateParams() {
+
+void OpenGL2dModel::updateParams() {
     mLineWidth  = mParams->draw2d_line_width;
     mLineSmooth = mParams->draw2d_line_smooth;
     mBGcolor    = mParams->draw2d_bg_color;
@@ -435,77 +348,66 @@ OpenGL2dModel::updateParams() {
     adjust();
     getTightLattice();
     setLattice();
-    updateGL();
+    update();
 }
 
-/*!  Get current position.
- *  \param x : reference to x position.
- *  \param y : reference to y position.
- */
-void
-OpenGL2dModel::getCurrPos(double &x, double &y) {
+
+void OpenGL2dModel::getCurrPos(double &x, double &y) {
     getXY(mLastPos, x, y);
 }
 
-/*! Reset.
- */
+
 void
 OpenGL2dModel::reset() {
     clearAllObjects();
     clearPoints();
     mDrawType = m4d::enum_draw_pseudocart;
     updateParams();
-    updateGL();
+    update();
 }
 
-// *********************************** protected methods ******************************
-/*!
- *
- */
-void
-OpenGL2dModel::initializeGL() {
+
+void OpenGL2dModel::initializeGL() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
-/*!
- */
-void
-OpenGL2dModel::paintGL() {
+
+void OpenGL2dModel::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    /* -----------------------
-    *   draw ticks
-    * ----------------------- */
+    // -----------------------
+    //   draw ticks
+    // -----------------------
     glColor3f(1, 1, 0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluOrtho2D(mXmin, mXmax, 0, 1);
-    glViewport(DEF_DRAW2D_LEFT_BORDER, 0, DEF_OPENGL_WIDTH - DEF_DRAW2D_LEFT_BORDER, DEF_DRAW2D_BOTTOM_BORDER);
+    glViewport(DEF_DRAW2D_LEFT_BORDER, 0, mWinSize[0] - DEF_DRAW2D_LEFT_BORDER, DEF_DRAW2D_BOTTOM_BORDER);
     for (int x = xStart; x < xEnd; x++) {
         glBegin(GL_LINES);
         glVertex2f((float)(x * mXstep), 0.6f);
         glVertex2f((float)(x * mXstep), 1.0f);
         glEnd();
-        renderText(x * mXstep, 0.1, 0.0, QString::number(x * mXstep), mTicksFont);
+       // renderText(x * mXstep, 0.1, 0.0, QString::number(x * mXstep), mTicksFont);
     }
 
     glLoadIdentity();
     gluOrtho2D(0, 1, mYmin, mYmax);
-    glViewport(0, DEF_DRAW2D_BOTTOM_BORDER, DEF_DRAW2D_LEFT_BORDER, DEF_OPENGL_HEIGHT - DEF_DRAW2D_BOTTOM_BORDER);
+    glViewport(0, DEF_DRAW2D_BOTTOM_BORDER, DEF_DRAW2D_LEFT_BORDER, mWinSize[1] - DEF_DRAW2D_BOTTOM_BORDER);
     for (int y = yStart; y < yEnd; y++) {
         glBegin(GL_LINES);
         glVertex2f(0.6f, y * mYstep);
         glVertex2f(1.0f, y * mYstep);
         glEnd();
-        renderText(0.1, y * mYstep, 0.0, QString::number(y * mYstep), mTicksFont);
+       // renderText(0.1, y * mYstep, 0.0, QString::number(y * mYstep), mTicksFont);
     }
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluOrtho2D(mXmin, mXmax, mYmin, mYmax);
-    glViewport(DEF_DRAW2D_LEFT_BORDER, DEF_DRAW2D_BOTTOM_BORDER, DEF_OPENGL_WIDTH - DEF_DRAW2D_LEFT_BORDER, DEF_OPENGL_HEIGHT - DEF_DRAW2D_BOTTOM_BORDER);
+    glViewport(DEF_DRAW2D_LEFT_BORDER, DEF_DRAW2D_BOTTOM_BORDER, mWinSize[0] - DEF_DRAW2D_LEFT_BORDER, mWinSize[1] - DEF_DRAW2D_BOTTOM_BORDER);
 
     /* -----------------------
     *   draw background
@@ -539,7 +441,7 @@ OpenGL2dModel::paintGL() {
                     mObjects[i]->getValue(2, size);
                     QFont font;
                     font.setPixelSize((int)size);
-                    this->renderText((double)cx, (double)cy, 0.0, QString(mObjects[i]->getText().c_str()), font);
+                   // this->renderText((double)cx, (double)cy, 0.0, QString(mObjects[i]->getText().c_str()), font);
                 }
             }
         }
@@ -608,10 +510,15 @@ OpenGL2dModel::paintGL() {
     }
 }
 
-/*!
- */
-void
-OpenGL2dModel::drawLattice() {
+
+void OpenGL2dModel::resizeGL(int width, int height) {
+    mWinSize[0] = width;
+    mWinSize[1] = height;
+    update();
+}
+
+
+void OpenGL2dModel::drawLattice() {
     glLineStipple(1, 0x1111);
     glEnable(GL_LINE_STIPPLE);
 
@@ -641,11 +548,8 @@ OpenGL2dModel::drawLattice() {
     glEnd();
 }
 
-/*!
- *  \param event : key event.
- */
-void
-OpenGL2dModel::keyPressEvent(QKeyEvent* event) {
+
+void OpenGL2dModel::keyPressEvent(QKeyEvent* event) {
     mKeyPressed = event->key();
 
     if (mKeyPressed == Qt::Key_C) {
@@ -670,23 +574,17 @@ OpenGL2dModel::keyPressEvent(QKeyEvent* event) {
         adjust();
         setLattice();
     }
-    updateGL();
+    update();
 }
 
-/*!
- *  \param event : key event.
- */
-void
-OpenGL2dModel::keyReleaseEvent(QKeyEvent* event) {
+
+void OpenGL2dModel::keyReleaseEvent(QKeyEvent* event) {
     mKeyPressed = Qt::Key_No;
     event->ignore();
 }
 
-/*!
- *  \param event : mouse event.
- */
-void
-OpenGL2dModel::mousePressEvent(QMouseEvent * event) {
+
+void OpenGL2dModel::mousePressEvent(QMouseEvent * event) {
     mButtonPressed = event->button();
     mLastPos = event->pos();
 
@@ -698,11 +596,8 @@ OpenGL2dModel::mousePressEvent(QMouseEvent * event) {
     }
 }
 
-/*!
- *  \param event : mouse event.
- */
-void
-OpenGL2dModel::mouseReleaseEvent(QMouseEvent * event) {
+
+void OpenGL2dModel::mouseReleaseEvent(QMouseEvent * event) {
     mButtonPressed = Qt::NoButton;
     event->accept();
 
@@ -724,15 +619,12 @@ OpenGL2dModel::mouseReleaseEvent(QMouseEvent * event) {
         setLattice();
         mShowZoom = false;
         emit scalingChanged();
-        updateGL();
+        update();
     }
 }
 
-/*!
- *  \param event : mouse event.
- */
-void
-OpenGL2dModel::mouseMoveEvent(QMouseEvent * event) {
+
+void OpenGL2dModel::mouseMoveEvent(QMouseEvent * event) {
     QPoint dxy = event->pos() - mLastPos;
     mLastPos   = event->pos();
 
@@ -759,29 +651,23 @@ OpenGL2dModel::mouseMoveEvent(QMouseEvent * event) {
     mParams->draw2d_yMin = mYmin;
     mParams->draw2d_yMax = mYmax;
     emit scalingChanged();
-    updateGL();
+    update();
 }
 
-/*!
- */
-void
-OpenGL2dModel::getXY(QPoint pos, double &x, double &y) {
+
+void OpenGL2dModel::getXY(QPoint pos, double &x, double &y) {
     x = (double)(pos.x() - DEF_DRAW2D_LEFT_BORDER) / (DEF_OPENGL_WIDTH - DEF_DRAW2D_LEFT_BORDER) * (mXmax - mXmin) + mXmin;
     y = (double)(DEF_OPENGL_HEIGHT - DEF_DRAW2D_BOTTOM_BORDER - pos.y()) / (DEF_OPENGL_HEIGHT - DEF_DRAW2D_BOTTOM_BORDER) * (mYmax - mYmin) + mYmin;
 }
 
-/*!
- */
-void
-OpenGL2dModel::adjust() {
+
+void OpenGL2dModel::adjust() {
     mFactorX = (mXmax - mXmin) / (double)(DEF_OPENGL_WIDTH - DEF_DRAW2D_LEFT_BORDER);
     mFactorY = (mYmax - mYmin) / (double)(DEF_OPENGL_HEIGHT - DEF_DRAW2D_BOTTOM_BORDER);
 }
 
-/*! Get tight lattice
- */
-void
-OpenGL2dModel::getTightLattice() {
+
+void OpenGL2dModel::getTightLattice() {
     double pXstep = (mXmax - mXmin) / (double)DEF_DRAW2D_X_STEP;
     double pYstep = (mYmax - mYmin) / (double)DEF_DRAW2D_Y_STEP;
 
@@ -808,10 +694,8 @@ OpenGL2dModel::getTightLattice() {
     mYstep = mStepList[mYstepIdx];
 }
 
-/*!
- */
-void
-OpenGL2dModel::setLattice() {
+
+void OpenGL2dModel::setLattice() {
     //bool hasChanged = false;
 
     int pixStepX = floor(mXstep / mFactorX);

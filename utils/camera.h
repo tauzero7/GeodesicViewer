@@ -1,32 +1,11 @@
-// --------------------------------------------------------------------------------
-/*
-    camera.h
-
-  Copyright (c) 2009-2015  Thomas Mueller, Frank Grave
-
-
-   This file is part of the GeodesicViewer.
-
-   The GeodesicViewer is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   The GeodesicViewer is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with the GeodesicViewer.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-/*!  \class  Camera
-     \brief  Camera handling.
-
-*/
-// --------------------------------------------------------------------------------
-
+/**
+ * @file    camera.h
+ * @author  Thomas Mueller
+ *
+ * @brief  Camera
+ *
+ * This file is part of GeodesicView.
+ */
 #ifndef CAMERA_H
 #define CAMERA_H
 
@@ -38,27 +17,17 @@
 #include <windows.h>
 #endif
 
-#ifndef __APPLE__
-//#include <GL/gl.h>
-//#include <GL/glu.h>
-#else
-//#include <gl.h>
-//#include <glu.h>
-#endif
-
 #include <m4dGlobalDefs.h>
 #include <utils/quaternions.h>
 
-
-// ---------------------------------------------------
-//     class definition:   Camera
-// ---------------------------------------------------
+/**
+ * @brief The Camera class
+ */
 class Camera {
 public:
     Camera();
     virtual ~Camera();
 
-// --------- public methods -----------
 public:
     void   setStandardParams();
 
@@ -72,14 +41,11 @@ public:
 
     void        setPOI(m4d::vec3 center);
     m4d::vec3   getPOI();
-    void        getPOI(float* poi);
 
     void        setVup(m4d::vec3 vup);
     m4d::vec3   getVup();
-    void        getVup(float* vup);
 
     m4d::vec3   getRight();
-    void        getRight(float* right);
 
     void        setFovY(double fovy);
     double      getFovY();
@@ -124,7 +90,7 @@ public:
 
     void        print(FILE* ptr = stderr);
 
-// --------- protected attributes -----------
+
 protected:
     m4d::vec3    mPos;
     m4d::vec3    mDir;
@@ -144,4 +110,5 @@ protected:
     m4d::vec3    mRight;
     m4d::vec3    mPOI;
 };
-#endif
+
+#endif // CAMERA_H

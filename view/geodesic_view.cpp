@@ -1314,7 +1314,7 @@ void GeodesicView::initGUI() {
     led_max_stepsize->setValidator(new QDoubleValidator(led_max_stepsize));
     led_max_stepsize->setEnabled(false);
 
-    QLabel* lab_min_stepsize = new QLabel("min step");
+   // QLabel* lab_min_stepsize = new QLabel("min step");
     led_min_stepsize = new QLineEdit(QString::number(mObject.min_stepsize));
     led_min_stepsize->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
     led_min_stepsize->setValidator(new QDoubleValidator(led_min_stepsize));
@@ -1337,12 +1337,12 @@ void GeodesicView::initGUI() {
     led_constraint_eps->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
     led_constraint_eps->setValidator(new QDoubleValidator(led_constraint_eps));
 
-    QLabel* lab_resize_eps = new QLabel("resize eps");
+   // QLabel* lab_resize_eps = new QLabel("resize eps");
     led_resize_eps = new QLineEdit(QString::number(DEF_RESIZE_EPSILON));
     led_resize_eps->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
     led_resize_eps->setValidator(new QDoubleValidator(led_resize_eps));
 
-    QLabel* lab_resize_fac = new QLabel("resize fac");
+   // QLabel* lab_resize_fac = new QLabel("resize fac");
     led_resize_fac = new QLineEdit(QString::number(DEF_RESIZE_FACTOR));
     led_resize_fac->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
     led_resize_fac->setValidator(new QDoubleValidator(led_resize_fac));

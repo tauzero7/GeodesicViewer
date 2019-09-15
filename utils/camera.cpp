@@ -1,46 +1,23 @@
-// --------------------------------------------------------------------------------
-/*
-    camera.cpp
-
-  Copyright (c) 2009-2015  Thomas Mueller, Frank Grave
-
-
-   This file is part of the GeodesicViewer.
-
-   The GeodesicViewer is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   The GeodesicViewer is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with the GeodesicViewer.  If not, see <http://www.gnu.org/licenses/>.
-*/
-// -------------------------------------------------------------------------------
-
-#include "camera.h"
-
-/*! Constructor of the simple OpenGL camera
+/**
+ * @file    camera.cpp
+ * @author  Thomas Mueller
+ *
+ * This file is part of GeodesicView.
  */
+#include "camera.h"
+#include <GL/glu.h>
+
+
 Camera::Camera() {
     setStandardParams();
 }
 
-/*! Destructor
- */
+
 Camera::~Camera() {
 }
 
-// *********************************** public methods ******************************
 
-/*!  Set standard parameters.
- */
-void
-Camera::setStandardParams() {
+void Camera::setStandardParams() {
     mPos = m4d::vec3(0.0, 0.0, 10.0);
     mDir = m4d::vec3(0.0, 0.0, -1.0);
     mVup = m4d::vec3(0.0, 1.0,  0.0);
@@ -69,49 +46,46 @@ Camera::setEyePos(m4d::vec3 pos) {
     mPos = pos;
 }
 
+
 m4d::vec3 Camera::getEyePos() {
     return mPos;
 }
 
-/*! Get camera position.
- * \param pos : pointer to position (4 floats: x,y,z,w)
- */
-void
-Camera::getEyePos(float* pos) {
-    pos[0] = (float)mPos[0];
-    pos[1] = (float)mPos[1];
-    pos[2] = (float)mPos[2];
-    pos[3] = 1.0f;
+
+void Camera::getEyePos(float* pos) {
+    if (pos == nullptr) {
+        return;
+    }
+
+    pos[0] = static_cast<float>(mPos.x(0));
+    pos[1] = static_cast<float>(mPos.x(1));
+    pos[2] = static_cast<float>(mPos.x(2));
 }
 
-/*! Set direction of camera view.
- *  \param dir : camera viewing direction
- */
-void
-Camera::setDir(m4d::vec3 dir) {
+
+void Camera::setDir(m4d::vec3 dir) {
     mDir = dir;
     mRight = (mDir ^ mVup).getNormalized();
 }
+
 
 m4d::vec3 Camera::getDir() {
     return mDir;
 }
 
-/*! Get direction of camera view.
- * \param dir : pointer to direction (3 floats).
- */
-void
-Camera::getDir(float* dir) {
-    dir[0] = (float)mDir[0];
-    dir[1] = (float)mDir[1];
-    dir[2] = (float)mDir[2];
+
+void Camera::getDir(float* dir) {
+    if (dir == nullptr) {
+        return;
+    }
+
+    dir[0] = static_cast<float>(mDir.x(0));
+    dir[1] = static_cast<float>(mDir.x(1));
+    dir[2] = static_cast<float>(mDir.x(2));
 }
 
-/*! Set point of interest.
- *  \param center : point of interest
- */
-void
-Camera::setPOI(m4d::vec3 center) {
+
+void Camera::setPOI(m4d::vec3 center) {
     mPOI = center;
     mDir = mPOI - mPos;
 
@@ -126,22 +100,8 @@ m4d::vec3 Camera::getPOI() {
     return mPOI;
 }
 
-/*! Get point of interest.
- * \param poi : pointer to point of interest (4 floats)
- */
-void
-Camera::getPOI(float* poi) {
-    poi[0] = (float)mPOI[0];
-    poi[1] = (float)mPOI[1];
-    poi[2] = (float)mPOI[2];
-    poi[3] = 1.0f;
-}
 
-/*! Set up-vector of camera.
- *  \param vup : vertical up-vector of the camera
- */
-void
-Camera::setVup(m4d::vec3 vup) {
+void Camera::setVup(m4d::vec3 vup) {
     mVup = vup;
     mRight = (mDir ^ mVup).getNormalized();
 }
@@ -150,31 +110,11 @@ m4d::vec3 Camera::getVup() {
     return mVup;
 }
 
-/*! Get up-vector of camera.
- *  \param vup : pointer to vertical up-vector of the camera (4 floats)
- */
-void
-Camera::getVup(float* vup) {
-    vup[0] = (float)mVup[0];
-    vup[1] = (float)mVup[1];
-    vup[2] = (float)mVup[2];
-    vup[3] = 0.0f;
-}
 
 m4d::vec3 Camera::getRight() {
     return mRight;
 }
 
-/*! Get right-vector of camera.
- *  \param right : pointer to right-vector (4 floats)
- */
-void
-Camera::getRight(float* right) {
-    right[0] = (float)mRight[0];
-    right[1] = (float)mRight[1];
-    right[2] = (float)mRight[2];
-    right[3] = 0.0f;
-}
 
 /*! Set field-of-view in y-direction.
  *  \param fovy : field of view in y-direction

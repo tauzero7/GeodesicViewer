@@ -1,36 +1,15 @@
-// --------------------------------------------------------------------------------
-/*
-    opengl2d_model.h
-
-  Copyright (c) 2010  Thomas Mueller
-
-
-   This file is part of the GeodesicViewer.
-
-   The GeodesicViewer is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   The GeodesicViewer is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with the GeodesicViewer.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-/*!  \class  OpenGL2dModel
-     \brief  Render engine for the 2d representation of geodesics based on OpenGL.
-
-*/
-// --------------------------------------------------------------------------------
-
+/**
+ * @file    opengl2d_model.h
+ * @author  Thomas Mueller
+ *
+ * @brief  Render engine for the 2d representation of geodesics based on OpenGL.
+ *
+ * This file is part of GeodesicView.
+ */
 #ifndef OPENGL2D_MODEL_H
 #define OPENGL2D_MODEL_H
 
-#include <QGLWidget>
+#include <QOpenGLWidget>
 #include <QMouseEvent>
 
 #include <gdefs.h>
@@ -41,20 +20,18 @@
 #include <metric/m4dMetric.h>
 #include <extra/m4dObject.h>
 
-
-// ---------------------------------------------------
-//    class definition:   OpenGL2dModel
-// ---------------------------------------------------
-class OpenGL2dModel : public QGLWidget {
+/**
+ * @brief The OpenGL2dModel class
+ */
+class OpenGL2dModel : public QOpenGLWidget {
     Q_OBJECT
 
 public:
-    OpenGL2dModel(struct_params* par, QWidget* parent = 0);
+    OpenGL2dModel(struct_params* par, QWidget* parent = nullptr);
     virtual ~OpenGL2dModel();
 
-// --------- public methods -----------
 public:
-    void  setPoints(m4d::enum_draw_type  dtype, bool update = true);
+    void  setPoints(m4d::enum_draw_type  dtype, bool needUpdate = true);
     void  clearPoints();
     void  setAbsOrd(enum_draw_coord_num  absNum,  enum_draw_coord_num  ordNum);
 
@@ -87,16 +64,15 @@ public:
     Q_INVOKABLE void  reset();
 
 
-// ------------ signals ---------------
 signals:
     void  scalingChanged();
     void  scalingReset();
 
-// -------- protected methods ---------
 protected:
-    virtual void  initializeGL();
-    virtual void  paintGL();
-    virtual void  drawLattice();
+    virtual void initializeGL();
+    virtual void paintGL();
+    virtual void resizeGL(int width, int height);
+    virtual void drawLattice();
 
     virtual void  keyPressEvent(QKeyEvent* event);
     virtual void  keyReleaseEvent(QKeyEvent* event);
@@ -110,10 +86,10 @@ protected:
     void   getTightLattice();
     void   setLattice();
 
-// -------- private attributes --------
 private:
     struct_params*     mParams;
 
+    int                mWinSize[2];
     enum_mouse_handle  mMouseHandle;
     enum_draw_style    mDrawStyle;
 
@@ -154,4 +130,4 @@ private:
     enum_draw_coord_num   mOrdinate;
 };
 
-#endif
+#endif // OPENGL2D_MODEL_H

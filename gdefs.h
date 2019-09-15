@@ -44,13 +44,7 @@
 #include <windows.h>
 #endif
 
-#ifndef __APPLE__
-#include <GL/gl.h>
-#include <GL/glu.h>
-#else
-#include <gl.h>
-#include <glu.h>
-#endif
+#include <QOpenGLFunctions>
 
 /* -----------------------------------
  *   global definitions
@@ -67,7 +61,7 @@
 /* -----------------------------------
  *   GUI definitions
  * ----------------------------------- */
-#define  DEF_GUI_WIDTH       800
+#define  DEF_GUI_WIDTH       1000
 #define  DEF_GUI_HEIGHT      500
 #define  DEF_DRAW2D_WIDTH    720
 #define  DEF_OPENGL_WIDTH    720
