@@ -87,6 +87,8 @@ void ObjectView::init()
     initGUI();
     initActions();
     initControl();
+
+    setlocale(LC_NUMERIC, "C");
 }
 
 void ObjectView::initElements()
@@ -95,7 +97,7 @@ void ObjectView::initElements()
     ted_objects = new QTextEdit();
     ted_objects->setMinimumWidth(1000);
 
-    QFont cf("Courier", 10);
+    QFont cf("Monospace", 10);
     ted_objects->setFont(cf);
 
     lab_syntax = new QLabel("Syntax:");

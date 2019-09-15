@@ -580,13 +580,17 @@ void DrawView::slot_setScaling()
 
 void DrawView::slot_resetScaling()
 {
-    double aspect = (DEF_OPENGL_HEIGHT - DEF_DRAW2D_BOTTOM_BORDER) / (double)(DEF_OPENGL_WIDTH - DEF_DRAW2D_LEFT_BORDER);
-    led_draw2d_x_min->setValue(DEF_DRAW2D_X_INIT_MIN);
-    led_draw2d_x_max->setValue(DEF_DRAW2D_X_INIT_MAX);
-    led_draw2d_y_min->setValue(-(DEF_DRAW2D_X_INIT_MAX - DEF_DRAW2D_X_INIT_MIN) * 0.5 * aspect);
-    led_draw2d_y_max->setValue((DEF_DRAW2D_X_INIT_MAX - DEF_DRAW2D_X_INIT_MIN) * 0.5 * aspect);
+    int width, height;
+    mDraw->getWinSize(width, height);
+    double aspect = (width - DEF_DRAW2D_LEFT_BORDER) / static_cast<double>(height - DEF_DRAW2D_BOTTOM_BORDER);
+    led_draw2d_x_min->setValue(DEF_DRAW2D_X_INIT_MIN * aspect);
+    led_draw2d_x_max->setValue(DEF_DRAW2D_X_INIT_MAX * aspect);
+    led_draw2d_y_min->setValue(-(DEF_DRAW2D_X_INIT_MAX - DEF_DRAW2D_X_INIT_MIN) * 0.5);
+    led_draw2d_y_max->setValue((DEF_DRAW2D_X_INIT_MAX - DEF_DRAW2D_X_INIT_MIN) * 0.5);
 
-    mDraw->setScaling(DEF_DRAW2D_X_INIT_MIN, DEF_DRAW2D_X_INIT_MAX, -(DEF_DRAW2D_X_INIT_MAX - DEF_DRAW2D_X_INIT_MIN) * 0.5 * aspect, (DEF_DRAW2D_X_INIT_MAX - DEF_DRAW2D_X_INIT_MIN) * 0.5 * aspect);
+    mDraw->setScaling(DEF_DRAW2D_X_INIT_MIN * aspect, DEF_DRAW2D_X_INIT_MAX * aspect,
+        -(DEF_DRAW2D_X_INIT_MAX - DEF_DRAW2D_X_INIT_MIN) * 0.5,
+        (DEF_DRAW2D_X_INIT_MAX - DEF_DRAW2D_X_INIT_MIN) * 0.5);
     mDraw->setStepIdx(DEF_DRAW2D_X_STEP, DEF_DRAW2D_Y_STEP);
 }
 

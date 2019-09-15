@@ -60,6 +60,8 @@ public:
 
     void showNumVerts(int num);
 
+    void getWinSize(int& width, int& height);
+
     Q_INVOKABLE void center();
     Q_INVOKABLE void reset();
 

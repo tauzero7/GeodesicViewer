@@ -23,7 +23,7 @@ OpenGL2dModel::OpenGL2dModel(struct_params* par, QWidget* parent)
 
     mWinSize[0] = DEF_OPENGL_WIDTH;
     mWinSize[1] = DEF_OPENGL_HEIGHT;
-    mAspect = (mWinSize[0] - DEF_DRAW2D_BOTTOM_BORDER) / static_cast<double>(mWinSize[1] - DEF_DRAW2D_LEFT_BORDER);
+    mAspect = (mWinSize[0] - DEF_DRAW2D_LEFT_BORDER) / static_cast<double>(mWinSize[1] - DEF_DRAW2D_BOTTOM_BORDER);
 
     mBGcolor = mParams->draw2d_bg_color;
     mFGcolor = mParams->draw2d_line_color;
@@ -185,7 +185,7 @@ void OpenGL2dModel::setScaling(double xMin, double xMax, double yMin, double yMa
     mXmax = xMax;
     mYmin = yMin;
     mYmax = yMax;
-    mAspect = (mYmax - mYmin) / (mXmax - mXmin);
+    mAspect = (mXmax - mXmin) / (mYmax - mYmin);
 
     adjust();
     setLattice();
@@ -298,6 +298,12 @@ void OpenGL2dModel::showNumVerts(int num)
     update();
 }
 
+void OpenGL2dModel::getWinSize(int& width, int& height)
+{
+    width = mWinSize[0];
+    height = mWinSize[1];
+}
+
 bool OpenGL2dModel::saveRGBimage(QString filename)
 {
     unsigned char* buf = new unsigned char[DEF_OPENGL_WIDTH * DEF_OPENGL_HEIGHT * 4];
@@ -346,8 +352,8 @@ void OpenGL2dModel::updateParams()
     mFGcolor = mParams->draw2d_line_color;
     mGridColor = mParams->draw2d_grid_color;
 
-    mAbscissa = (enum_draw_coord_num)mParams->draw2d_abscissa;
-    mOrdinate = (enum_draw_coord_num)mParams->draw2d_ordinate;
+    mAbscissa = static_cast<enum_draw_coord_num>(mParams->draw2d_abscissa);
+    mOrdinate = static_cast<enum_draw_coord_num>(mParams->draw2d_ordinate);
 
     adjust();
     getTightLattice();
@@ -393,8 +399,8 @@ void OpenGL2dModel::paintGL()
     glViewport(DEF_DRAW2D_LEFT_BORDER, 0, mWinSize[0] - DEF_DRAW2D_LEFT_BORDER, DEF_DRAW2D_BOTTOM_BORDER);
     for (int x = xStart; x < xEnd; x++) {
         glBegin(GL_LINES);
-        glVertex2f((float)(x * mXstep), 0.6f);
-        glVertex2f((float)(x * mXstep), 1.0f);
+        glVertex2f(static_cast<float>(x * mXstep), 0.6f);
+        glVertex2f(static_cast<float>(x * mXstep), 1.0f);
         glEnd();
         // renderText(x * mXstep, 0.1, 0.0, QString::number(x * mXstep), mTicksFont);
     }
@@ -404,8 +410,8 @@ void OpenGL2dModel::paintGL()
     glViewport(0, DEF_DRAW2D_BOTTOM_BORDER, DEF_DRAW2D_LEFT_BORDER, mWinSize[1] - DEF_DRAW2D_BOTTOM_BORDER);
     for (int y = yStart; y < yEnd; y++) {
         glBegin(GL_LINES);
-        glVertex2f(0.6f, y * mYstep);
-        glVertex2f(1.0f, y * mYstep);
+        glVertex2f(0.6f, static_cast<float>(y * mYstep));
+        glVertex2f(1.0f, static_cast<float>(y * mYstep));
         glEnd();
         // renderText(0.1, y * mYstep, 0.0, QString::number(y * mYstep), mTicksFont);
     }
@@ -415,28 +421,28 @@ void OpenGL2dModel::paintGL()
     gluOrtho2D(mXmin, mXmax, mYmin, mYmax);
     glViewport(DEF_DRAW2D_LEFT_BORDER, DEF_DRAW2D_BOTTOM_BORDER, mWinSize[0] - DEF_DRAW2D_LEFT_BORDER, mWinSize[1] - DEF_DRAW2D_BOTTOM_BORDER);
 
-    /* -----------------------
-    *   draw background
-    * ----------------------- */
+    // -----------------------
+    //   draw background
+    // -----------------------
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
     glColor3f(mBGcolor.redF(), mBGcolor.greenF(), mBGcolor.blueF());
     glBegin(GL_QUADS);
-    glVertex2f(mXmin, mYmin);
-    glVertex2f(mXmax, mYmin);
-    glVertex2f(mXmax, mYmax);
-    glVertex2f(mXmin, mYmax);
+    glVertex2f(static_cast<float>(mXmin), static_cast<float>(mYmin));
+    glVertex2f(static_cast<float>(mXmax), static_cast<float>(mYmin));
+    glVertex2f(static_cast<float>(mXmax), static_cast<float>(mYmax));
+    glVertex2f(static_cast<float>(mXmin), static_cast<float>(mYmax));
     glEnd();
 
-    /* -----------------------
-    *   draw lattice
-    * ----------------------- */
+    // -----------------------
+    //   draw lattice
+    // -----------------------
     drawLattice();
 
-    /* -----------------------
-    *   draw objects
-    * ----------------------- */
+    // -----------------------
+    //   draw objects
+    // -----------------------
     for (unsigned int i = 0; i < mObjects.size(); i++) {
         if (mObjects[i]->getObjectDim() == enum_object_dim_2d) {
             if (!mObjects[i]->drawObject(false)) {
@@ -446,16 +452,16 @@ void OpenGL2dModel::paintGL()
                     mObjects[i]->getValue(1, cy);
                     mObjects[i]->getValue(2, size);
                     QFont font;
-                    font.setPixelSize((int)size);
+                    font.setPixelSize(static_cast<int>(size));
                     // this->renderText((double)cx, (double)cy, 0.0, QString(mObjects[i]->getText().c_str()), font);
                 }
             }
         }
     }
 
-    /* -----------------------
-    *   draw geodesic
-    * ----------------------- */
+    // -----------------------
+    //  draw geodesic
+    // -----------------------
     glLineWidth(mLineWidth);
     if (mLineSmooth == 1) {
         glEnable(GL_LINE_SMOOTH);
@@ -475,18 +481,18 @@ void OpenGL2dModel::paintGL()
     glLineWidth(1);
     glDisable(GL_LINE_SMOOTH);
 
-    /* -----------------------
-    *   draw effective
-    * ----------------------- */
+    // -----------------------
+    //   draw effective
+    // -----------------------
     if (mDrawType == m4d::enum_draw_effpoti) {
         if (mObject.currMetric != nullptr) {
-            double xstep = (mXmax - mXmin) / (double)DEF_DRAW2D_WIDTH;
+            double xstep = (mXmax - mXmin) / static_cast<double>(mWinSize[0]);
             glColor3f(1, 0, 0);
             glBegin(GL_LINE_STRIP);
             for (double x = mXmin; x < mXmax; x += xstep) {
                 double val;
                 if (mObject.currMetric->effPotentialValue(mObject.startPos, mObject.coordDir, mObject.type, x, val)) {
-                    glVertex2f(x, val);
+                    glVertex2f(static_cast<float>(x), static_cast<float>(val));
                 }
             }
             glEnd();
@@ -495,23 +501,23 @@ void OpenGL2dModel::paintGL()
             if (mObject.currMetric->totEnergy(mObject.startPos, mObject.coordDir, 0.0, k)) {
                 glColor3f(0, 0, 1);
                 glBegin(GL_LINES);
-                glVertex2f(mXmin, k);
-                glVertex2f(mXmax, k);
+                glVertex2f(static_cast<float>(mXmin), static_cast<float>(k));
+                glVertex2f(static_cast<float>(mXmax), static_cast<float>(k));
                 glEnd();
             }
         }
     }
 
-    /* -----------------------
-    *   draw zoom quad
-    * ----------------------- */
+    // -----------------------
+    //   draw zoom quad
+    // -----------------------
     if (mShowZoom) {
         glColor4f(1.0f - mBGcolor.redF(), 1.0f - mBGcolor.greenF(), 1.0f - mBGcolor.blueF(), 0.3f);
         glBegin(GL_QUADS);
-        glVertex2f(mZoomXul, mZoomYlr);
-        glVertex2f(mZoomXlr, mZoomYlr);
-        glVertex2f(mZoomXlr, mZoomYul);
-        glVertex2f(mZoomXul, mZoomYul);
+        glVertex2f(static_cast<float>(mZoomXul), static_cast<float>(mZoomYlr));
+        glVertex2f(static_cast<float>(mZoomXlr), static_cast<float>(mZoomYlr));
+        glVertex2f(static_cast<float>(mZoomXlr), static_cast<float>(mZoomYul));
+        glVertex2f(static_cast<float>(mZoomXul), static_cast<float>(mZoomYul));
         glEnd();
     }
 }
@@ -520,6 +526,7 @@ void OpenGL2dModel::resizeGL(int width, int height)
 {
     mWinSize[0] = static_cast<int>(width * mDPIFactor[0]);
     mWinSize[1] = static_cast<int>(height * mDPIFactor[1]);
+    mAspect = (mWinSize[0] - DEF_DRAW2D_LEFT_BORDER) / static_cast<double>(mWinSize[1] - DEF_DRAW2D_BOTTOM_BORDER);
     update();
 }
 
@@ -531,26 +538,27 @@ void OpenGL2dModel::drawLattice()
     glColor3f(mGridColor.redF(), mGridColor.greenF(), mGridColor.blueF());
     for (int x = xStart; x < xEnd; x++) {
         glBegin(GL_LINES);
-        glVertex2f(x * mXstep, mYmin);
-        glVertex2f(x * mXstep, mYmax);
+        glVertex2f(static_cast<float>(x * mXstep), static_cast<float>(mYmin));
+        glVertex2f(static_cast<float>(x * mXstep), static_cast<float>(mYmax));
         glEnd();
     }
     for (int y = yStart; y < yEnd; y++) {
         glBegin(GL_LINES);
-        glVertex2f(mXmin, y * mYstep);
-        glVertex2f(mXmax, y * mYstep);
+        glVertex2f(static_cast<float>(mXmin), static_cast<float>(y * mYstep));
+        glVertex2f(static_cast<float>(mXmax), static_cast<float>(y * mYstep));
         glEnd();
     }
     glDisable(GL_LINE_STIPPLE);
 
     // 'origin' cross
     glBegin(GL_LINES);
-    glVertex2f(0.0, mYmin);
-    glVertex2f(0.0, mYmax);
+    glVertex2f(0.0f, static_cast<float>(mYmin));
+    glVertex2f(0.0f, static_cast<float>(mYmax));
     glEnd();
+
     glBegin(GL_LINES);
-    glVertex2f(mXmin, 0.0);
-    glVertex2f(mXmax, 0.0);
+    glVertex2f(static_cast<float>(mXmin), 0.0f);
+    glVertex2f(static_cast<float>(mXmax), 0.0f);
     glEnd();
 }
 
@@ -565,18 +573,18 @@ void OpenGL2dModel::keyPressEvent(QKeyEvent* event)
         emit scalingReset();
     } else if (mKeyPressed == Qt::Key_PageDown) {
         double zoomFactor = (mXmax - mXmin) * 0.1;
-        mXmin -= zoomFactor;
-        mXmax += zoomFactor;
-        mYmin -= zoomFactor * mAspect;
-        mYmax += zoomFactor * mAspect;
+        mXmin -= zoomFactor * mAspect;
+        mXmax += zoomFactor * mAspect;
+        mYmin -= zoomFactor;
+        mYmax += zoomFactor;
         adjust();
         setLattice();
     } else if (mKeyPressed == Qt::Key_PageUp) {
         double zoomFactor = (mXmax - mXmin) * 0.1;
-        mXmin += zoomFactor;
-        mXmax -= zoomFactor;
-        mYmin += zoomFactor * mAspect;
-        mYmax -= zoomFactor * mAspect;
+        mXmin += zoomFactor * mAspect;
+        mXmax -= zoomFactor * mAspect;
+        mYmin += zoomFactor;
+        mYmax -= zoomFactor;
         adjust();
         setLattice();
     }
@@ -593,8 +601,8 @@ void OpenGL2dModel::mousePressEvent(QMouseEvent* event)
 {
     mButtonPressed = event->button();
     mLastPos = event->pos();
-    mLastPos.setX(mLastPos.x() * mDPIFactor[0]);
-    mLastPos.setY(mLastPos.y() * mDPIFactor[1]);
+    mLastPos.setX(static_cast<int>(mLastPos.x() * mDPIFactor[0]));
+    mLastPos.setY(static_cast<int>(mLastPos.y() * mDPIFactor[1]));
 
     if (mButtonPressed == Qt::RightButton) {
         getXY(mLastPos, mZoomXul, mZoomYul);
@@ -621,7 +629,7 @@ void OpenGL2dModel::mouseReleaseEvent(QMouseEvent* event)
             mYmin -= fabs(mZoomYlr - mYmin);
             mYmax += fabs(mZoomYul - mYmax);
         }
-        mAspect = (mYmax - mYmin) / (mXmax - mXmin);
+        mAspect = (mXmax - mXmin) / (mYmax - mYmin);
         adjust();
         getTightLattice();
         setLattice();
@@ -640,19 +648,23 @@ void OpenGL2dModel::mouseMoveEvent(QMouseEvent* event)
     mLastPos = cp;
 
     if (mButtonPressed == Qt::LeftButton) {
-        mXmin -= dxy.x() * mFactorX;
-        mXmax -= dxy.x() * mFactorX;
-        mYmin += dxy.y() * mFactorY;
-        mYmax += dxy.y() * mFactorY;
-        setLattice();
+        if (event->modifiers() == Qt::ControlModifier) {
+            double zoomFactor = 0.005 * (mYmax - mYmin);
+            mXmin += dxy.y() * zoomFactor * mAspect;
+            mXmax -= dxy.y() * zoomFactor * mAspect;
+            mYmin += dxy.y() * zoomFactor;
+            mYmax -= dxy.y() * zoomFactor;
+            adjust();
+            setLattice();
+        } else {
+            mXmin -= dxy.x() * mFactorX;
+            mXmax -= dxy.x() * mFactorX;
+            mYmin += dxy.y() * mFactorY;
+            mYmax += dxy.y() * mFactorY;
+            setLattice();
+        }
+
     } else if (mButtonPressed == Qt::MidButton) {
-        double zoomFactor = 0.05;
-        mXmin -= dxy.y() * zoomFactor;
-        mXmax += dxy.y() * zoomFactor;
-        mYmin -= dxy.y() * zoomFactor * mAspect;
-        mYmax += dxy.y() * zoomFactor * mAspect;
-        adjust();
-        setLattice();
     } else if (mButtonPressed == Qt::RightButton) {
         getXY(mLastPos, mZoomXlr, mZoomYlr);
     }
@@ -679,8 +691,8 @@ void OpenGL2dModel::adjust()
 
 void OpenGL2dModel::getTightLattice()
 {
-    double pXstep = (mXmax - mXmin) / (double)DEF_DRAW2D_X_STEP;
-    double pYstep = (mYmax - mYmin) / (double)DEF_DRAW2D_Y_STEP;
+    double pXstep = (mXmax - mXmin) / static_cast<double>(DEF_DRAW2D_X_STEP);
+    double pYstep = (mYmax - mYmin) / static_cast<double>(DEF_DRAW2D_Y_STEP);
 
     int idx = 0, idy = 0;
     double dist, minDist = 1e32;
@@ -709,8 +721,8 @@ void OpenGL2dModel::setLattice()
 {
     //bool hasChanged = false;
 
-    int pixStepX = floor(mXstep / mFactorX);
-    int pixStepY = floor(mYstep / mFactorY);
+    int pixStepX = static_cast<int>(floor(mXstep / mFactorX));
+    int pixStepY = static_cast<int>(floor(mYstep / mFactorY));
 
     if (pixStepX > 119) {
         mXstepIdx--;
@@ -747,8 +759,8 @@ void OpenGL2dModel::setLattice()
 
     // fprintf(stderr,"%d %d  %d %d  %f %f\n",pixStepX,pixStepY,mXstepIdx,mYstepIdx,mXstep,mYstep);
 
-    xStart = floor(mXmin / mXstep) + 1;
-    xEnd = floor(mXmax / mXstep) + 1;
-    yStart = floor(mYmin / mYstep) + 1;
-    yEnd = floor(mYmax / mYstep) + 1;
+    xStart = static_cast<int>(floor(mXmin / mXstep)) + 1;
+    xEnd = static_cast<int>(floor(mXmax / mXstep)) + 1;
+    yStart = static_cast<int>(floor(mYmin / mYstep)) + 1;
+    yEnd = static_cast<int>(floor(mYmax / mYstep)) + 1;
 }
