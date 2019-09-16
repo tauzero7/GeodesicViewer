@@ -292,7 +292,8 @@ void OpenGL2dModel::showNumVerts(int num)
     mShowNumVerts = num;
     if (mShowNumVerts < 0) {
         mShowNumVerts = 0;
-    } else if (mShowNumVerts > mNumVerts) {
+    }
+    else if (mShowNumVerts > mNumVerts) {
         mShowNumVerts = mNumVerts;
     }
     update();
@@ -474,7 +475,8 @@ void OpenGL2dModel::paintGL()
     glEnableClientState(GL_VERTEX_ARRAY);
     if (mDrawStyle == enum_draw_lines) {
         glDrawArrays(GL_LINE_STRIP, 0, mShowNumVerts);
-    } else {
+    }
+    else {
         glDrawArrays(GL_POINTS, 0, mShowNumVerts);
     }
     glDisableClientState(GL_VERTEX_ARRAY);
@@ -569,9 +571,11 @@ void OpenGL2dModel::keyPressEvent(QKeyEvent* event)
     if (mKeyPressed == Qt::Key_C) {
         center();
         emit scalingChanged();
-    } else if (mKeyPressed == Qt::Key_R) {
+    }
+    else if (mKeyPressed == Qt::Key_R) {
         emit scalingReset();
-    } else if (mKeyPressed == Qt::Key_PageDown) {
+    }
+    else if (mKeyPressed == Qt::Key_PageDown) {
         double zoomFactor = (mXmax - mXmin) * 0.1;
         mXmin -= zoomFactor * mAspect;
         mXmax += zoomFactor * mAspect;
@@ -579,7 +583,8 @@ void OpenGL2dModel::keyPressEvent(QKeyEvent* event)
         mYmax += zoomFactor;
         adjust();
         setLattice();
-    } else if (mKeyPressed == Qt::Key_PageUp) {
+    }
+    else if (mKeyPressed == Qt::Key_PageUp) {
         double zoomFactor = (mXmax - mXmin) * 0.1;
         mXmin += zoomFactor * mAspect;
         mXmax -= zoomFactor * mAspect;
@@ -623,7 +628,8 @@ void OpenGL2dModel::mouseReleaseEvent(QMouseEvent* event)
             mXmax = mZoomXlr;
             mYmin = mZoomYlr;
             mYmax = mZoomYul;
-        } else if (mZoomXul > mZoomXlr && mZoomYul < mZoomYlr) {
+        }
+        else if (mZoomXul > mZoomXlr && mZoomYul < mZoomYlr) {
             mXmin -= fabs(mZoomXlr - mXmin);
             mXmax += fabs(mZoomXul - mXmax);
             mYmin -= fabs(mZoomYlr - mYmin);
@@ -656,16 +662,18 @@ void OpenGL2dModel::mouseMoveEvent(QMouseEvent* event)
             mYmax -= dxy.y() * zoomFactor;
             adjust();
             setLattice();
-        } else {
+        }
+        else {
             mXmin -= dxy.x() * mFactorX;
             mXmax -= dxy.x() * mFactorX;
             mYmin += dxy.y() * mFactorY;
             mYmax += dxy.y() * mFactorY;
             setLattice();
         }
-
-    } else if (mButtonPressed == Qt::MidButton) {
-    } else if (mButtonPressed == Qt::RightButton) {
+    }
+    else if (mButtonPressed == Qt::MidButton) {
+    }
+    else if (mButtonPressed == Qt::RightButton) {
         getXY(mLastPos, mZoomXlr, mZoomYlr);
     }
 
