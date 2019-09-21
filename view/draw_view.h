@@ -15,7 +15,6 @@
 
  * This file is part of GeodesicView.
  */
-
 #ifndef DRAW_VIEW_H
 #define DRAW_VIEW_H
 

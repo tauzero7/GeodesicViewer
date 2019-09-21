@@ -7,6 +7,7 @@
 #include "locted_view.h"
 #include <QGridLayout>
 #include <QGroupBox>
+#include <QHeaderView>
 
 extern m4d::Object mObject;
 
@@ -25,11 +26,12 @@ LoctedView::~LoctedView()
 
 void LoctedView::updateData()
 {
-    if ((unsigned int)mObject.tetradType >= 0 && (unsigned int)mObject.tetradType < m4d::NUM_ENUM_NAT_TETRAD_TYPES) {
-        cob_locted_type->setCurrentIndex((int)mObject.tetradType);
+    if (static_cast<int>(mObject.tetradType) >= 0
+        && static_cast<unsigned int>(mObject.tetradType) < m4d::NUM_ENUM_NAT_TETRAD_TYPES) {
+        cob_locted_type->setCurrentIndex(static_cast<int>(mObject.tetradType));
     }
 
-    for (unsigned int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
         lst_led_locted_pos_value[i]->setText(QString::number(mObject.startPos[i], 'f', DEF_PREC_POSITION));
     }
 
@@ -163,7 +165,7 @@ void LoctedView::resetBoost()
 void LoctedView::slot_setPosition()
 {
     double pos[4];
-    for (unsigned int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
         pos[i] = lst_led_locted_pos_value[i]->getValue();
     }
 
@@ -174,7 +176,7 @@ void LoctedView::slot_setPosition()
 void LoctedView::slot_setPosStep()
 {
     double step;
-    for (unsigned int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
         step = lst_led_locted_pos_step[i]->getValue();
         lst_led_locted_pos_value[i]->setStep(step);
     }
@@ -300,7 +302,7 @@ void LoctedView::setPosition(int num, double val)
     }
 
     double pos[4];
-    for (unsigned int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
         pos[i] = lst_led_locted_pos_value[i]->getValue();
     }
 
@@ -311,7 +313,7 @@ void LoctedView::setPosition(int num, double val)
 void LoctedView::setPosition(double x0, double x1, double x2, double x3)
 {
     double pos[4] = { x0, x1, x2, x3 };
-    for (unsigned int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
         lst_led_locted_pos_value[i]->setValue(pos[i]);
     }
 
@@ -345,7 +347,6 @@ void LoctedView::init()
     initElements();
     initGUI();
     initControl();
-
     initStatusTips();
 }
 
@@ -355,10 +356,8 @@ void LoctedView::initElements()
     lab_step = new QLabel("step");
 
     lab_locted_type = new QLabel(tr("Natural local tetrad"));
-    lab_locted_type->setMaximumWidth(130);
     cob_locted_type = new QComboBox();
     cob_locted_type->addItem(QString(m4d::stl_nat_tetrad_types[m4d::enum_nat_tetrad_default]));
-    cob_locted_type->setMaximumWidth(300);
 
     // ----------------------
     //    position
@@ -383,30 +382,24 @@ void LoctedView::initElements()
                                            << "z";
     for (int i = 0; i < 4; i++) {
         QLabel* lab = new QLabel(coordnames[i]);
-        lab->setMaximumSize(12, DEF_MAXIMUM_ELEM_HEIGHT);
-        lab->setMinimumSize(12, DEF_MAXIMUM_ELEM_HEIGHT);
         lst_lab_locted_coordname.push_back(lab);
 
         DoubleEdit* led_pos = new DoubleEdit(DEF_PREC_POSITION);
         led_pos->setValidator(new QDoubleValidator(led_pos));
-        led_pos->setMaximumSize(DEF_MAXIMUM_LE_W_WIDTH + 10, DEF_MAXIMUM_ELEM_HEIGHT);
         DoubleEdit* led_step = new DoubleEdit(DEF_PREC_POSITION, DEF_VALUE_STEP);
         led_step->setValidator(new QDoubleValidator(led_step));
-        led_step->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH + 0, DEF_MAXIMUM_ELEM_HEIGHT);
 
         lst_led_locted_pos_value.push_back(led_pos);
         lst_led_locted_pos_step.push_back(led_step);
 
         QPushButton* pub_pos_left = new QPushButton(QIcon(":down.png"), "");
         pub_pos_left->setObjectName(QString("pub_pos_left %1").arg(i));
-        pub_pos_left->setMaximumSize(20, DEF_MAXIMUM_ELEM_HEIGHT);
         pub_pos_left->setAutoRepeat(true);
         pub_pos_left->setAutoRepeatDelay(400);
         lst_pub_locted_pos_decr.push_back(pub_pos_left);
 
         QPushButton* pub_pos_right = new QPushButton(QIcon(":up.png"), "");
         pub_pos_right->setObjectName(QString("pub_pos_right %1").arg(i));
-        pub_pos_right->setMaximumSize(20, DEF_MAXIMUM_ELEM_HEIGHT);
         pub_pos_right->setAutoRepeat(true);
         pub_pos_right->setAutoRepeatDelay(400);
         lst_pub_locted_pos_incr.push_back(pub_pos_right);
@@ -449,15 +442,14 @@ void LoctedView::initElements()
         tbw_locted_tetrad->setRowHeight(row, 20);
     }
 
+    QHeaderView* header = tbw_locted_tetrad->horizontalHeader();
+    header->setSectionResizeMode(QHeaderView::Stretch);
+
     pub_locted_reset = new QPushButton("reset");
-    pub_locted_reset->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     pub_locted_set = new QPushButton("set");
-    pub_locted_set->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     pub_locted_ortho = new QPushButton("orthonorm");
-    pub_locted_ortho->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     cob_locted_predef = new QComboBox();
-    cob_locted_predef->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     for (int i = 0; i < m4d::NUM_PREDEF_TETRADS; i++) {
         cob_locted_predef->insertItem(i, m4d::stl_predef_tetrads[i]);
     }
@@ -479,25 +471,18 @@ void LoctedView::initElements()
     lab_boost_step = new QLabel("step");
     lab_boost_chi = new QLabel("chi");
     led_boost_chi_value = new DoubleEdit(DEF_PREC_BOOST, 90.0, DEF_INIT_CHI_STEP);
-    led_boost_chi_value->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
     led_boost_chi_value->setRange(0.0, 180.0);
     led_boost_chi_step = new DoubleEdit(DEF_PREC_BOOST, DEF_INIT_CHI_STEP, DEF_INIT_CHI_STEP * 0.1);
-    led_boost_chi_step->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
     lab_boost_ksi = new QLabel("xi");
     led_boost_ksi_value = new DoubleEdit(DEF_PREC_BOOST, 0.0, DEF_INIT_KSI_STEP);
-    led_boost_ksi_value->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
     led_boost_ksi_value->setRange(0.0, 360.0);
     led_boost_ksi_step = new DoubleEdit(DEF_PREC_BOOST, DEF_INIT_KSI_STEP, DEF_INIT_KSI_STEP * 0.1);
-    led_boost_ksi_step->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
     lab_boost_vel = new QLabel("Velocity");
     led_boost_vel_value = new DoubleEdit(DEF_PREC_BOOST, 0.0, DEF_INIT_VEL_STEP);
-    led_boost_vel_value->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
     led_boost_vel_value->setRange(-1.0, 1.0);
     led_boost_vel_step = new DoubleEdit(DEF_PREC_BOOST, DEF_INIT_VEL_STEP, DEF_INIT_VEL_STEP * 0.1);
-    led_boost_vel_step->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
     led_boost_vel_step->setRange(0.0, 1.0);
     pub_boost_reset = new QPushButton("reset");
-    pub_boost_reset->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     QChar ch_chi = mGreekLetter.toChar("chi");
     if (ch_chi != QChar()) {
@@ -538,8 +523,6 @@ void LoctedView::initElements()
 void LoctedView::initGUI()
 {
     QGroupBox* grb_locted = new QGroupBox("Local Tetrad");
-    grb_locted->setMinimumWidth(DEF_GROUPBOX_WIDTH);
-    grb_locted->setMaximumWidth(DEF_GROUPBOX_WIDTH);
     QGridLayout* layout_locted = new QGridLayout();
     layout_locted->addWidget(lab_locted_type, 0, 0);
     layout_locted->addWidget(cob_locted_type, 0, 1);
@@ -554,7 +537,7 @@ void LoctedView::initGUI()
 
 void LoctedView::initControl()
 {
-    for (unsigned int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
         connect(lst_led_locted_pos_value[i], SIGNAL(editingFinished()), this, SLOT(slot_setPosition()));
         connect(lst_led_locted_pos_step[i], SIGNAL(textChanged(const QString)), this, SLOT(slot_setPosStep()));
         connect(lst_pub_locted_pos_decr[i], SIGNAL(pressed()), this, SLOT(slot_decrPosition()));

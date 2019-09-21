@@ -149,7 +149,7 @@ protected:
     void calculateGeodesic();
     void calculateGeodesicData();
 
-    bool setMetric(m4d::enum_metric metric);
+    bool setMetric(m4d::MetricList::enum_metric metric);
     bool setMetricNamesAndCoords();
     bool setGeodSolver(m4d::enum_integrator type);
 
@@ -203,7 +203,7 @@ private:
     QAction* mActionMake3Dactive;
     QAction* mActionMake2Dactive;
 
-    /* ---- metric/integrator ---- */
+    // ---- metric/integrator ----
     QTabWidget* tab_metricInt;
 
     QComboBox* cob_metric;
@@ -231,17 +231,17 @@ private:
     QPushButton* pub_geom_units;
     QWidget* wgt_constants;
 
-    /* ---- local tetrad ---- */
+    // ---- local tetrad ----
     LoctedView* lct_view;
 
-    /* ---- geodesic ---- */
+    // ---- geodesic ----
     GeodView* geo_view;
 
-    /* ---- draw handing ---- */
+    // ---- draw handing ----
     DrawView* drw_view;
     OpenGLJacobiModel* mOglJacobi;
 
-    /* ---- File menu ---- */
+    // ---- File menu ----
     QMenu* mFileMenu;
     QAction* mActionReset;
     QAction* mActionLoadSetting;
@@ -260,7 +260,7 @@ private:
     lua_State* mLuaState;
 #endif // HAVE_LUA
 
-    /* ---- Object menu ---- */
+    // ---- Object menu ----
     QMenu* mObjectMenu;
     QAction* mActionLoadObjectFile;
     QAction* mActionAppendObjectFile;
@@ -288,14 +288,15 @@ private:
     ReportDialog* mReportText;
     ProtDialog* mProtDialog;
 
-    /* ---- QtScript ---- */
+    // ---- QtScript ----
     //QScriptEngine*  mScriptEngine;
     QAction* mLoadScript;
 
-    /* ---- status bar ---- */
+    // ---- status bar ----
     QStatusBar* mStatus;
     QLineEdit* led_status;
     QLCDNumber* lcd_num_points;
+
 #ifdef SHOW_CALC_TIME
     QLabel* lab_calc_time;
     QLCDNumber* lcd_calc_time;

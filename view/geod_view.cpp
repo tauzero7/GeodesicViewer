@@ -393,20 +393,19 @@ void GeodView::initElements()
         cob_geod_type->addItem(m4d::stl_geodesic_type[i]);
     }
     cob_geod_type->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
+
     lab_geod_vel = new QLabel(tr("velocity ") + QString(mGreekLetter.toChar("beta")));
     led_geod_vel = new DoubleEdit(DEF_PREC_VELOCITY, 0.99, 0.01);
-    led_geod_vel->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
     led_geod_vel->setEnabled(false);
+
     lab_geod_vel_step = new QLabel(tr("step"));
     led_geod_vel_step = new DoubleEdit(DEF_PREC_VELOCITY, 0.01, 0.001);
-    led_geod_vel_step->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
     led_geod_vel_step->setEnabled(false);
+
     lab_geod_timedir = new QLabel(tr("time dir"));
-    lab_geod_timedir->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     cob_geod_timedir = new QComboBox();
     cob_geod_timedir->addItem("+1 (future)");
     cob_geod_timedir->addItem("-1 (past)");
-    cob_geod_timedir->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     cps_ksi = new CompassDial("xi", this);
     cps_ksi->setRange(360.0);
@@ -419,10 +418,8 @@ void GeodView::initElements()
     cps_chi->setStep(1.0);
 
     lab_orientation = new QLabel(tr("Orientation"));
-    lab_orientation->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     cob_orientation = new QComboBox();
     cob_orientation->addItems(stl_initdir_orient);
-    cob_orientation->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     QHBoxLayout* layout_orient = new QHBoxLayout();
     layout_orient->addWidget(lab_orientation);
@@ -441,49 +438,43 @@ void GeodView::initElements()
     QLabel* lab_sachs_orientation = new QLabel("System:");
     cob_sachs_orientation = new QComboBox();
     cob_sachs_orientation->addItems(stl_sachs_system);
-    cob_sachs_orientation->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
+
     QLabel* lab_sachs_legs = new QLabel("Legs:");
     cob_sachs_legs = new QComboBox();
     cob_sachs_legs->addItems(stl_sachs_legs);
-    cob_sachs_legs->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     QLabel* lab_sachs_leg1 = new QLabel("leg1:");
     pub_sachs_leg1_col1 = new QPushButton();
     pub_sachs_leg1_col1->setObjectName("leg1col1");
     pub_sachs_leg1_col1->setPalette(QPalette(mParams->opengl_leg1_col1));
-    pub_sachs_leg1_col1->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
+
     pub_sachs_leg1_col2 = new QPushButton();
     pub_sachs_leg1_col2->setObjectName("leg1col2");
     pub_sachs_leg1_col2->setPalette(QPalette(mParams->opengl_leg1_col2));
-    pub_sachs_leg1_col2->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
+
     led_sachs_leg1_freq = new QLineEdit(QString::number(mParams->opengl_leg1_freq));
     led_sachs_leg1_freq->setValidator(new QDoubleValidator(led_sachs_leg1_freq));
     led_sachs_leg1_freq->setObjectName("leg1freq");
     led_sachs_leg1_freq->setAlignment(Qt::AlignRight);
-    led_sachs_leg1_freq->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
-    led_sachs_leg1_freq->setMaximumWidth(80);
 
     QLabel* lab_sachs_leg2 = new QLabel("leg2:");
     pub_sachs_leg2_col1 = new QPushButton();
     pub_sachs_leg2_col1->setObjectName("leg2col1");
     pub_sachs_leg2_col1->setPalette(QPalette(mParams->opengl_leg2_col1));
-    pub_sachs_leg2_col1->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
+
     pub_sachs_leg2_col2 = new QPushButton();
     pub_sachs_leg2_col2->setObjectName("leg2col2");
     pub_sachs_leg2_col2->setPalette(QPalette(mParams->opengl_leg2_col2));
-    pub_sachs_leg2_col2->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
+
     led_sachs_leg2_freq = new QLineEdit(QString::number(mParams->opengl_leg1_freq));
     led_sachs_leg2_freq->setValidator(new QDoubleValidator(led_sachs_leg2_freq));
     led_sachs_leg2_freq->setObjectName("leg2freq");
     led_sachs_leg2_freq->setAlignment(Qt::AlignRight);
-    led_sachs_leg2_freq->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
-    led_sachs_leg2_freq->setMaximumWidth(80);
 
     QLabel* lab_sachs_scale = new QLabel("Scale:");
     led_sachs_scale = new QLineEdit(QString::number(mParams->opengl_sachs_scale));
     led_sachs_scale->setValidator(new QDoubleValidator(led_sachs_scale));
     led_sachs_scale->setAlignment(Qt::AlignRight);
-    led_sachs_scale->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     led_sachs_scale->setMaximumWidth(80);
 
     QGroupBox* grb_sachs = new QGroupBox("Sachs basis");
@@ -508,38 +499,39 @@ void GeodView::initElements()
     //    Jacobi parameter
     // -----------------------------------
     rab_jac_ellipse = new QRadioButton("Ellipse");
-    rab_jac_ellipse->setObjectName(QString::number((int)enum_jacobi_ellipse));
+    rab_jac_ellipse->setObjectName(QString::number(static_cast<int>(enum_jacobi_ellipse)));
     rab_jac_ellipse->setChecked(true);
+
     rab_jac_majorAxis = new QRadioButton("MajAxis");
-    rab_jac_majorAxis->setObjectName(QString::number((int)enum_jacobi_dp));
+    rab_jac_majorAxis->setObjectName(QString::number(static_cast<int>(enum_jacobi_dp)));
     led_jac_majorAxis = new QLineEdit();
     led_jac_majorAxis->setReadOnly(true);
     led_jac_majorAxis->setAlignment(Qt::AlignRight);
-    led_jac_majorAxis->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
+
     rab_jac_minorAxis = new QRadioButton("MinAxis");
-    rab_jac_minorAxis->setObjectName(QString::number((int)enum_jacobi_dm));
+    rab_jac_minorAxis->setObjectName(QString::number(static_cast<int>(enum_jacobi_dm)));
     led_jac_minorAxis = new QLineEdit();
     led_jac_minorAxis->setAlignment(Qt::AlignRight);
     led_jac_minorAxis->setReadOnly(true);
-    led_jac_minorAxis->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
+
     rab_jac_mu = new QRadioButton("mu");
-    rab_jac_mu->setObjectName(QString::number((int)enum_jacobi_mu));
+    rab_jac_mu->setObjectName(QString::number(static_cast<int>(enum_jacobi_mu)));
+
     led_jac_mu = new QLineEdit();
     led_jac_mu->setAlignment(Qt::AlignRight);
     led_jac_mu->setReadOnly(true);
-    led_jac_mu->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
+
     rab_jac_angle = new QRadioButton("angle");
-    rab_jac_angle->setObjectName(QString::number((int)enum_jacobi_angle));
+    rab_jac_angle->setObjectName(QString::number(static_cast<int>(enum_jacobi_angle)));
     led_jac_angle = new QLineEdit();
     led_jac_angle->setAlignment(Qt::AlignRight);
     led_jac_angle->setReadOnly(true);
-    led_jac_angle->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
+
     rab_jac_ellipt = new QRadioButton("ellipt");
-    rab_jac_ellipt->setObjectName(QString::number((int)enum_jacobi_ellipt));
+    rab_jac_ellipt->setObjectName(QString::number(static_cast<int>(enum_jacobi_ellipt)));
     led_jac_ellipt = new QLineEdit();
     led_jac_ellipt->setAlignment(Qt::AlignRight);
     led_jac_ellipt->setReadOnly(true);
-    led_jac_ellipt->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     QGroupBox* grb_jacobi = new QGroupBox("Jacobi parameters");
     QGridLayout* layout_jacobi = new QGridLayout();
@@ -590,9 +582,6 @@ void GeodView::initGUI()
     QVBoxLayout* layout_complete = new QVBoxLayout();
     layout_complete->addWidget(grb_geodesic);
     setLayout(layout_complete);
-
-    this->setMinimumWidth(DEF_GROUPBOX_WIDTH);
-    this->setMaximumWidth(DEF_GROUPBOX_WIDTH);
 }
 
 void GeodView::initControl()

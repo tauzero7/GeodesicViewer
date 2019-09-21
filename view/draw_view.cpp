@@ -1024,84 +1024,61 @@ void DrawView::initElements()
     // ---------------------------------
     cob_drawtype = new QComboBox();
     cob_drawtype->addItem(QString(m4d::stl_draw_type[m4d::enum_draw_coordinates]));
-    cob_drawtype->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     lab_abscissa = new QLabel("abscissa");
     cob_abscissa = new QComboBox();
-    cob_abscissa->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     cob_abscissa->setEnabled(false);
+
     lab_ordinate = new QLabel("ordinate");
     cob_ordinate = new QComboBox();
-    cob_ordinate->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     cob_ordinate->setEnabled(false);
 
     lab_min = new QLabel("min");
-    lab_min->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     lab_max = new QLabel("max");
-    lab_max->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     lab_draw2d_abs = new QLabel("abscissa");
-    lab_draw2d_abs->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     led_draw2d_x_min = new DoubleEdit(DEF_PREC_SCALE, DEF_DRAW2D_X_INIT_MIN, DEF_DRAW2D_X_STEP);
-    led_draw2d_x_min->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     led_draw2d_x_max = new DoubleEdit(DEF_PREC_SCALE, DEF_DRAW2D_X_INIT_MAX, DEF_DRAW2D_X_STEP);
-    led_draw2d_x_max->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     lab_draw2d_ord = new QLabel("ordinate");
-    lab_draw2d_ord->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     led_draw2d_y_min = new DoubleEdit(DEF_PREC_SCALE, DEF_DRAW2D_Y_INIT_MIN, DEF_DRAW2D_Y_STEP);
-    led_draw2d_y_min->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     led_draw2d_y_max = new DoubleEdit(DEF_PREC_SCALE, DEF_DRAW2D_Y_INIT_MAX, DEF_DRAW2D_Y_STEP);
-    led_draw2d_y_max->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     pub_draw2d_center = new QPushButton("center");
-    pub_draw2d_center->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     pub_draw2d_reset = new QPushButton("reset");
-    pub_draw2d_reset->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     pub_draw2d_zoom_in = new QPushButton("zoom in");
     pub_draw2d_zoom_in->setObjectName(QString("pub_zoom_in"));
     pub_draw2d_zoom_in->setAutoRepeat(true);
     pub_draw2d_zoom_in->setAutoRepeatDelay(400);
-    pub_draw2d_zoom_in->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
+
     pub_draw2d_zoom_out = new QPushButton("zoom out");
     pub_draw2d_zoom_out->setObjectName(QString("pub_zoom_out"));
     pub_draw2d_zoom_out->setAutoRepeat(true);
     pub_draw2d_zoom_out->setAutoRepeatDelay(400);
-    pub_draw2d_zoom_out->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     lab_draw2d_bgcolor = new QLabel("bg color");
-    lab_draw2d_bgcolor->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     pub_draw2d_bgcolor = new QPushButton();
     pub_draw2d_bgcolor->setPalette(QPalette(QColor(DEF_DRAW2D_BG_COLOR)));
-    pub_draw2d_bgcolor->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     lab_draw2d_fgcolor = new QLabel("line color");
-    lab_draw2d_fgcolor->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     pub_draw2d_fgcolor = new QPushButton();
     pub_draw2d_fgcolor->setPalette(QPalette(QColor(DEF_DRAW2D_LINE_COLOR)));
-    pub_draw2d_fgcolor->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     lab_draw2d_gridcolor = new QLabel("grid color");
-    lab_draw2d_gridcolor->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     pub_draw2d_gridcolor = new QPushButton();
     pub_draw2d_gridcolor->setPalette(QPalette(QColor(DEF_DRAW2D_GRID_COLOR)));
-    pub_draw2d_gridcolor->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     lab_draw2d_linewidth = new QLabel("line width");
-    lab_draw2d_linewidth->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     spb_draw2d_linewidth = new QSpinBox();
     spb_draw2d_linewidth->setRange(1, 5);
-    spb_draw2d_linewidth->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     lab_draw2d_pos = new QLabel("Cur.pos.");
     led_draw2d_currX = new QLineEdit();
     led_draw2d_currX->setReadOnly(true);
-    led_draw2d_currX->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     led_draw2d_currY = new QLineEdit();
     led_draw2d_currY->setReadOnly(true);
-    led_draw2d_currY->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     // ---------------------------------
     //    3-D
@@ -1109,76 +1086,52 @@ void DrawView::initElements()
     lab_projection = new QLabel("projection");
     cob_projection = new QComboBox();
     cob_projection->addItems(stl_projection);
-    cob_projection->setMaximumSize(DEF_MAXIMUM_LE_W_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
     cob_projection->setCurrentIndex(mParams->opengl_projection);
 
     lab_view = new QLabel("view");
     cob_view = new QComboBox();
     cob_view->addItems(stl_camera_predefs);
-    cob_view->setMaximumSize(DEF_MAXIMUM_LE_W_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
 
     lab_fov = new QLabel("FoV");
-    lab_fov->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     led_fov = new DoubleEdit(DEF_PREC_DRAW, mParams->opengl_fov, mParams->opengl_fov_step);
     led_fov->setRange(1.0, 170.0);
-    led_fov->setMaximumSize(DEF_MAXIMUM_LE_W_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
 
     m4d::vec3 eye = mParams->opengl_eye_pos;
     lab_eye_x = new QLabel("eye x");
-    lab_eye_x->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     led_eye_x = new DoubleEdit(DEF_PREC_DRAW, eye[0], mParams->opengl_eye_pos_step);
-    led_eye_x->setMaximumSize(DEF_MAXIMUM_LE_W_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
 
     lab_eye_y = new QLabel("eye y");
-    lab_eye_y->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     led_eye_y = new DoubleEdit(DEF_PREC_DRAW, eye[1], mParams->opengl_eye_pos_step);
-    led_eye_y->setMaximumSize(DEF_MAXIMUM_LE_W_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
 
     lab_eye_z = new QLabel("eye z");
-    lab_eye_z->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     led_eye_z = new DoubleEdit(DEF_PREC_DRAW, eye[2], mParams->opengl_eye_pos_step);
-    led_eye_z->setMaximumSize(DEF_MAXIMUM_LE_W_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
 
     lab_poi_x = new QLabel("poi x");
-    lab_poi_x->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     led_poi_x = new DoubleEdit(DEF_PREC_DRAW, mParams->opengl_eye_poi[0], mParams->opengl_eye_poi_step);
-    led_poi_x->setMaximumSize(DEF_MAXIMUM_LE_W_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
 
     lab_poi_y = new QLabel("poi y");
-    lab_poi_y->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     led_poi_y = new DoubleEdit(DEF_PREC_DRAW, mParams->opengl_eye_poi[1], mParams->opengl_eye_poi_step);
-    led_poi_y->setMaximumSize(DEF_MAXIMUM_LE_W_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
 
     lab_poi_z = new QLabel("poi z");
-    lab_poi_z->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     led_poi_z = new DoubleEdit(DEF_PREC_DRAW, mParams->opengl_eye_poi[2], mParams->opengl_eye_poi_step);
-    led_poi_z->setMaximumSize(DEF_MAXIMUM_LE_W_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
 
     pub_reset_poi = new QPushButton("reset poi");
-    pub_reset_poi->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     lab_bgcolor = new QLabel("bg color");
-    lab_bgcolor->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     pub_bgcolor = new QPushButton();
     pub_bgcolor->setPalette(QPalette(Qt::black));
-    pub_bgcolor->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
+
     lab_fgcolor = new QLabel("line color");
-    lab_fgcolor->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     pub_fgcolor = new QPushButton();
     pub_fgcolor->setPalette(QPalette(Qt::yellow));
-    pub_fgcolor->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     lab_linewidth = new QLabel("line width");
-    lab_linewidth->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     spb_linewidth = new QSpinBox();
     spb_linewidth->setRange(1, 5);
-    spb_linewidth->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
+
     chb_linesmooth = new QCheckBox("line smooth");
-    chb_linesmooth->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     lab_drawtype3d = new QLabel("type");
-    lab_drawtype3d->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     cob_drawtype3d = new QComboBox();
-    cob_drawtype3d->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     cob_drawtype3d->setCurrentIndex(mParams->opengl_draw3d_type);
 
     // ---------------------------------
@@ -1187,35 +1140,31 @@ void DrawView::initElements()
     lab_scale3d_value = new QLabel("value");
     lab_scale3d_step = new QLabel("step");
     lab_scale3d_x = new QLabel("scale x");
-    lab_scale3d_x->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
+
     led_scale3d_x = new DoubleEdit(DEF_PREC_SCALE, mParams->opengl_scale_x, DEF_DRAW3D_SCALE_X_STEP);
     led_scale3d_x->setValidator(new QDoubleValidator(led_scale3d_x));
     led_scale3d_x->setRange(0.001, 10.0);
-    led_scale3d_x->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
+
     led_scale3d_x_step = new DoubleEdit(DEF_PREC_SCALE, 0.1, DEF_DRAW3D_SCALE_X_STEP * 0.1);
     led_scale3d_x_step->setValidator(new QDoubleValidator(led_scale3d_x_step));
-    led_scale3d_x_step->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
+
     lab_scale3d_y = new QLabel("scale y");
-    lab_scale3d_y->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     led_scale3d_y = new DoubleEdit(DEF_PREC_SCALE, mParams->opengl_scale_y, DEF_DRAW3D_SCALE_Y_STEP);
     led_scale3d_y->setValidator(new QDoubleValidator(led_scale3d_y));
     led_scale3d_y->setRange(0.001, 10.0);
-    led_scale3d_y->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
+
     led_scale3d_y_step = new DoubleEdit(DEF_PREC_SCALE, 0.1, DEF_DRAW3D_SCALE_Y_STEP * 0.1);
     led_scale3d_y_step->setValidator(new QDoubleValidator(led_scale3d_y_step));
-    led_scale3d_y_step->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
+
     lab_scale3d_z = new QLabel("scale z");
-    lab_scale3d_z->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     led_scale3d_z = new DoubleEdit(DEF_PREC_SCALE, mParams->opengl_scale_z, DEF_DRAW3D_SCALE_Z_STEP);
     led_scale3d_z->setValidator(new QDoubleValidator(led_scale3d_z));
     led_scale3d_z->setRange(0.001, 10.0);
-    led_scale3d_z->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
+
     led_scale3d_z_step = new DoubleEdit(DEF_PREC_SCALE, 0.1, DEF_DRAW3D_SCALE_Z_STEP * 0.1);
     led_scale3d_z_step->setValidator(new QDoubleValidator(led_scale3d_z_step));
-    led_scale3d_z_step->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
 
     pub_scale3d_reset = new QPushButton("reset");
-    pub_scale3d_reset->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     // ---------------------------------
     //    3-D  stereo
@@ -1224,20 +1173,16 @@ void DrawView::initElements()
     cob_glasses = new QComboBox();
     cob_glasses->addItems(stl_stereo_glasses);
     cob_glasses->setCurrentIndex((int)mParams->opengl_stereo_glasses);
-    cob_glasses->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
 
     cob_stereo_type = new QComboBox();
     cob_stereo_type->addItems(stl_stereo_types);
     cob_stereo_type->setCurrentIndex((int)mParams->opengl_stereo_type);
-    cob_stereo_type->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
 
     lab_eye_sep = new QLabel("eye sep");
     lab_eye_sep_value = new QLabel("value");
     lab_eye_sep_step = new QLabel("step");
     led_eye_sep = new DoubleEdit(DEF_PREC_STEREO, mParams->opengl_stereo_sep, mParams->opengl_stereo_step);
-    led_eye_sep->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
     led_eye_sep_step = new DoubleEdit(DEF_PREC_STEREO, mParams->opengl_stereo_step, mParams->opengl_stereo_step * 0.1);
-    led_eye_sep_step->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
 
     if (mParams->opengl_stereo_use == 1) {
         chb_stereo->setChecked(true);
@@ -1257,12 +1202,11 @@ void DrawView::initElements()
     lab_fog_density = new QLabel("density");
     lab_fog_value = new QLabel("value");
     lab_fog_step = new QLabel("step");
-    lab_fog_density->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
+
     led_fog_density = new DoubleEdit(DEF_PREC_STEREO, mParams->opengl_fog_init, mParams->opengl_fog_step);
     led_fog_density->setRange(0.0, 1.0);
-    led_fog_density->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
+
     led_fog_density_step = new DoubleEdit(DEF_PREC_STEREO, mParams->opengl_fog_step, mParams->opengl_fog_step * 0.1);
-    led_fog_density_step->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
 
     if (mParams->opengl_fog_use == 1) {
         chb_fog->setChecked(true);
@@ -1283,22 +1227,18 @@ void DrawView::initElements()
     chb_anim_localrot->setChecked(false);
     lab_anim_rotate_x = new QLabel("x-axis");
     led_anim_rotate_x = new DoubleEdit(DEF_PREC_ANIM, DEF_OPENGL_ANIM_ROT_X_INIT, 0.01);
-    led_anim_rotate_x->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
     led_anim_rotate_x_step = new DoubleEdit(DEF_PREC_ANIM, 0.01, 0.001);
-    led_anim_rotate_x_step->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
+
     lab_anim_rotate_y = new QLabel("y-axis");
     led_anim_rotate_y = new DoubleEdit(DEF_PREC_ANIM, DEF_OPENGL_ANIM_ROT_Y_INIT, 0.01);
-    led_anim_rotate_y->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
     led_anim_rotate_y_step = new DoubleEdit(DEF_PREC_ANIM, 0.01, 0.001);
-    led_anim_rotate_y_step->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
+
     lab_anim_rotate_z = new QLabel("z-axis");
     led_anim_rotate_z = new DoubleEdit(DEF_PREC_ANIM, DEF_OPENGL_ANIM_ROT_Z_INIT, 0.01);
-    led_anim_rotate_z->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
     led_anim_rotate_z_step = new DoubleEdit(DEF_PREC_ANIM, 0.01, 0.001);
-    led_anim_rotate_z_step->setMaximumSize(DEF_MAXIMUM_LE_S_WIDTH, DEF_MAXIMUM_ELEM_HEIGHT);
+
     pub_anim_rotate = new QPushButton("Play");
     pub_anim_rotate->setCheckable(true);
-    pub_anim_rotate->setMaximumWidth(40);
 
     sli_anim_geodlength = new QSlider(Qt::Horizontal);
     sli_anim_geodlength->setRange(0, 0);
@@ -1307,10 +1247,8 @@ void DrawView::initElements()
 
     QChar chAffine = mGreekLetter.toChar("lambda");
     lab_lastpoint_affineparam = new QLabel(chAffine);
-    lab_lastpoint_affineparam->setMaximumSize(12, 20);
     led_lastpoint_affineparam = new QLineEdit();
     led_lastpoint_affineparam->setReadOnly(true);
-    led_lastpoint_affineparam->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     led_lastpoint_affineparam->setAlignment(Qt::AlignRight);
 
     QStringList coordnames = QStringList() << "t"
@@ -1325,7 +1263,6 @@ void DrawView::initElements()
 
         QLineEdit* led_pos = new QLineEdit();
         led_pos->setReadOnly(true);
-        led_pos->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
         led_pos->setAlignment(Qt::AlignRight);
         lst_led_lastpoint_pos_value.push_back(led_pos);
     }
@@ -1347,7 +1284,6 @@ void DrawView::initElements()
     lab_emb_color->setMaximumWidth(50);
     pub_emb_color = new QPushButton();
     pub_emb_color->setPalette(QPalette(mParams->opengl_emb_color));
-    pub_emb_color->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     // ---------------------------------
     //    mouse handle
@@ -1355,7 +1291,6 @@ void DrawView::initElements()
     lab_mousehandle = new QLabel("mouse");
     cob_mousehandle = new QComboBox();
     cob_mousehandle->addItems(stl_mouse_handle);
-    cob_mousehandle->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 }
 
 void DrawView::initGUI()
