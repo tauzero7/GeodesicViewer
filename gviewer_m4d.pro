@@ -22,6 +22,12 @@ M4D_LIB_DIR  = $$M4D_DIR/lib
 #GSL_LIB_DIR  = $$GSL_DIR/lib64
 GSL_LIB_DIR  = $$GSL_DIR/lib
 
+## Freetype available
+DEFINES += HAVE_FREETYPE
+FREETYPE_DIR =  /home/tmueller/HdA/Projekte/OGLView/externals/Release/freetype-2.10.0
+FREETYPE_LIB_DIR = $$FREETYPE_DIR/LIBS
+INCLUDEPATH += $$FREETYPE_DIR/include/freetype2
+LIBS += -L$$FREETYPE_LIB_DIR -lfreetype
 
 ## Shows time needed to integrate
 ## geodesic equation

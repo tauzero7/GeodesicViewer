@@ -5,10 +5,7 @@
  * This file is part of GeodesicView.
  */
 #include "dialwdg.h"
-
-constexpr double PI = 3.14159265358979323846;
-constexpr double RAD_TO_DEG = 57.295779513082320875;
-constexpr double DEG_TO_RAD = 0.017453292519943295770;
+#include "utils/mathutils.h"
 
 DialWidget::DialWidget(double initValue, double step, QWidget* parent)
     : QWidget(parent)
@@ -16,15 +13,14 @@ DialWidget::DialWidget(double initValue, double step, QWidget* parent)
     mInitValue = initValue;
     if (step == 0.0) {
         mStep = 0.01;
-    } else {
+    }
+    else {
         mStep = step;
     }
     arcMax = 360.0;
 }
 
-DialWidget::~DialWidget()
-{
-}
+DialWidget::~DialWidget() {}
 
 void DialWidget::reset()
 {
@@ -99,7 +95,8 @@ void DialWidget::paintEvent(QPaintEvent*)
     ptr.setWidth(3);
     painter.setPen(ptr);
 
-    painter.drawLine(dspCenter, dspCenter + QPointF(ptrRadius * sin(mValue * DEG_TO_RAD), -ptrRadius * cos(mValue * DEG_TO_RAD)));
+    painter.drawLine(
+        dspCenter, dspCenter + QPointF(ptrRadius * sin(mValue * DEG_TO_RAD), -ptrRadius * cos(mValue * DEG_TO_RAD)));
 
     ptr.setColor(QColor(210, 210, 200));
     ptr.setWidth(2);

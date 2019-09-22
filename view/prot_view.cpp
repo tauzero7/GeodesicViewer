@@ -20,9 +20,7 @@ ProtDialog::ProtDialog(QWidget* parent)
     init();
 }
 
-ProtDialog::~ProtDialog()
-{
-}
+ProtDialog::~ProtDialog() {}
 
 QString ProtDialog::getDirName()
 {
@@ -95,7 +93,8 @@ void ProtDialog::slot_write()
     QString filename = dirname + "/" + basefilename;
     filename.append(DEF_PROTOCOL_FILE_ENDING);
     if (QFile::exists(filename)) {
-        int button = QMessageBox::question(this, "File exists", "File already exists. Overwrite?", QMessageBox::Cancel | QMessageBox::Ok, QMessageBox::Ok);
+        int button = QMessageBox::question(this, "File exists", "File already exists. Overwrite?",
+            QMessageBox::Cancel | QMessageBox::Ok, QMessageBox::Ok);
         if (button != QMessageBox::Ok) {
             return;
         }
@@ -121,14 +120,12 @@ void ProtDialog::initElements()
 {
     lab_dir = new QLabel("Directory");
     lep_dir = new LedPub(true);
-    lep_dir->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT + 4);
     lep_dir->setDirPath(mDir);
     lep_dir->setName(mDir);
 
     lab_filename = new QLabel("Name");
     lep_filename = new LedPub();
     lep_filename->setDirPath(mDir);
-    lep_filename->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT + 4);
 
     chb_save_3dimage = new QCheckBox("3d Image");
     chb_save_3dimage->setCheckState(Qt::Unchecked);

@@ -81,7 +81,8 @@ void LoctedView::adjustCoordNames()
         QChar ch = mGreekLetter.toChar(coordNames[i].c_str());
         if (ch == QChar()) {
             lst_lab_locted_coordname[i]->setText(coordNames[i].c_str());
-        } else {
+        }
+        else {
             lst_lab_locted_coordname[i]->setText(ch);
         }
     }
@@ -112,7 +113,8 @@ void LoctedView::setLocalTetrad(bool reset)
             mObject.base[i] = m4d::vec4();
             mObject.base[i].setX(i, 1.0);
         }
-    } else {
+    }
+    else {
         for (int row = 0; row < 4; row++)
             for (int col = 0; col < 4; col++) {
                 bool ok;
@@ -157,7 +159,7 @@ void LoctedView::resetBoost()
     mObject.resetLorentzTransf();
 }
 
-//void LoctedView::addObjectsToScriptEngine(QScriptEngine* engine) {
+// void LoctedView::addObjectsToScriptEngine(QScriptEngine* engine) {
 //    QScriptValue lt = engine->newQObject(this);
 //    engine->globalObject().setProperty("lt", lt);
 //}
@@ -251,7 +253,7 @@ void LoctedView::slot_orthoLocalTetrad()
 {
     setLocalTetrad(false);
     mGramSchmidt->calculateTetrad(mObject.base[0], mObject.base[1], mObject.base[2], mObject.base[3]);
-    //mGramSchmidt->print();
+    // mGramSchmidt->print();
 
     for (int row = 0; row < 4; row++)
         for (int col = 0; col < 4; col++) {
@@ -423,7 +425,9 @@ void LoctedView::initElements()
     //   tetrad direction
     // ----------------------
     tbw_locted_tetrad = new QTableWidget(4, 4);
-    QStringList collistLT = QStringList() << QString("%1%2").arg(QChar(0x00ea)).arg("0") << QString("%1%2").arg(QChar(0x00ea)).arg("1") << QString("%1%2").arg(QChar(0x00ea)).arg("2") << QString("%1%2").arg(QChar(0x00ea)).arg("3");
+    QStringList collistLT = QStringList()
+        << QString("%1%2").arg(QChar(0x00ea)).arg("0") << QString("%1%2").arg(QChar(0x00ea)).arg("1")
+        << QString("%1%2").arg(QChar(0x00ea)).arg("2") << QString("%1%2").arg(QChar(0x00ea)).arg("3");
     QStringList rowlistLT = QStringList() << "e0"
                                           << "e1"
                                           << "e2"
@@ -431,16 +435,20 @@ void LoctedView::initElements()
     tbw_locted_tetrad->setHorizontalHeaderLabels(collistLT);
     tbw_locted_tetrad->setVerticalHeaderLabels(rowlistLT);
     tbw_locted_tetrad->setAlternatingRowColors(true);
+
+    int totalHeight = tbw_locted_tetrad->horizontalHeader()->height();
     for (int row = 0; row < 4; row++) {
         for (int col = 0; col < 4; col++) {
             QTableWidgetItem* item_name = new QTableWidgetItem();
             item_name->setText(QString::number(mObject.base[row][col]));
             item_name->setFlags(Qt::ItemIsEnabled | Qt::ItemIsEditable);
             tbw_locted_tetrad->setItem(row, col, item_name);
-            tbw_locted_tetrad->setColumnWidth(col, 90);
+            // tbw_locted_tetrad->setColumnWidth(col, 90);
         }
-        tbw_locted_tetrad->setRowHeight(row, 20);
+        totalHeight += tbw_locted_tetrad->verticalHeader()->sectionSize(row);
     }
+    tbw_locted_tetrad->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    tbw_locted_tetrad->setMaximumHeight(totalHeight);
 
     QHeaderView* header = tbw_locted_tetrad->horizontalHeader();
     header->setSectionResizeMode(QHeaderView::Stretch);
@@ -506,6 +514,7 @@ void LoctedView::initElements()
     layout_locted_boost->addWidget(led_boost_vel_value, 3, 1);
     layout_locted_boost->addWidget(led_boost_vel_step, 3, 2);
     layout_locted_boost->addWidget(pub_boost_reset, 4, 1);
+    layout_locted_boost->setRowStretch(5, 10);
 
     wgt_locted_boost = new QWidget();
     wgt_locted_boost->setLayout(layout_locted_boost);
@@ -517,7 +526,6 @@ void LoctedView::initElements()
     tab_locted->addTab(wgt_locted_position, tr("Position"));
     tab_locted->addTab(wgt_locted_tetrads, tr("Tetrad Directions"));
     tab_locted->addTab(wgt_locted_boost, tr("Tetrad boost"));
-    tab_locted->setMaximumHeight(190);
 }
 
 void LoctedView::initGUI()

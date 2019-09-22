@@ -11,11 +11,13 @@ CompassDial::CompassDial(QString valName, QWidget* parent)
 {
     if (valName == QString()) {
         mValueName = QString("value");
-    } else {
+    }
+    else {
         QChar ch = mGreekLetter.toChar(valName);
         if (ch == QChar()) {
             mValueName = valName;
-        } else {
+        }
+        else {
             mValueName = ch;
         }
     }
@@ -25,9 +27,7 @@ CompassDial::CompassDial(QString valName, QWidget* parent)
     init();
 }
 
-CompassDial::~CompassDial()
-{
-}
+CompassDial::~CompassDial() {}
 
 void CompassDial::reset()
 {
@@ -86,7 +86,8 @@ void CompassDial::initElements()
     colorPal.setColor(QPalette::Text, Qt::white);
 
     dial = new DialWidget(0.0, 1.0, this);
-    dial->setMinimumSize(200, 200);
+    // dial->setMinimumSize(200, 200);
+    dial->setMinimumSize(180, 180);
 
     QMap<double, QString> map;
     for (double d = 0.0; d < 360.0; d += 60.0) {
@@ -99,16 +100,13 @@ void CompassDial::initElements()
     led_param_val = new DoubleEdit(DEF_PREC_COMPASS, 0.0, DEF_COMPASS_DIAL_STEP);
     led_param_val->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     //  led_param_val->setValidator( new QDoubleValidator( led_param_val ) );
-    led_param_val->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     lab_param_step = new QLabel("step");
     led_param_step = new DoubleEdit(DEF_PREC_COMPASS, DEF_COMPASS_DIAL_STEP);
     led_param_step->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     //  led_param_step->setValidator( new QDoubleValidator( led_param_step ) );
-    led_param_step->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     pub_reset = new QPushButton("reset");
-    pub_reset->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 }
 
 void CompassDial::initGUI()

@@ -15,9 +15,7 @@ LedPub::LedPub(bool loadDir, QWidget* parent)
     init();
 }
 
-LedPub::~LedPub()
-{
-}
+LedPub::~LedPub() {}
 
 void LedPub::setName(QString filename)
 {
@@ -52,8 +50,10 @@ void LedPub::slot_load_file()
     if (mLoadDir) {
         QDir cdir = QDir::current();
         cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
-        name = QFileDialog::getExistingDirectory(this, tr("Choose directory"), cdir.absolutePath(), QFileDialog::ShowDirsOnly);
-    } else {
+        name = QFileDialog::getExistingDirectory(
+            this, tr("Choose directory"), cdir.absolutePath(), QFileDialog::ShowDirsOnly);
+    }
+    else {
         path = mDirPath;
         if (path == QString()) {
             path = QDir::currentPath();
@@ -82,7 +82,6 @@ void LedPub::initElements()
     led_text->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     pub_file = new QPushButton("...");
     pub_file->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Ignored);
-    pub_file->setMaximumWidth(30);
 }
 
 void LedPub::initGUI()

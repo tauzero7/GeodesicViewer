@@ -13,9 +13,7 @@ ObjectView::ObjectView(QWidget* parent)
     init();
 }
 
-ObjectView::~ObjectView()
-{
-}
+ObjectView::~ObjectView() {}
 
 void ObjectView::clearAll()
 {
@@ -28,13 +26,12 @@ void ObjectView::writeText(QString text)
     ted_objects->setText(text);
 }
 
-QString
-ObjectView::getText()
+QString ObjectView::getText()
 {
     return ted_objects->toPlainText();
 }
 
-//void ObjectView::addObjectsToScriptEngine(QScriptEngine* engine) {
+// void ObjectView::addObjectsToScriptEngine(QScriptEngine* engine) {
 //    QScriptValue obj = engine->newQObject(this);
 //    engine->globalObject().setProperty("obj", obj);
 //}
@@ -95,13 +92,13 @@ void ObjectView::initElements()
 {
     lab_text = new QLabel("Enter coordinate objects into the text field:");
     ted_objects = new QTextEdit();
-    ted_objects->setMinimumWidth(1000);
+    ted_objects->setMinimumWidth(800);
 
     QFont cf("Monospace", 10);
     ted_objects->setFont(cf);
 
     lab_syntax = new QLabel("Syntax:");
-    lab_syntax->setMaximumWidth(60);
+    // lab_syntax->setMaximumWidth(60);
     led_syntax = new QLineEdit();
     led_syntax->setReadOnly(true);
     led_syntax->setFont(cf);

@@ -54,7 +54,9 @@ UTILS_HEADERS = \
     $$UTILS_DIR/quaternions.h \
     $$UTILS_DIR/doubleedit_util.h \
     $$UTILS_DIR/greek.h \
+    $$UTILS_DIR/mathutils.h \
     $$UTILS_DIR/myobject.h \
+    $$UTILS_DIR/rendertext.h \
     $$UTILS_DIR/utilities.h \
     $$UTILS_DIR/gramschmidt.h
 
@@ -63,7 +65,9 @@ UTILS_SOURCES = \
     $$UTILS_DIR/quaternions.cpp \
     $$UTILS_DIR/doubleedit_util.cpp \
     $$UTILS_DIR/greek.cpp \
+    $$UTILS_DIR/mathutils.cpp \
     $$UTILS_DIR/myobject.cpp \
+    $$UTILS_DIR/rendertext.cpp \
     $$UTILS_DIR/utilities.cpp \
     $$UTILS_DIR/gramschmidt.cpp
 

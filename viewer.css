@@ -1,8 +1,8 @@
 
 QGroupBox {
     border:1px solid #555;
-    border-radius: 4px;
-    margin-top: 20px;
+    border-radius: 2px;
+    margin-top: 15px;
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
         stop: 0 #353535, 
         stop: 0.5 #454545,
@@ -12,9 +12,9 @@ QGroupBox {
 QGroupBox::title {
     subcontrol-origin: margin;
     subcontrol-position: top left;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 10px;    
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;    
     font-family: Monospace;
     color: #c6c6ff;
 }
@@ -28,13 +28,11 @@ QCheckBox::disabled {
     color: black
 }
 
-
 QComboBox { 
     font-family: Monospace;
     font-size: 10pt;
     height: 16px;
 }
-
 
 QLabel {
     font-family: Monospace;
@@ -56,11 +54,16 @@ QLineEdit {
     font-family: Monospace;
     font-size: 10pt;
     height: 16px;
-    width: 80px;
+    width: 60px;
 } 
 
 QLineEdit[readOnly="true"] {
-    color: #bbb;
+    color: #555;
+}
+
+DoubleEdit {
+    font-size: 10pt;
+    color: black;
 }
 
 QPushButton { 
@@ -110,10 +113,16 @@ QTabBar::tab:!enabled {
     color: #555;
 }
 
-QTableView {
+QTableWidget {
     font-family: Monospace;
     font-size: 10pt;
 }
+
+QTableWidget::item {
+   border: 0px;
+   padding: 0px 0px 0px 0px;
+}
+
 
 QTextEdit {
     font-family: Monospace;

@@ -11,8 +11,7 @@
 
 extern m4d::Object mObject;
 
-GeodView::GeodView(struct_params* par,
-    OpenGL3dModel* opengl, OpenGLJacobiModel* openglJacobi, QWidget* parent)
+GeodView::GeodView(struct_params* par, OpenGL3dModel* opengl, OpenGLJacobiModel* openglJacobi, QWidget* parent)
     : QWidget(parent)
 {
     assert(opengl != NULL && openglJacobi != NULL);
@@ -24,9 +23,7 @@ GeodView::GeodView(struct_params* par,
     init();
 }
 
-GeodView::~GeodView()
-{
-}
+GeodView::~GeodView() {}
 
 void GeodView::resetAll()
 {
@@ -49,33 +46,34 @@ void GeodView::updateData()
 {
     if (mObject.timeDirection > 0) {
         cob_geod_timedir->setCurrentIndex(0);
-    } else {
+    }
+    else {
         cob_geod_timedir->setCurrentIndex(1);
     }
 
     cob_geod_type->setCurrentIndex(static_cast<int>(mObject.type));
     switch (mObject.type) {
-    case m4d::enum_geodesic_lightlike: {
-        led_geod_vel->setEnabled(false);
-        led_geod_vel_step->setEnabled(false);
-        tab_geodesic->setTabEnabled(1, false);
-        break;
-    }
-    case m4d::enum_geodesic_lightlike_sachs: {
-        led_geod_vel->setEnabled(false);
-        led_geod_vel_step->setEnabled(false);
-        tab_geodesic->setTabEnabled(1, true);
-        break;
-    }
-    case m4d::enum_geodesic_timelike: {
-        led_geod_vel->setEnabled(true);
-        led_geod_vel_step->setEnabled(true);
-        tab_geodesic->setTabEnabled(1, false);
-        break;
-    }
-    case m4d::enum_geodesic_spacelike: {
-        break;
-    }
+        case m4d::enum_geodesic_lightlike: {
+            led_geod_vel->setEnabled(false);
+            led_geod_vel_step->setEnabled(false);
+            tab_geodesic->setTabEnabled(1, false);
+            break;
+        }
+        case m4d::enum_geodesic_lightlike_sachs: {
+            led_geod_vel->setEnabled(false);
+            led_geod_vel_step->setEnabled(false);
+            tab_geodesic->setTabEnabled(1, true);
+            break;
+        }
+        case m4d::enum_geodesic_timelike: {
+            led_geod_vel->setEnabled(true);
+            led_geod_vel_step->setEnabled(true);
+            tab_geodesic->setTabEnabled(1, false);
+            break;
+        }
+        case m4d::enum_geodesic_spacelike: {
+            break;
+        }
     }
 
     int ao = mObject.axes_orient;
@@ -104,7 +102,7 @@ void GeodView::updateParams()
     led_sachs_scale->setText(QString::number(mParams->opengl_sachs_scale));
 }
 
-//void GeodView::addObjectsToScriptEngine(QScriptEngine* engine) {
+// void GeodView::addObjectsToScriptEngine(QScriptEngine* engine) {
 //    QScriptValue ksiAngle = engine->newQObject(cps_ksi);
 //    engine->globalObject().setProperty("ksi", ksiAngle);
 //
@@ -159,11 +157,14 @@ void GeodView::slot_setLegColors()
         pub->setPalette(newCol);
         if (pub->objectName() == "leg1col1") {
             mParams->opengl_leg1_col1 = newCol;
-        } else if (pub->objectName() == "leg1col2") {
+        }
+        else if (pub->objectName() == "leg1col2") {
             mParams->opengl_leg1_col2 = newCol;
-        } else if (pub->objectName() == "leg2col1") {
+        }
+        else if (pub->objectName() == "leg2col1") {
             mParams->opengl_leg2_col1 = newCol;
-        } else if (pub->objectName() == "leg2col2") {
+        }
+        else if (pub->objectName() == "leg2col2") {
             mParams->opengl_leg2_col2 = newCol;
         }
 
@@ -179,7 +180,8 @@ void GeodView::slot_setLegFreq()
     if (led->text() != QString()) {
         if (led->objectName() == "leg1freq") {
             mParams->opengl_leg1_freq = led->text().toFloat();
-        } else if (led->objectName() == "leg2freq") {
+        }
+        else if (led->objectName() == "leg2freq") {
             mParams->opengl_leg2_freq = led->text().toFloat();
         }
 
@@ -237,11 +239,13 @@ void GeodView::setTimeDirection(int dir)
         cob_geod_timedir->setCurrentIndex(0);
         mObject.timeDirection = 1;
         emit calcGeodesic();
-    } else if (dir == -1) {
+    }
+    else if (dir == -1) {
         cob_geod_timedir->setCurrentIndex(1);
         mObject.timeDirection = -1;
         emit calcGeodesic();
-    } else {
+    }
+    else {
         fprintf(stderr, "GeodView::setTimeDirection() ... direction %d not valid!\nUse +1 or -1.\n", dir);
     }
 }
@@ -262,7 +266,8 @@ void GeodView::slot_setTimeDirection()
     int index = cob_geod_timedir->currentIndex();
     if (index == 0) {
         mObject.timeDirection = 1;
-    } else {
+    }
+    else {
         mObject.timeDirection = -1;
     }
     emit calcGeodesic();
@@ -276,30 +281,30 @@ void GeodView::slot_setGeodType()
 
     int index = cob_geod_type->currentIndex();
     switch (index) {
-    case m4d::enum_geodesic_lightlike: {
-        mObject.type = m4d::enum_geodesic_lightlike;
-        mObject.geodSolver->setGeodesicType(mObject.type);
-        led_geod_vel->setText(QString::number(mObject.vel, 'f'));
-        led_geod_vel->setEnabled(false);
-        led_geod_vel_step->setEnabled(false);
-        tab_geodesic->setTabEnabled(1, false);
-    } break;
-    case m4d::enum_geodesic_lightlike_sachs: {
-        mObject.type = m4d::enum_geodesic_lightlike_sachs;
-        mObject.geodSolver->setGeodesicType(mObject.type);
-        led_geod_vel->setText(QString::number(mObject.vel, 'f'));
-        led_geod_vel->setEnabled(false);
-        led_geod_vel_step->setEnabled(false);
-        tab_geodesic->setTabEnabled(1, true);
-    } break;
-    case m4d::enum_geodesic_timelike: {
-        mObject.type = m4d::enum_geodesic_timelike;
-        mObject.geodSolver->setGeodesicType(mObject.type);
-        mObject.vel = led_geod_vel->getValue();
-        led_geod_vel->setEnabled(true);
-        led_geod_vel_step->setEnabled(true);
-        tab_geodesic->setTabEnabled(1, false);
-    } break;
+        case m4d::enum_geodesic_lightlike: {
+            mObject.type = m4d::enum_geodesic_lightlike;
+            mObject.geodSolver->setGeodesicType(mObject.type);
+            led_geod_vel->setText(QString::number(mObject.vel, 'f'));
+            led_geod_vel->setEnabled(false);
+            led_geod_vel_step->setEnabled(false);
+            tab_geodesic->setTabEnabled(1, false);
+        } break;
+        case m4d::enum_geodesic_lightlike_sachs: {
+            mObject.type = m4d::enum_geodesic_lightlike_sachs;
+            mObject.geodSolver->setGeodesicType(mObject.type);
+            led_geod_vel->setText(QString::number(mObject.vel, 'f'));
+            led_geod_vel->setEnabled(false);
+            led_geod_vel_step->setEnabled(false);
+            tab_geodesic->setTabEnabled(1, true);
+        } break;
+        case m4d::enum_geodesic_timelike: {
+            mObject.type = m4d::enum_geodesic_timelike;
+            mObject.geodSolver->setGeodesicType(mObject.type);
+            mObject.vel = led_geod_vel->getValue();
+            led_geod_vel->setEnabled(true);
+            led_geod_vel_step->setEnabled(true);
+            tab_geodesic->setTabEnabled(1, false);
+        } break;
     }
     emit calcGeodesic();
     emit changeGeodType();
@@ -320,7 +325,8 @@ void GeodView::slot_setVelocity()
 
     if (1.0 - fabs(newVel) < 1e-10) {
         led_geod_vel->setValue(mObject.vel);
-    } else {
+    }
+    else {
         mObject.vel = newVel;
     }
 
@@ -387,12 +393,10 @@ void GeodView::initElements()
     lab_step = new QLabel("step");
 
     lab_geod_type = new QLabel(tr("type"));
-    lab_geod_type->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
     cob_geod_type = new QComboBox();
     for (unsigned int i = 0; i < m4d::NUM_ENUM_GEODESIC_TYPE - 1; i++) {
         cob_geod_type->addItem(m4d::stl_geodesic_type[i]);
     }
-    cob_geod_type->setMaximumHeight(DEF_MAXIMUM_ELEM_HEIGHT);
 
     lab_geod_vel = new QLabel(tr("velocity ") + QString(mGreekLetter.toChar("beta")));
     led_geod_vel = new DoubleEdit(DEF_PREC_VELOCITY, 0.99, 0.01);
@@ -475,7 +479,6 @@ void GeodView::initElements()
     led_sachs_scale = new QLineEdit(QString::number(mParams->opengl_sachs_scale));
     led_sachs_scale->setValidator(new QDoubleValidator(led_sachs_scale));
     led_sachs_scale->setAlignment(Qt::AlignRight);
-    led_sachs_scale->setMaximumWidth(80);
 
     QGroupBox* grb_sachs = new QGroupBox("Sachs basis");
     QGridLayout* layout_sachs = new QGridLayout();
@@ -638,23 +641,23 @@ void GeodView::initStatusTips()
 void GeodView::setInitDir()
 {
     switch (mOrientation) {
-    case enum_initdir_axis_3: {
-        mObject.startDir[0] = sin(mObject.chi * DEG_TO_RAD) * cos(mObject.ksi * DEG_TO_RAD);
-        mObject.startDir[1] = sin(mObject.chi * DEG_TO_RAD) * sin(mObject.ksi * DEG_TO_RAD);
-        mObject.startDir[2] = cos(mObject.chi * DEG_TO_RAD);
-        break;
-    }
-    case enum_initdir_axis_1: {
-        mObject.startDir[0] = cos(mObject.chi * DEG_TO_RAD);
-        mObject.startDir[1] = sin(mObject.chi * DEG_TO_RAD) * cos(mObject.ksi * DEG_TO_RAD);
-        mObject.startDir[2] = sin(mObject.chi * DEG_TO_RAD) * sin(mObject.ksi * DEG_TO_RAD);
-        break;
-    }
-    case enum_initdir_axis_2: {
-        mObject.startDir[0] = sin(mObject.chi * DEG_TO_RAD) * cos(mObject.ksi * DEG_TO_RAD);
-        mObject.startDir[1] = cos(mObject.chi * DEG_TO_RAD);
-        mObject.startDir[2] = sin(mObject.chi * DEG_TO_RAD) * sin(mObject.ksi * DEG_TO_RAD);
-        break;
-    }
+        case enum_initdir_axis_3: {
+            mObject.startDir[0] = sin(mObject.chi * DEG_TO_RAD) * cos(mObject.ksi * DEG_TO_RAD);
+            mObject.startDir[1] = sin(mObject.chi * DEG_TO_RAD) * sin(mObject.ksi * DEG_TO_RAD);
+            mObject.startDir[2] = cos(mObject.chi * DEG_TO_RAD);
+            break;
+        }
+        case enum_initdir_axis_1: {
+            mObject.startDir[0] = cos(mObject.chi * DEG_TO_RAD);
+            mObject.startDir[1] = sin(mObject.chi * DEG_TO_RAD) * cos(mObject.ksi * DEG_TO_RAD);
+            mObject.startDir[2] = sin(mObject.chi * DEG_TO_RAD) * sin(mObject.ksi * DEG_TO_RAD);
+            break;
+        }
+        case enum_initdir_axis_2: {
+            mObject.startDir[0] = sin(mObject.chi * DEG_TO_RAD) * cos(mObject.ksi * DEG_TO_RAD);
+            mObject.startDir[1] = cos(mObject.chi * DEG_TO_RAD);
+            mObject.startDir[2] = sin(mObject.chi * DEG_TO_RAD) * sin(mObject.ksi * DEG_TO_RAD);
+            break;
+        }
     }
 }

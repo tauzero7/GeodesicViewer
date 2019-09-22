@@ -6,6 +6,7 @@
  */
 #include "doubleedit_util.h"
 #include <QWheelEvent>
+#include <limits>
 
 DoubleEdit::DoubleEdit(int prec, double value, double step, QWidget* parent)
     : QLineEdit(parent)
@@ -15,23 +16,20 @@ DoubleEdit::DoubleEdit(int prec, double value, double step, QWidget* parent)
     setValue(value);
     setAlignment(Qt::AlignRight);
 
-    mMin = -DBL_MAX;
-    mMax = DBL_MAX;
+    mMin = -std::numeric_limits<double>::max();
+    mMax = std::numeric_limits<double>::max();
 
     setPalette(QPalette(QColor(DEF_DOUBLE_EDIT_COLOR)));
 }
 
-DoubleEdit::~DoubleEdit()
-{
-}
+DoubleEdit::~DoubleEdit() {}
 
 void DoubleEdit::setValue(double value)
 {
     setText(QString::number(value, 'f', mPrecision));
 }
 
-double
-DoubleEdit::getValue()
+double DoubleEdit::getValue()
 {
     /*
     double val = atof(text().toStdString().c_str());
@@ -45,8 +43,7 @@ void DoubleEdit::setStep(double step)
     mStep = step;
 }
 
-double
-DoubleEdit::getStep()
+double DoubleEdit::getStep()
 {
     return mStep;
 }
@@ -97,7 +94,8 @@ void DoubleEdit::wheelEvent(QWheelEvent* event)
 
     if (event->delta() > 0) {
         val += mStep;
-    } else {
+    }
+    else {
         val -= mStep;
     }
 
@@ -111,6 +109,6 @@ void DoubleEdit::wheelEvent(QWheelEvent* event)
     setText(QString("%1").arg(val, 0, 'f', mPrecision));
     event->accept();
 
-    //emit returnPressed();
+    // emit returnPressed();
     emit editingFinished();
 }

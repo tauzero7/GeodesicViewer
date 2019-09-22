@@ -12,9 +12,10 @@
 #include <QMouseEvent>
 #include <QOpenGLWidget>
 
+#include "utils/myobject.h"
+#include "utils/rendertext.h"
+#include "utils/utilities.h"
 #include <gdefs.h>
-#include <utils/myobject.h>
-#include <utils/utilities.h>
 
 #include <extra/m4dObject.h>
 #include <m4dGlobalDefs.h>
@@ -23,7 +24,8 @@
 /**
  * @brief The OpenGL2dModel class
  */
-class OpenGL2dModel : public QOpenGLWidget {
+class OpenGL2dModel : public QOpenGLWidget
+{
     Q_OBJECT
 
 public:
@@ -130,6 +132,8 @@ private:
 
     enum_draw_coord_num mAbscissa;
     enum_draw_coord_num mOrdinate;
+
+    RenderText* renderText;
 };
 
 #endif // OPENGL2D_MODEL_H

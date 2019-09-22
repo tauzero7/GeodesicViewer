@@ -7,13 +7,15 @@
 #include <QColorDialog>
 #include <QGridLayout>
 #include <QGroupBox>
+#include <QHeaderView>
 #include <QTimer>
 
 #include "draw_view.h"
 
 extern m4d::Object mObject;
 
-DrawView::DrawView(OpenGL3dModel* opengl, OpenGL2dModel* draw, OpenGLJacobiModel* oglJacobi, struct_params* par, QWidget* parent)
+DrawView::DrawView(
+    OpenGL3dModel* opengl, OpenGL2dModel* draw, OpenGLJacobiModel* oglJacobi, struct_params* par, QWidget* parent)
     : QWidget(parent)
 {
     mOpenGL = opengl;
@@ -35,9 +37,7 @@ DrawView::DrawView(OpenGL3dModel* opengl, OpenGL2dModel* draw, OpenGLJacobiModel
     init();
 }
 
-DrawView::~DrawView()
-{
-}
+DrawView::~DrawView() {}
 
 void DrawView::resetAll()
 {
@@ -64,7 +64,7 @@ void DrawView::resetAll()
     spb_draw2d_linewidth->setValue(1);
 
     cob_projection->setCurrentIndex(mParams->opengl_projection);
-    int dt = cob_drawtype3d->findText(m4d::stl_draw_type[(int)mParams->opengl_draw3d_type]);
+    int dt = cob_drawtype3d->findText(m4d::stl_draw_type[static_cast<int>(mParams->opengl_draw3d_type)]);
     cob_drawtype3d->setCurrentIndex(dt);
     cob_view->setCurrentIndex(0);
 
@@ -96,8 +96,8 @@ void DrawView::resetAll()
     led_scale3d_z_step->setValueAndStep(DEF_DRAW3D_SCALE_Z_STEP, DEF_DRAW3D_SCALE_Z_STEP * 0.1);
 
     chb_stereo->setCheckState(Qt::Unchecked);
-    cob_glasses->setCurrentIndex((int)mParams->opengl_stereo_glasses);
-    cob_stereo_type->setCurrentIndex((int)mParams->opengl_stereo_type);
+    cob_glasses->setCurrentIndex(static_cast<int>(mParams->opengl_stereo_glasses));
+    cob_stereo_type->setCurrentIndex(static_cast<int>(mParams->opengl_stereo_type));
 
     chb_fog->setCheckState(Qt::Unchecked);
     led_fog_density->setValueAndStep(mParams->opengl_fog_init, mParams->opengl_fog_step);
@@ -126,9 +126,7 @@ void DrawView::resetAll()
     slot_resetScaling();
 }
 
-void DrawView::updateData()
-{
-}
+void DrawView::updateData() {}
 
 void DrawView::updateParams()
 {
@@ -146,16 +144,17 @@ void DrawView::updateParams()
     pub_draw2d_bgcolor->setPalette(m2dBGcolor);
     pub_draw2d_fgcolor->setPalette(m2dFGcolor);
     pub_draw2d_gridcolor->setPalette(m2dGridColor);
-    //pub_draw2d_zoomcolor->setPalette( m2dZoomColor );
+    // pub_draw2d_zoomcolor->setPalette( m2dZoomColor );
     spb_draw2d_linewidth->setValue(mParams->draw2d_line_width);
     mDraw->setColors(m2dFGcolor, m2dBGcolor, m2dGridColor);
 
-    //if (mParams->draw2d_representation>=0 && mParams->draw2d_representation<cob_drawtype->count())
+    // if (mParams->draw2d_representation>=0 && mParams->draw2d_representation<cob_drawtype->count())
     //  cob_drawtype->setCurrentIndex(mParams->draw2d_representation);
 
     if (mParams->draw2d_representation >= 0 && mParams->draw2d_representation < m4d::NUM_ENUM_DRAW_TYPE) {
         for (int i = 0; i < cob_drawtype->count(); i++) {
-            // std::cerr << cob_drawtype->itemText(i).toStdString() << " " << m4d::stl_draw_type[mParams->draw2d_representation] << std::endl;
+            // std::cerr << cob_drawtype->itemText(i).toStdString() << " " <<
+            // m4d::stl_draw_type[mParams->draw2d_representation] << std::endl;
             if (cob_drawtype->itemText(i).toStdString() == m4d::stl_draw_type[mParams->draw2d_representation]) {
                 cob_drawtype->setCurrentIndex(i);
                 break;
@@ -187,13 +186,14 @@ void DrawView::updateParams()
     if (type == m4d::enum_draw_coordinates) {
         cob_abscissa->setEnabled(true);
         cob_ordinate->setEnabled(true);
-    } else {
+    }
+    else {
         cob_abscissa->setEnabled(false);
         cob_ordinate->setEnabled(false);
     }
 
     cob_projection->setCurrentIndex(mParams->opengl_projection);
-    int dt = cob_drawtype3d->findText(m4d::stl_draw_type[(int)mParams->opengl_draw3d_type]);
+    int dt = cob_drawtype3d->findText(m4d::stl_draw_type[static_cast<int>(mParams->opengl_draw3d_type)]);
     cob_drawtype3d->setCurrentIndex(dt);
 
     led_fov->setValueAndStep(mParams->opengl_fov, mParams->opengl_fov_step);
@@ -218,12 +218,13 @@ void DrawView::updateParams()
     spb_linewidth->setValue(mParams->opengl_line_width);
     if (mParams->opengl_line_smooth == 1) {
         chb_linesmooth->setChecked(true);
-    } else {
+    }
+    else {
         chb_linesmooth->setChecked(false);
     }
 
     /* --- embedding --- */
-    if (mParams->opengl_emb_params.size() > 0 && mObject.currMetric != NULL) {
+    if (mParams->opengl_emb_params.size() > 0 && mObject.currMetric != nullptr) {
         std::map<std::string, double>::iterator mapItr = mParams->opengl_emb_params.begin();
         while (mapItr != mParams->opengl_emb_params.end()) {
             mObject.currMetric->setEmbeddingParam(mapItr->first.c_str(), mapItr->second);
@@ -233,40 +234,44 @@ void DrawView::updateParams()
     adjustEmbParams();
     if (mParams->opengl_draw3d_type == m4d::enum_draw_embedding) {
         mOpenGL->genEmbed(mObject.currMetric);
-    } else {
+    }
+    else {
         mOpenGL->clearEmbed();
     }
 
-    /* --- stereo --- */
+    // --- stereo ---
     if (mParams->opengl_stereo_use == 1) {
         chb_stereo->setCheckState(Qt::Checked);
-    } else {
+    }
+    else {
         chb_stereo->setCheckState(Qt::Unchecked);
     }
-    cob_glasses->setCurrentIndex((int)mParams->opengl_stereo_glasses);
-    cob_stereo_type->setCurrentIndex((int)mParams->opengl_stereo_type);
+    cob_glasses->setCurrentIndex(static_cast<int>(mParams->opengl_stereo_glasses));
+    cob_stereo_type->setCurrentIndex(static_cast<int>(mParams->opengl_stereo_type));
 
     led_eye_sep->setValueAndStep(mParams->opengl_stereo_sep, mParams->opengl_stereo_step);
     led_eye_sep_step->setValueAndStep(mParams->opengl_stereo_step, mParams->opengl_stereo_step * 0.1);
 
-    /* --- fog --- */
+    // --- fog ---
     if (mParams->opengl_fog_use == 1) {
         chb_fog->setCheckState(Qt::Checked);
-    } else {
+    }
+    else {
         chb_fog->setCheckState(Qt::Unchecked);
     }
     led_fog_density->setValueAndStep(mParams->opengl_fog_init, mParams->opengl_fog_step);
     led_fog_density_step->setValueAndStep(mParams->opengl_fog_step, mParams->opengl_fog_step * 0.1);
 
-    /* --- 3d-scaling --- */
+    // --- 3d-scaling ---
     led_scale3d_x->setValue(mParams->opengl_scale_x);
     led_scale3d_y->setValue(mParams->opengl_scale_y);
     led_scale3d_z->setValue(mParams->opengl_scale_z);
 
-    /* --- 3d-anim --- */
+    // --- 3d-anim ---
     if (mParams->opengl_anim_local > 0) {
         chb_anim_localrot->setChecked(true);
-    } else {
+    }
+    else {
         chb_anim_localrot->setChecked(false);
     }
     led_anim_rotate_x->setValue(mParams->opengl_anim_rot_x);
@@ -298,7 +303,8 @@ void DrawView::adjustCoordNames()
             cob_abscissa->addItem(coordNames[i].c_str());
             cob_ordinate->addItem(coordNames[i].c_str());
             lst_lab_lastpoint_coordname[i]->setText(coordNames[i].c_str());
-        } else {
+        }
+        else {
             cob_abscissa->addItem(QString(ch));
             cob_ordinate->addItem(QString(ch));
             lst_lab_lastpoint_coordname[i]->setText(QString(ch));
@@ -312,7 +318,8 @@ void DrawView::adjustCoordNames()
         if (ch == QChar()) {
             cob_abscissa->addItem(QString("d") + coordNames[i].c_str());
             cob_ordinate->addItem(QString("d") + coordNames[i].c_str());
-        } else {
+        }
+        else {
             cob_abscissa->addItem(QString("d") + QString(ch));
             cob_ordinate->addItem(QString("d") + QString(ch));
         }
@@ -333,7 +340,8 @@ void DrawView::adjustDrawTypes()
     cob_drawtype3d->clear();
     for (int i = 0; i < numDT; i++) {
         m4d::enum_draw_type type = mObject.currMetric->getCurrDrawType(i);
-        if (type == m4d::enum_draw_pseudocart || type == m4d::enum_draw_coordinates || type == m4d::enum_draw_effpoti || type == m4d::enum_draw_custom) {
+        if (type == m4d::enum_draw_pseudocart || type == m4d::enum_draw_coordinates || type == m4d::enum_draw_effpoti
+            || type == m4d::enum_draw_custom) {
             cob_drawtype->addItem(QString(m4d::stl_draw_type[type]));
         }
 
@@ -357,12 +365,13 @@ void DrawView::adjustEmbParams()
     std::vector<std::string> paramNames;
     mObject.currMetric->getEmbeddingNames(paramNames);
 
-    for (unsigned int i = 0; i < paramNames.size(); i++) {
-        tbw_emb_params->insertRow(i);
+    for (size_t i = 0; i < paramNames.size(); i++) {
+        int ii = static_cast<int>(i);
+        tbw_emb_params->insertRow(ii);
         QTableWidgetItem* item_name = new QTableWidgetItem();
         item_name->setText(paramNames[i].c_str());
         item_name->setFlags(Qt::ItemIsEnabled);
-        tbw_emb_params->setItem(i, 0, item_name);
+        tbw_emb_params->setItem(ii, 0, item_name);
 
         double value;
         mObject.currMetric->getEmbeddingParam(paramNames[i].c_str(), value);
@@ -371,9 +380,8 @@ void DrawView::adjustEmbParams()
 
         DoubleEdit* led_step = new DoubleEdit(DEF_PREC_EMBEDDING, 1.0, 0.1);
 
-        tbw_emb_params->setCellWidget(i, 1, led_value);
-        tbw_emb_params->setCellWidget(i, 2, led_step);
-        tbw_emb_params->setRowHeight(i, DEF_MAXIMUM_ELEM_HEIGHT);
+        tbw_emb_params->setCellWidget(ii, 1, led_value);
+        tbw_emb_params->setCellWidget(ii, 2, led_step);
 
         connect(led_value, SIGNAL(editingFinished()), this, SLOT(slot_embParamChanged()));
         connect(led_step, SIGNAL(editingFinished()), led_value, SLOT(slot_setStep()));
@@ -421,8 +429,7 @@ int DrawView::getDrawType3DIndex()
     return cob_drawtype3d->currentIndex();
 }
 
-std::string
-DrawView ::getDrawTypeName()
+std::string DrawView ::getDrawTypeName()
 {
     return cob_drawtype->currentText().toStdString();
 }
@@ -433,8 +440,7 @@ void DrawView::getDrawAbsOrdIndex(int& absIdx, int& ordIdx)
     ordIdx = cob_ordinate->currentIndex();
 }
 
-std::string
-DrawView ::getDrawType3DName()
+std::string DrawView ::getDrawType3DName()
 {
     return cob_drawtype3d->currentText().toStdString();
 }
@@ -460,10 +466,10 @@ void DrawView::setGeodLength(int num)
 {
     sli_anim_geodlength->setMaximum(num);
     sli_anim_geodlength->setValue(num);
-    adjustLastPoint(num);
+    adjustLastPoint(static_cast<unsigned int>(num));
 }
 
-//void DrawView::addObjectsToScriptEngine(QScriptEngine* engine) {
+// void DrawView::addObjectsToScriptEngine(QScriptEngine* engine) {
 //    QScriptValue drawView = engine->newQObject(this);
 //    engine->globalObject().setProperty("dh", drawView);
 //
@@ -520,7 +526,8 @@ void DrawView::setFog(int fog, double density)
 {
     if (fog > 0) {
         chb_fog->setChecked(true);
-    } else {
+    }
+    else {
         chb_fog->setChecked(false);
     }
     led_fog_density->setValue(density);
@@ -543,15 +550,16 @@ void DrawView::slot_setDrawType()
         return;
     }
 
-    //m4d::enum_draw_type  type = mObject.currMetric->getCurrDrawType(cob_drawtype->currentIndex());
-    //mParams->draw2d_representation = (int)type;
+    // m4d::enum_draw_type  type = mObject.currMetric->getCurrDrawType(cob_drawtype->currentIndex());
+    // mParams->draw2d_representation = (int)type;
     m4d::enum_draw_type type = mObject.currMetric->getCurrDrawType(cob_drawtype->currentText().toStdString());
     mParams->draw2d_representation = type;
 
     if (type == m4d::enum_draw_coordinates) {
         cob_abscissa->setEnabled(true);
         cob_ordinate->setEnabled(true);
-    } else {
+    }
+    else {
         cob_abscissa->setEnabled(false);
         cob_ordinate->setEnabled(false);
     }
@@ -560,9 +568,9 @@ void DrawView::slot_setDrawType()
 
 void DrawView::slot_setAbsOrd()
 {
-    int abscissa = cob_abscissa->currentIndex();
-    int ordinate = cob_ordinate->currentIndex();
-    mDraw->setAbsOrd((enum_draw_coord_num)abscissa, (enum_draw_coord_num)ordinate);
+    enum_draw_coord_num abscissa = static_cast<enum_draw_coord_num>(cob_abscissa->currentIndex());
+    enum_draw_coord_num ordinate = static_cast<enum_draw_coord_num>(cob_ordinate->currentIndex());
+    mDraw->setAbsOrd(abscissa, ordinate);
     mDraw->setPoints(mObject.currMetric->getCurrDrawType(cob_drawtype->currentIndex()));
     mParams->draw2d_abscissa = abscissa;
     mParams->draw2d_ordinate = ordinate;
@@ -589,8 +597,7 @@ void DrawView::slot_resetScaling()
     led_draw2d_y_max->setValue((DEF_DRAW2D_X_INIT_MAX - DEF_DRAW2D_X_INIT_MIN) * 0.5);
 
     mDraw->setScaling(DEF_DRAW2D_X_INIT_MIN * aspect, DEF_DRAW2D_X_INIT_MAX * aspect,
-        -(DEF_DRAW2D_X_INIT_MAX - DEF_DRAW2D_X_INIT_MIN) * 0.5,
-        (DEF_DRAW2D_X_INIT_MAX - DEF_DRAW2D_X_INIT_MIN) * 0.5);
+        -(DEF_DRAW2D_X_INIT_MAX - DEF_DRAW2D_X_INIT_MIN) * 0.5, (DEF_DRAW2D_X_INIT_MAX - DEF_DRAW2D_X_INIT_MIN) * 0.5);
     mDraw->setStepIdx(DEF_DRAW2D_X_STEP, DEF_DRAW2D_Y_STEP);
 }
 
@@ -635,7 +642,8 @@ void DrawView::slot_zoom()
         xmax -= DEF_ZOOM_STEP;
         ymin += DEF_ZOOM_STEP;
         ymax -= DEF_ZOOM_STEP;
-    } else {
+    }
+    else {
         xmin -= DEF_ZOOM_STEP;
         xmax += DEF_ZOOM_STEP;
         ymin -= DEF_ZOOM_STEP;
@@ -700,7 +708,7 @@ void DrawView::slot_setProjection()
 {
     enum_projection proj = enum_projection(cob_projection->currentIndex());
     mOpenGL->setProjection(proj);
-    mParams->opengl_projection = (int)proj;
+    mParams->opengl_projection = static_cast<int>(proj);
 }
 
 void DrawView::slot_setFieldOfView()
@@ -760,7 +768,8 @@ void DrawView::slot_setDrawType3d()
 
     if (type == m4d::enum_draw_embedding) {
         mOpenGL->genEmbed(mObject.currMetric);
-    } else {
+    }
+    else {
         mOpenGL->clearEmbed();
     }
 
@@ -812,7 +821,8 @@ void DrawView::slot_setSmoothLine()
 {
     if (chb_linesmooth->isChecked()) {
         mParams->opengl_line_smooth = 1;
-    } else {
+    }
+    else {
         mParams->opengl_line_smooth = 0;
     }
 
@@ -854,7 +864,8 @@ void DrawView::slot_setStereo()
         led_eye_sep_step->setEnabled(true);
 
         mParams->opengl_stereo_use = 1;
-    } else {
+    }
+    else {
         mOpenGL->setStereoCam(false);
         cob_glasses->setEnabled(false);
         cob_stereo_type->setEnabled(false);
@@ -863,6 +874,7 @@ void DrawView::slot_setStereo()
 
         mParams->opengl_stereo_use = 0;
     }
+    mOpenGL->update();
 }
 
 void DrawView::slot_setStereoParams()
@@ -893,7 +905,8 @@ void DrawView::slot_setFog()
         led_fog_density_step->setEnabled(true);
 
         mParams->opengl_fog_use = 1;
-    } else {
+    }
+    else {
         mOpenGL->setFog(false);
         led_fog_density->setEnabled(false);
         led_fog_density_step->setEnabled(false);
@@ -919,7 +932,8 @@ void DrawView::slot_anim_rot_startstop()
     if (pub_anim_rotate->isChecked()) {
         tim_anim_rotate->start();
         pub_anim_rotate->setText("Stop");
-    } else {
+    }
+    else {
         tim_anim_rotate->stop();
         pub_anim_rotate->setText("Play");
 
@@ -936,7 +950,8 @@ void DrawView::slot_anim_rotate()
     bool local = chb_anim_localrot->isChecked();
     if (local) {
         mParams->opengl_anim_local = 1;
-    } else {
+    }
+    else {
         mParams->opengl_anim_local = 0;
     }
     mOpenGL->doAnimRotation(30.0, local);
@@ -972,7 +987,8 @@ void DrawView::slot_embParamChanged()
     if (mObject.currMetric != nullptr) {
         mObject.currMetric->setEmbeddingParam(obj->objectName().toStdString().c_str(), value);
 
-        std::map<std::string, double>::iterator mapItr = mParams->opengl_emb_params.find(obj->objectName().toStdString());
+        std::map<std::string, double>::iterator mapItr
+            = mParams->opengl_emb_params.find(obj->objectName().toStdString());
         if (mapItr != mParams->opengl_emb_params.end()) {
             mapItr->second = value;
         }
@@ -985,7 +1001,8 @@ void DrawView::slot_adjustAPname()
     QChar chAffine;
     if (mObject.type == m4d::enum_geodesic_timelike) {
         chAffine = mGreekLetter.toChar("tau");
-    } else {
+    }
+    else {
         chAffine = mGreekLetter.toChar("lambda");
     }
     lab_lastpoint_affineparam->setText(chAffine);
@@ -996,7 +1013,7 @@ void DrawView::slot_showNumPoints(int num)
     mOpenGL->showNumVerts(num);
     mDraw->showNumVerts(num);
     mOglJacobi->showNumJacobi(num);
-    adjustLastPoint(num);
+    adjustLastPoint(static_cast<unsigned int>(num));
     emit lastPointChanged(num);
 }
 
@@ -1121,15 +1138,15 @@ void DrawView::initElements()
     pub_bgcolor = new QPushButton();
     pub_bgcolor->setPalette(QPalette(Qt::black));
 
-    lab_fgcolor = new QLabel("line color");
+    lab_fgcolor = new QLabel("Line color");
     pub_fgcolor = new QPushButton();
     pub_fgcolor->setPalette(QPalette(Qt::yellow));
 
-    lab_linewidth = new QLabel("line width");
+    lab_linewidth = new QLabel("width");
     spb_linewidth = new QSpinBox();
     spb_linewidth->setRange(1, 5);
 
-    chb_linesmooth = new QCheckBox("line smooth");
+    chb_linesmooth = new QCheckBox("smooth");
     lab_drawtype3d = new QLabel("type");
     cob_drawtype3d = new QComboBox();
     cob_drawtype3d->setCurrentIndex(mParams->opengl_draw3d_type);
@@ -1172,11 +1189,11 @@ void DrawView::initElements()
     chb_stereo = new QCheckBox("Use glasses");
     cob_glasses = new QComboBox();
     cob_glasses->addItems(stl_stereo_glasses);
-    cob_glasses->setCurrentIndex((int)mParams->opengl_stereo_glasses);
+    cob_glasses->setCurrentIndex(static_cast<int>(mParams->opengl_stereo_glasses));
 
     cob_stereo_type = new QComboBox();
     cob_stereo_type->addItems(stl_stereo_types);
-    cob_stereo_type->setCurrentIndex((int)mParams->opengl_stereo_type);
+    cob_stereo_type->setCurrentIndex(static_cast<int>(mParams->opengl_stereo_type));
 
     lab_eye_sep = new QLabel("eye sep");
     lab_eye_sep_value = new QLabel("value");
@@ -1190,7 +1207,8 @@ void DrawView::initElements()
         led_eye_sep_step->setEnabled(true);
         cob_glasses->setEnabled(true);
         cob_stereo_type->setEnabled(true);
-    } else {
+    }
+    else {
         chb_stereo->setChecked(false);
         led_eye_sep->setEnabled(false);
         led_eye_sep_step->setEnabled(false);
@@ -1212,7 +1230,8 @@ void DrawView::initElements()
         chb_fog->setChecked(true);
         led_fog_density->setEnabled(true);
         led_fog_density_step->setEnabled(true);
-    } else {
+    }
+    else {
         chb_fog->setChecked(false);
         led_fog_density->setEnabled(false);
         led_fog_density_step->setEnabled(false);
@@ -1279,9 +1298,10 @@ void DrawView::initElements()
                                                 << "Step";
     tbw_emb_params->setHorizontalHeaderLabels(tbw_emb_headers);
     tbw_emb_params->setAlternatingRowColors(true);
+    QHeaderView* header = tbw_emb_params->horizontalHeader();
+    header->setSectionResizeMode(QHeaderView::Stretch);
 
     lab_emb_color = new QLabel("Color");
-    lab_emb_color->setMaximumWidth(50);
     pub_emb_color = new QPushButton();
     pub_emb_color->setPalette(QPalette(mParams->opengl_emb_color));
 
@@ -1361,14 +1381,19 @@ void DrawView::initGUI()
     layout_3d->addWidget(cob_view, 1, 3);
 
     QGroupBox* grb_3d_col = new QGroupBox("Colors and line props");
+    QHBoxLayout* layout_3d_line = new QHBoxLayout();
+    layout_3d_line->addWidget(lab_fgcolor);
+    layout_3d_line->addWidget(pub_fgcolor);
+    layout_3d_line->addWidget(lab_linewidth);
+    layout_3d_line->addWidget(spb_linewidth);
+    layout_3d_line->addWidget(chb_linesmooth);
+    QHBoxLayout* layout_3d_bg = new QHBoxLayout();
+    layout_3d_bg->addWidget(lab_bgcolor);
+    layout_3d_bg->addWidget(pub_bgcolor);
+    layout_3d_bg->addSpacing(200);
     QGridLayout* layout_3d_col = new QGridLayout();
-    layout_3d_col->addWidget(lab_fgcolor, 0, 0);
-    layout_3d_col->addWidget(pub_fgcolor, 0, 1);
-    layout_3d_col->addWidget(lab_bgcolor, 1, 0);
-    layout_3d_col->addWidget(pub_bgcolor, 1, 1);
-    layout_3d_col->addWidget(lab_linewidth, 0, 2);
-    layout_3d_col->addWidget(spb_linewidth, 0, 3);
-    layout_3d_col->addWidget(chb_linesmooth, 0, 4);
+    layout_3d_col->addLayout(layout_3d_line, 0, 0);
+    layout_3d_col->addLayout(layout_3d_bg, 1, 0);
     grb_3d_col->setLayout(layout_3d_col);
 
     QGroupBox* grb_3d_pos = new QGroupBox("Camera parameters");
@@ -1411,10 +1436,10 @@ void DrawView::initGUI()
     layout_3d_scale->addWidget(led_scale3d_z, 3, 1);
     layout_3d_scale->addWidget(led_scale3d_z_step, 3, 2);
     layout_3d_scale->addWidget(pub_scale3d_reset, 4, 1, 1, 2);
+    layout_3d_scale->setRowStretch(5, 10);
     grb_scale3d->setLayout(layout_3d_scale);
     QVBoxLayout* layout_3d_compl = new QVBoxLayout();
     layout_3d_compl->addWidget(grb_scale3d);
-    layout_3d_compl->addSpacing(100);
     wgt_draw_3dscale->setLayout(layout_3d_compl);
 
     // ---------------------------------
@@ -1430,6 +1455,7 @@ void DrawView::initGUI()
     layout_3d_anaglyph->addWidget(lab_eye_sep, 2, 0);
     layout_3d_anaglyph->addWidget(led_eye_sep, 2, 1);
     layout_3d_anaglyph->addWidget(led_eye_sep_step, 2, 2);
+    layout_3d_anaglyph->setRowStretch(3, 10);
     grb_anaglyph->setLayout(layout_3d_anaglyph);
 
     QGroupBox* grb_fog = new QGroupBox("Fog - artificial");
@@ -1440,12 +1466,12 @@ void DrawView::initGUI()
     layout_3d_fog->addWidget(lab_fog_density, 1, 0);
     layout_3d_fog->addWidget(led_fog_density, 1, 1);
     layout_3d_fog->addWidget(led_fog_density_step, 1, 2);
+    layout_3d_fog->setRowStretch(3, 10);
     grb_fog->setLayout(layout_3d_fog);
 
     QVBoxLayout* layout_3d_stereo = new QVBoxLayout();
     layout_3d_stereo->addWidget(grb_anaglyph);
     layout_3d_stereo->addWidget(grb_fog);
-    layout_3d_stereo->addSpacing(100);
     wgt_draw_3dstereo->setLayout(layout_3d_stereo);
 
     // ---------------------------------
@@ -1518,7 +1544,6 @@ void DrawView::initGUI()
     tab_draw->addTab(wgt_draw_2d, "2D");
 
     QGroupBox* grb_draw = new QGroupBox("DrawHandling");
-    grb_draw->setMaximumWidth(DEF_GROUPBOX_WIDTH);
     QGridLayout* layout_draw = new QGridLayout();
     layout_draw->addWidget(tab_draw);
     grb_draw->setLayout(layout_draw);

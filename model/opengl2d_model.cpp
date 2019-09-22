@@ -68,9 +68,7 @@ OpenGL2dModel::OpenGL2dModel(struct_params* par, QWidget* parent)
     setMouseTracking(true);
 }
 
-OpenGL2dModel::~OpenGL2dModel()
-{
-}
+OpenGL2dModel::~OpenGL2dModel() {}
 
 void OpenGL2dModel::setPoints(m4d::enum_draw_type dtype, bool needUpdate)
 {
@@ -97,61 +95,61 @@ void OpenGL2dModel::setPoints(m4d::enum_draw_type dtype, bool needUpdate)
     m4d::vec4 tp;
     for (int i = 0; i < mNumVerts; i++) {
         switch (dtype) {
-        case m4d::enum_draw_pseudocart: {
-            mObject.currMetric->transToPseudoCart(mObject.points[i], tp);
-            *(vptr++) = GLfloat(tp[1]);
-            *(vptr++) = GLfloat(tp[2]);
-            break;
-        }
-        case m4d::enum_draw_coordinates: {
-            switch (mAbscissa) {
-            case enum_draw_coord_x0:
-            case enum_draw_coord_x1:
-            case enum_draw_coord_x2:
-            case enum_draw_coord_x3:
-                *(vptr++) = GLfloat(mObject.points[i].x((int)mAbscissa));
-                break;
-            case enum_draw_lambda:
-                *(vptr++) = GLfloat(mObject.lambda[i]);
-                break;
-            case enum_draw_coord_dx0:
-            case enum_draw_coord_dx1:
-            case enum_draw_coord_dx2:
-            case enum_draw_coord_dx3:
-                *(vptr++) = GLfloat(mObject.dirs[i].x(((int)mAbscissa) - 5));
+            case m4d::enum_draw_pseudocart: {
+                mObject.currMetric->transToPseudoCart(mObject.points[i], tp);
+                *(vptr++) = GLfloat(tp[1]);
+                *(vptr++) = GLfloat(tp[2]);
                 break;
             }
-            switch (mOrdinate) {
-            case enum_draw_coord_x0:
-            case enum_draw_coord_x1:
-            case enum_draw_coord_x2:
-            case enum_draw_coord_x3:
-                *(vptr++) = GLfloat(mObject.points[i].x((int)mOrdinate));
-                break;
-            case enum_draw_lambda:
-                *(vptr++) = GLfloat(mObject.lambda[i]);
-                break;
-            case enum_draw_coord_dx0:
-            case enum_draw_coord_dx1:
-            case enum_draw_coord_dx2:
-            case enum_draw_coord_dx3:
-                *(vptr++) = GLfloat(mObject.dirs[i].x(((int)mOrdinate) - 5));
+            case m4d::enum_draw_coordinates: {
+                switch (mAbscissa) {
+                    case enum_draw_coord_x0:
+                    case enum_draw_coord_x1:
+                    case enum_draw_coord_x2:
+                    case enum_draw_coord_x3:
+                        *(vptr++) = GLfloat(mObject.points[i].x((int)mAbscissa));
+                        break;
+                    case enum_draw_lambda:
+                        *(vptr++) = GLfloat(mObject.lambda[i]);
+                        break;
+                    case enum_draw_coord_dx0:
+                    case enum_draw_coord_dx1:
+                    case enum_draw_coord_dx2:
+                    case enum_draw_coord_dx3:
+                        *(vptr++) = GLfloat(mObject.dirs[i].x(((int)mAbscissa) - 5));
+                        break;
+                }
+                switch (mOrdinate) {
+                    case enum_draw_coord_x0:
+                    case enum_draw_coord_x1:
+                    case enum_draw_coord_x2:
+                    case enum_draw_coord_x3:
+                        *(vptr++) = GLfloat(mObject.points[i].x((int)mOrdinate));
+                        break;
+                    case enum_draw_lambda:
+                        *(vptr++) = GLfloat(mObject.lambda[i]);
+                        break;
+                    case enum_draw_coord_dx0:
+                    case enum_draw_coord_dx1:
+                    case enum_draw_coord_dx2:
+                    case enum_draw_coord_dx3:
+                        *(vptr++) = GLfloat(mObject.dirs[i].x(((int)mOrdinate) - 5));
+                        break;
+                }
                 break;
             }
-            break;
-        }
-        case m4d::enum_draw_embedding:
-            break;
-        case m4d::enum_draw_twoplusone:
-            break;
-        case m4d::enum_draw_effpoti:
-            break;
-        case m4d::enum_draw_custom: {
-            mObject.currMetric->transToCustom(mObject.points[i], tp);
-            *(vptr++) = GLfloat(tp[1]);
-            *(vptr++) = GLfloat(tp[2]);
-            break;
-        }
+            case m4d::enum_draw_embedding:
+                break;
+            case m4d::enum_draw_twoplusone:
+                break;
+            case m4d::enum_draw_effpoti:
+                break;
+            case m4d::enum_draw_custom: {
+                mObject.currMetric->transToCustom(mObject.points[i], tp);
+                *(vptr++) = GLfloat(tp[1]);
+                *(vptr++) = GLfloat(tp[2]);
+                break;
+            }
         }
     }
 
@@ -384,6 +382,8 @@ void OpenGL2dModel::initializeGL()
 
     mDPIFactor[0] = QApplication::desktop()->devicePixelRatioF();
     mDPIFactor[1] = QApplication::desktop()->devicePixelRatioF();
+
+    renderText = new RenderText("DroidSansMono.ttf", 12);
 }
 
 void OpenGL2dModel::paintGL()
@@ -393,7 +393,7 @@ void OpenGL2dModel::paintGL()
     // -----------------------
     //   draw ticks
     // -----------------------
-    glColor3f(1, 1, 0);
+    glColor3f(1, 1, 1);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluOrtho2D(mXmin, mXmax, 0, 1);
@@ -403,7 +403,6 @@ void OpenGL2dModel::paintGL()
         glVertex2f(static_cast<float>(x * mXstep), 0.6f);
         glVertex2f(static_cast<float>(x * mXstep), 1.0f);
         glEnd();
-        // renderText(x * mXstep, 0.1, 0.0, QString::number(x * mXstep), mTicksFont);
     }
 
     glLoadIdentity();
@@ -420,7 +419,8 @@ void OpenGL2dModel::paintGL()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluOrtho2D(mXmin, mXmax, mYmin, mYmax);
-    glViewport(DEF_DRAW2D_LEFT_BORDER, DEF_DRAW2D_BOTTOM_BORDER, mWinSize[0] - DEF_DRAW2D_LEFT_BORDER, mWinSize[1] - DEF_DRAW2D_BOTTOM_BORDER);
+    glViewport(DEF_DRAW2D_LEFT_BORDER, DEF_DRAW2D_BOTTOM_BORDER, mWinSize[0] - DEF_DRAW2D_LEFT_BORDER,
+        mWinSize[1] - DEF_DRAW2D_BOTTOM_BORDER);
 
     // -----------------------
     //   draw background
@@ -428,7 +428,7 @@ void OpenGL2dModel::paintGL()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    glColor3f(mBGcolor.redF(), mBGcolor.greenF(), mBGcolor.blueF());
+    glColor3d(mBGcolor.redF(), mBGcolor.greenF(), mBGcolor.blueF());
     glBegin(GL_QUADS);
     glVertex2f(static_cast<float>(mXmin), static_cast<float>(mYmin));
     glVertex2f(static_cast<float>(mXmax), static_cast<float>(mYmin));
@@ -447,7 +447,8 @@ void OpenGL2dModel::paintGL()
     for (unsigned int i = 0; i < mObjects.size(); i++) {
         if (mObjects[i]->getObjectDim() == enum_object_dim_2d) {
             if (!mObjects[i]->drawObject(false)) {
-                if (mObjects[i]->getObjectType() == enum_object_text2d && mObjects[i]->getObjectDim() == enum_object_dim_2d) {
+                if (mObjects[i]->getObjectType() == enum_object_text2d
+                    && mObjects[i]->getObjectDim() == enum_object_dim_2d) {
                     float cx, cy, size;
                     mObjects[i]->getValue(0, cx);
                     mObjects[i]->getValue(1, cy);
@@ -468,7 +469,7 @@ void OpenGL2dModel::paintGL()
         glEnable(GL_LINE_SMOOTH);
     }
 
-    glColor3f(mFGcolor.redF(), mFGcolor.greenF(), mFGcolor.blueF());
+    glColor3d(mFGcolor.redF(), mFGcolor.greenF(), mFGcolor.blueF());
 
     glPointSize(mLineWidth);
     glVertexPointer(2, GL_FLOAT, 0, mVerts);
@@ -514,13 +515,31 @@ void OpenGL2dModel::paintGL()
     //   draw zoom quad
     // -----------------------
     if (mShowZoom) {
-        glColor4f(1.0f - mBGcolor.redF(), 1.0f - mBGcolor.greenF(), 1.0f - mBGcolor.blueF(), 0.3f);
+        glColor4d(1.0 - mBGcolor.redF(), 1.0 - mBGcolor.greenF(), 1.0 - mBGcolor.blueF(), 0.3);
         glBegin(GL_QUADS);
         glVertex2f(static_cast<float>(mZoomXul), static_cast<float>(mZoomYlr));
         glVertex2f(static_cast<float>(mZoomXlr), static_cast<float>(mZoomYlr));
         glVertex2f(static_cast<float>(mZoomXlr), static_cast<float>(mZoomYul));
         glVertex2f(static_cast<float>(mZoomXul), static_cast<float>(mZoomYul));
         glEnd();
+    }
+
+    // draw tick labels
+    if (renderText != nullptr) {
+        glViewport(DEF_DRAW2D_LEFT_BORDER, 0, mWinSize[0] - DEF_DRAW2D_LEFT_BORDER, DEF_DRAW2D_BOTTOM_BORDER);
+        renderText->SetWindowSize(mWinSize[0], DEF_DRAW2D_BOTTOM_BORDER);
+        for (int x = xStart; x < xEnd; x++) {
+            int xpos = static_cast<int>((x * mXstep - mXmin) / (mXmax - mXmin) * mWinSize[0]);
+            renderText->Print(xpos, 2, QString::number(x * mXstep).toStdString().c_str(), ALIGN_HCENTER);
+        }
+
+        glViewport(0, DEF_DRAW2D_BOTTOM_BORDER, DEF_DRAW2D_LEFT_BORDER, mWinSize[1] - DEF_DRAW2D_BOTTOM_BORDER);
+        renderText->SetWindowSize(DEF_DRAW2D_LEFT_BORDER, mWinSize[1]);
+        for (int y = yStart; y < yEnd; y++) {
+            int ypos = static_cast<int>((y * mYstep - mYmin) / (mYmax - mYmin) * mWinSize[1]);
+            renderText->Print(
+                DEF_DRAW2D_LEFT_BORDER - 3, ypos + 2, QString::number(y * mYstep).toStdString().c_str(), ALIGN_RIGHT);
+        }
     }
 }
 
@@ -529,6 +548,17 @@ void OpenGL2dModel::resizeGL(int width, int height)
     mWinSize[0] = static_cast<int>(width * mDPIFactor[0]);
     mWinSize[1] = static_cast<int>(height * mDPIFactor[1]);
     mAspect = (mWinSize[0] - DEF_DRAW2D_LEFT_BORDER) / static_cast<double>(mWinSize[1] - DEF_DRAW2D_BOTTOM_BORDER);
+
+    double xcenter = 0.5 * (mXmax + mXmin);
+    double yrange = mYmax - mYmin;
+    mXmin = xcenter - 0.5 * yrange * mAspect;
+    mXmax = xcenter + 0.5 * yrange * mAspect;
+    adjust();
+    setLattice();
+
+    if (renderText != nullptr) {
+        renderText->SetWindowSize(width, height);
+    }
     update();
 }
 
@@ -537,7 +567,7 @@ void OpenGL2dModel::drawLattice()
     glLineStipple(1, 0x1111);
     glEnable(GL_LINE_STIPPLE);
 
-    glColor3f(mGridColor.redF(), mGridColor.greenF(), mGridColor.blueF());
+    glColor3d(mGridColor.redF(), mGridColor.greenF(), mGridColor.blueF());
     for (int x = xStart; x < xEnd; x++) {
         glBegin(GL_LINES);
         glVertex2f(static_cast<float>(x * mXstep), static_cast<float>(mYmin));
@@ -687,8 +717,11 @@ void OpenGL2dModel::mouseMoveEvent(QMouseEvent* event)
 
 void OpenGL2dModel::getXY(QPoint pos, double& x, double& y)
 {
-    x = (pos.x() - DEF_DRAW2D_LEFT_BORDER) / static_cast<double>(mWinSize[0] - DEF_DRAW2D_LEFT_BORDER) * (mXmax - mXmin) + mXmin;
-    y = (mWinSize[1] - DEF_DRAW2D_BOTTOM_BORDER - pos.y()) / static_cast<double>(mWinSize[1] - DEF_DRAW2D_BOTTOM_BORDER) * (mYmax - mYmin) + mYmin;
+    x = (pos.x() - DEF_DRAW2D_LEFT_BORDER) / static_cast<double>(mWinSize[0] - DEF_DRAW2D_LEFT_BORDER) * (mXmax - mXmin)
+        + mXmin;
+    y = (mWinSize[1] - DEF_DRAW2D_BOTTOM_BORDER - pos.y()) / static_cast<double>(mWinSize[1] - DEF_DRAW2D_BOTTOM_BORDER)
+            * (mYmax - mYmin)
+        + mYmin;
 }
 
 void OpenGL2dModel::adjust()
@@ -727,7 +760,7 @@ void OpenGL2dModel::getTightLattice()
 
 void OpenGL2dModel::setLattice()
 {
-    //bool hasChanged = false;
+    // bool hasChanged = false;
 
     int pixStepX = static_cast<int>(floor(mXstep / mFactorX));
     int pixStepY = static_cast<int>(floor(mYstep / mFactorY));
@@ -737,14 +770,14 @@ void OpenGL2dModel::setLattice()
         if (mXstepIdx < 0) {
             mXstepIdx = 0;
         }
-        //hasChanged = true;
+        // hasChanged = true;
     }
     if (pixStepX < 40) {
         mXstepIdx++;
         if (mXstepIdx >= mStepList.size()) {
             mXstepIdx = mStepList.size() - 1;
         }
-        //hasChanged = true;
+        // hasChanged = true;
     }
 
     if (pixStepY > 119) {
@@ -752,14 +785,14 @@ void OpenGL2dModel::setLattice()
         if (mYstepIdx < 0) {
             mYstepIdx = 0;
         }
-        //hasChanged = true;
+        // hasChanged = true;
     }
     if (pixStepY < 40) {
         mYstepIdx++;
         if (mYstepIdx >= mStepList.size()) {
             mYstepIdx = mStepList.size() - 1;
         }
-        //hasChanged = true;
+        // hasChanged = true;
     }
 
     mXstep = mStepList[mXstepIdx];

@@ -5,6 +5,7 @@
  * This file is part of GeodesicView.
  */
 #include "geodesic_view.h"
+#include <QDockWidget>
 #include <QGroupBox>
 #include <QHeaderView>
 #include <QMessageBox>
@@ -26,7 +27,7 @@ GeodesicView::GeodesicView()
 
     setStandardParams(&mParams);
     init();
-    //tab_draw->setCurrentIndex(1);
+    // tab_draw->setCurrentIndex(1);
 }
 
 GeodesicView::~GeodesicView()
@@ -60,7 +61,8 @@ void GeodesicView::slot_load_setting()
 {
     QDir cdir = QDir::current();
     cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
-    QString filename = QFileDialog::getOpenFileName(this, tr("Load setting"), cdir.absolutePath(), tr(DEF_PROTOCOL_FILE_ENDING_PATTERN));
+    QString filename = QFileDialog::getOpenFileName(
+        this, tr("Load setting"), cdir.absolutePath(), tr(DEF_PROTOCOL_FILE_ENDING_PATTERN));
 
     if (filename == QString()) {
         return;
@@ -68,7 +70,8 @@ void GeodesicView::slot_load_setting()
 
     if (!mObject.loadSettings(filename.toStdString().c_str(), false)) {
         led_status->setText("load settings failed");
-    } else {
+    }
+    else {
         setSetting();
         calculateGeodesic();
     }
@@ -78,7 +81,8 @@ void GeodesicView::slot_save_setting()
 {
     QDir cdir = QDir::current();
     cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save setting"), cdir.absolutePath(), tr(DEF_PROTOCOL_FILE_ENDING_PATTERN));
+    QString filename = QFileDialog::getSaveFileName(
+        this, tr("Save setting"), cdir.absolutePath(), tr(DEF_PROTOCOL_FILE_ENDING_PATTERN));
 
     if (filename == QString()) {
         return;
@@ -95,7 +99,8 @@ void GeodesicView::slot_load_vparams()
 {
     QDir cdir = QDir::current();
     cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
-    QString filename = QFileDialog::getOpenFileName(this, tr("Load ViewParameters"), cdir.absolutePath(), tr(DEF_VPARAMS_FILE_ENDING_PATTERN));
+    QString filename = QFileDialog::getOpenFileName(
+        this, tr("Load ViewParameters"), cdir.absolutePath(), tr(DEF_VPARAMS_FILE_ENDING_PATTERN));
 
     if (filename == QString()) {
         return;
@@ -115,7 +120,8 @@ void GeodesicView::slot_save_vparams()
 {
     QDir cdir = QDir::current();
     cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save ViewParameters"), cdir.absolutePath(), tr(DEF_VPARAMS_FILE_ENDING_PATTERN));
+    QString filename = QFileDialog::getSaveFileName(
+        this, tr("Save ViewParameters"), cdir.absolutePath(), tr(DEF_VPARAMS_FILE_ENDING_PATTERN));
 
     if (filename == QString()) {
         return;
@@ -188,9 +194,11 @@ void GeodesicView::slot_save_image_2d()
 
     if (filename.endsWith(DEF_2D_FILE_ENDING)) {
         filename.remove(DEF_2D_FILE_ENDING);
-    } else if (filename.endsWith(DEF_3D_FILE_ENDING)) {
+    }
+    else if (filename.endsWith(DEF_3D_FILE_ENDING)) {
         filename.remove(DEF_3D_FILE_ENDING);
-    } else if (filename.endsWith(DEF_IMG_FILE_ENDING)) {
+    }
+    else if (filename.endsWith(DEF_IMG_FILE_ENDING)) {
         filename.remove(DEF_IMG_FILE_ENDING);
     }
     filename.append(DEF_2D_FILE_ENDING);
@@ -212,9 +220,11 @@ void GeodesicView::slot_save_image_3d()
 
     if (filename.endsWith(DEF_3D_FILE_ENDING)) {
         filename.remove(DEF_3D_FILE_ENDING);
-    } else if (filename.endsWith(DEF_2D_FILE_ENDING)) {
+    }
+    else if (filename.endsWith(DEF_2D_FILE_ENDING)) {
         filename.remove(DEF_2D_FILE_ENDING);
-    } else if (filename.endsWith(DEF_IMG_FILE_ENDING)) {
+    }
+    else if (filename.endsWith(DEF_IMG_FILE_ENDING)) {
         filename.remove(DEF_IMG_FILE_ENDING);
     }
     filename.append(DEF_3D_FILE_ENDING);
@@ -229,7 +239,8 @@ void GeodesicView::slot_load_all()
 {
     QDir cdir = QDir::current();
     cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
-    QString filename = QFileDialog::getOpenFileName(this, tr("Load all"), cdir.absolutePath(), tr(DEF_PROTOCOL_FILE_ENDING_PATTERN));
+    QString filename
+        = QFileDialog::getOpenFileName(this, tr("Load all"), cdir.absolutePath(), tr(DEF_PROTOCOL_FILE_ENDING_PATTERN));
 
     if (filename == QString()) {
         return;
@@ -237,13 +248,14 @@ void GeodesicView::slot_load_all()
 
     if (!mObject.loadSettings(filename.toStdString().c_str(), false)) {
         led_status->setText("load settings failed");
-    } else {
+    }
+    else {
         QString basefilename = filename.remove(DEF_PROTOCOL_FILE_ENDING);
-        //std::cerr << basefilename.toStdString() << std::endl;
+        // std::cerr << basefilename.toStdString() << std::endl;
         setSetting();
 
         QString paramFilename = basefilename + QString(DEF_VPARAMS_FILE_ENDING);
-        //std::cerr << paramFilename.toStdString() << std::endl;
+        // std::cerr << paramFilename.toStdString() << std::endl;
         if (loadParamFile(paramFilename.toStdString(), &mParams)) {
             drw_view->updateParams();
             geo_view->updateParams();
@@ -334,10 +346,12 @@ void GeodesicView::slot_write_prot()
             //           mPointData[i][0],mPointData[i][1],mPointData[i][2],mPointData[i][3],mPointData[i][4],mPointData[i][5],mPointData[i][6],mPointData[i][7],mPointData[i][8]);
 #ifdef _WIN32
             sprintf_s(buf, "%5d %16.12f %16.12f %16.12f %16.12f   %16.12f %16.12f %16.12f %16.12f  %16.12g\n", i,
-                mPointData[i][0], mPointData[i][1], mPointData[i][2], mPointData[i][3], mDirData[i][0], mDirData[i][1], mDirData[i][2], mDirData[i][3], mEpsData[i]);
+                mPointData[i][0], mPointData[i][1], mPointData[i][2], mPointData[i][3], mDirData[i][0], mDirData[i][1],
+                mDirData[i][2], mDirData[i][3], mEpsData[i]);
 #else
             sprintf(buf, "%5d %16.12f %16.12f %16.12f %16.12f   %16.12f %16.12f %16.12f %16.12f  %16.12g\n", i,
-                mPointData[i][0], mPointData[i][1], mPointData[i][2], mPointData[i][3], mDirData[i][0], mDirData[i][1], mDirData[i][2], mDirData[i][3], mEpsData[i]);
+                mPointData[i][0], mPointData[i][1], mPointData[i][2], mPointData[i][3], mDirData[i][0], mDirData[i][1],
+                mDirData[i][2], mDirData[i][3], mEpsData[i]);
 #endif
             ts_points << buf;
         }
@@ -398,10 +412,12 @@ void GeodesicView::slot_run_luaScript()
         int absIdx, ordIdx;
         drw_view->getDrawAbsOrdIndex(absIdx, ordIdx);
         draw2d->setPoints(mObject.currMetric->getCurrDrawType(drw_view->getDrawTypeName()));
-    } else if (tab_draw->currentIndex() == 0) { // set sachs axes and points for 3D visualization...
+    }
+    else if (tab_draw->currentIndex() == 0) { // set sachs axes and points for 3D visualization...
         if (mObject.type == m4d::enum_geodesic_lightlike_sachs) {
             opengl->setSachsAxes(false);
-        } else {
+        }
+        else {
             opengl->clearSachsAxes();
         }
         opengl->setPoints(mObject.currMetric->getCurrDrawType(drw_view->getDrawType3DName()));
@@ -444,7 +460,8 @@ void GeodesicView::reset()
 
 void GeodesicView::slot_reset()
 {
-    int button = QMessageBox::question(this, "Reset", "Really reset GeodesicViewer?", QMessageBox::Cancel | QMessageBox::Ok, QMessageBox::Ok);
+    int button = QMessageBox::question(
+        this, "Reset", "Really reset GeodesicViewer?", QMessageBox::Cancel | QMessageBox::Ok, QMessageBox::Ok);
     if (button != QMessageBox::Ok) {
         return;
     }
@@ -454,7 +471,7 @@ void GeodesicView::slot_reset()
 
 void GeodesicView::slot_doc()
 {
-    //if (!mHelpDoc->isVisible()) {
+    // if (!mHelpDoc->isVisible()) {
     //    mHelpDoc->show();
     //} else {
     //    mHelpDoc->hide();
@@ -467,7 +484,8 @@ void GeodesicView::slot_about()
     QMessageBox::about(this, tr("GeodesicViewer"),
         tr("GeodesicViewer was first developed by Thomas Müller and Frank Grave at "
            "the Visualization Research Center, University of Stuttgart, Germany (2009-2015).\n\n"
-           "Current contact:\nDr. Thomas Müller\nHaus der Astronomie/Max Planck Institute for Astronomy\n69117 Heidelberg, Germany\n\n"
+           "Current contact:\nDr. Thomas Müller\nHaus der Astronomie/Max Planck Institute for Astronomy\n69117 "
+           "Heidelberg, Germany\n\n"
            "Email: tmueller@mpia.de\n\n"
            "Details about the metrics can be found in the\n\"Catalogue of Spacetimes\"\narXiv:0904.4184 [gr-qc]"));
 }
@@ -478,7 +496,8 @@ void GeodesicView::slot_changeDrawActive()
     if (obj->objectName() == tr("action3dactive")) {
         tab_draw->setCurrentIndex(0);
         opengl->setFocus();
-    } else {
+    }
+    else {
         drw_view->animate(false);
         tab_draw->setCurrentIndex(1);
         draw2d->setFocus();
@@ -489,7 +508,8 @@ void GeodesicView::slot_animate()
 {
     if (drw_view->isAnimated()) {
         drw_view->animate(false);
-    } else {
+    }
+    else {
         drw_view->animate(true);
     }
 }
@@ -498,7 +518,8 @@ void GeodesicView::slot_load_objects()
 {
     QDir cdir = QDir::current();
     cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
-    QString filename = QFileDialog::getOpenFileName(this, tr("Load object file"), cdir.absolutePath(), tr(DEF_OBJECT_FILE_ENDING_PATTERN));
+    QString filename = QFileDialog::getOpenFileName(
+        this, tr("Load object file"), cdir.absolutePath(), tr(DEF_OBJECT_FILE_ENDING_PATTERN));
 
     if (filename == QString()) {
         return;
@@ -511,7 +532,8 @@ void GeodesicView::slot_append_objects()
 {
     QDir cdir = QDir::current();
     cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
-    QString filename = QFileDialog::getOpenFileName(this, tr("Append object file"), cdir.absolutePath(), tr(DEF_OBJECT_FILE_ENDING_PATTERN));
+    QString filename = QFileDialog::getOpenFileName(
+        this, tr("Append object file"), cdir.absolutePath(), tr(DEF_OBJECT_FILE_ENDING_PATTERN));
 
     if (filename == QString()) {
         return;
@@ -526,7 +548,8 @@ void GeodesicView::slot_append_objects()
     for (size_t i = 0; i < num; i++) {
         if (mObjects[i]->getObjectDim() == enum_object_dim_3d) {
             opengl->insertObject(mObjects[i]);
-        } else if (mObjects[i]->getObjectDim() == enum_object_dim_2d) {
+        }
+        else if (mObjects[i]->getObjectDim() == enum_object_dim_2d) {
             draw2d->insertObject(mObjects[i]);
         }
     }
@@ -540,7 +563,8 @@ void GeodesicView::slot_save_objects()
 
     QDir cdir = QDir::current();
     cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save object file"), cdir.absolutePath(), tr(DEF_OBJECT_FILE_ENDING_PATTERN));
+    QString filename = QFileDialog::getSaveFileName(
+        this, tr("Save object file"), cdir.absolutePath(), tr(DEF_OBJECT_FILE_ENDING_PATTERN));
 
     if (filename == QString()) {
         return;
@@ -555,15 +579,15 @@ void GeodesicView::slot_save_objects()
 
 void GeodesicView::slot_show_objects()
 {
-    //std::cerr << "\n\n\n\n-----------------------GeodesicView::slot_show_objects: " << mObjects.size() <<  "\n";
     if (mObjectView->isVisible()) {
         mObjectView->hide();
-    } else {
+    }
+    else {
         QString text;
         for (unsigned int i = 0; i < mObjects.size(); i++) {
             std::string line;
             mObjects[i]->printLine(line);
-            //mObjects[i]->print();
+            // mObjects[i]->print();
             text.append(QString("%1\n").arg(QString(line.c_str())));
         }
         mObjectView->writeText(text);
@@ -602,7 +626,8 @@ void GeodesicView::slot_objChanged()
     for (size_t i = 0; i < num; i++) {
         if (mObjects[i]->getObjectDim() == enum_object_dim_3d) {
             opengl->insertObject(mObjects[i]);
-        } else if (mObjects[i]->getObjectDim() == enum_object_dim_2d) {
+        }
+        else if (mObjects[i]->getObjectDim() == enum_object_dim_2d) {
             draw2d->insertObject(mObjects[i]);
         }
     }
@@ -612,7 +637,7 @@ void GeodesicView::slot_show_report()
 {
     std::string text;
     mObject.makeReport(text);
-    //std::cerr << text;
+    // std::cerr << text;
 
     mReportText->setText(text);
     mReportText->show();
@@ -622,7 +647,8 @@ void GeodesicView::slot_save_report()
 {
     QDir cdir = QDir::current();
     cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save report"), cdir.absolutePath(), tr(DEF_REPORT_FILE_ENDING_PATTERN));
+    QString filename = QFileDialog::getSaveFileName(
+        this, tr("Save report"), cdir.absolutePath(), tr(DEF_REPORT_FILE_ENDING_PATTERN));
 
     if (filename == QString()) {
         return;
@@ -686,7 +712,7 @@ void GeodesicView::slot_metricParamChanged()
     DoubleEdit* led = reinterpret_cast<DoubleEdit*>(obj);
     double value = led->getValue();
 
-    //std::cerr << obj->objectName().toStdString() << " " << value << std::endl;
+    // std::cerr << obj->objectName().toStdString() << " " << value << std::endl;
 
     QString paramName = QString(obj->objectName()).replace(QString(".value"), QString(""));
 
@@ -725,7 +751,8 @@ void GeodesicView::slot_setStepsizeControl()
     if (chb_stepsize_controlled->checkState() == Qt::Checked) {
         mObject.geodSolver->setStepSizeControlled(true);
         mObject.stepsizeControlled = true;
-    } else {
+    }
+    else {
         mObject.geodSolver->setStepSizeControlled(false);
         mObject.stepsizeControlled = false;
     }
@@ -748,7 +775,8 @@ void GeodesicView::slot_setDrawWithLines()
     if (chb_drawstyle->checkState() == Qt::Checked) {
         draw2d->setStyle(enum_draw_lines);
         opengl->setStyle(enum_draw_lines);
-    } else {
+    }
+    else {
         draw2d->setStyle(enum_draw_points);
         opengl->setStyle(enum_draw_points);
     }
@@ -772,7 +800,8 @@ void GeodesicView::slot_setResize()
         fac = 1.0;
         led_resize_fac->setText(QString::number(fac));
         led_resize_fac->setEnabled(false);
-    } else {
+    }
+    else {
         led_resize_fac->setEnabled(true);
     }
 
@@ -894,7 +923,9 @@ void GeodesicView::setMetricParam(QString name, double val)
     if (mObject.currMetric != nullptr) {
         int paramNum = mObject.currMetric->getParamNum(name.toStdString().c_str());
         if (paramNum < 0) {
-            fprintf(stderr, "GeodesicView::setMetricParam() ... parameter name \"%s\" does not exist for the current metric!\n", name.toStdString().c_str());
+            fprintf(stderr,
+                "GeodesicView::setMetricParam() ... parameter name \"%s\" does not exist for the current metric!\n",
+                name.toStdString().c_str());
             return;
         }
         DoubleEdit* led_value = reinterpret_cast<DoubleEdit*>(tbw_metric_params->cellWidget(paramNum, 1));
@@ -926,35 +957,44 @@ void GeodesicView::setSolverParam(QString name, double val)
     if (name.compare("max points") == 0) {
         led_maxpoints->setText(QString::number(val));
         slot_setMaxNumPoints();
-    } else if (name.compare("step size") == 0) {
+    }
+    else if (name.compare("step size") == 0) {
         led_stepsize->setText(QString::number(val));
         slot_setIntegratorParams();
-    } else if (name.compare("eps abs") == 0) {
+    }
+    else if (name.compare("eps abs") == 0) {
         led_eps_abs->setText(QString::number(val));
         slot_setIntegratorParams();
-    } else if (name.compare("eps rel") == 0) {
+    }
+    else if (name.compare("eps rel") == 0) {
         led_eps_rel->setText(QString::number(val));
         slot_setIntegratorParams();
-    } else if (name.compare("step ctrl") == 0) {
+    }
+    else if (name.compare("step ctrl") == 0) {
         if (val > 0) {
             chb_stepsize_controlled->setChecked(true);
-        } else {
+        }
+        else {
             chb_stepsize_controlled->setChecked(false);
         }
         slot_setStepsizeControl();
-    } else if (name.compare("constr eps") == 0) {
+    }
+    else if (name.compare("constr eps") == 0) {
         led_constraint_eps->setText(QString::number(val));
         slot_setConstraintEps();
-    } else {
-        fprintf(stderr, "GeodesicView::setSolverParam() ... parameter \"%s\" is not valid.\n", name.toStdString().c_str());
-        fprintf(stderr, "Use: \"max points\", \"step ctrl\", \"step size\", \"eps abs\", \"eps.rel\", or \"constr eps\".\n");
+    }
+    else {
+        fprintf(
+            stderr, "GeodesicView::setSolverParam() ... parameter \"%s\" is not valid.\n", name.toStdString().c_str());
+        fprintf(stderr,
+            "Use: \"max points\", \"step ctrl\", \"step size\", \"eps abs\", \"eps.rel\", or \"constr eps\".\n");
     }
 }
 
 void GeodesicView::wait(double)
 {
 #ifndef _WIN32
-    //usleep(sec*1e6);
+    // usleep(sec*1e6);
 #endif
 }
 
@@ -963,7 +1003,8 @@ void GeodesicView::addObject(MyObject* obj)
     mObjects.push_back(obj);
     if (obj->getObjectDim() == enum_object_dim_3d) {
         opengl->insertObject(obj);
-    } else if (obj->getObjectDim() == enum_object_dim_2d) {
+    }
+    else if (obj->getObjectDim() == enum_object_dim_2d) {
         draw2d->insertObject(obj);
     }
 }
@@ -1015,8 +1056,8 @@ void GeodesicView::init()
 void GeodesicView::initActions()
 {
     /* ------------------
-    *  File actions
-    * ------------------ */
+     *  File actions
+     * ------------------ */
     mActionReset = new QAction(QIcon(":/reset.png"), "&Reset", this);
     mActionReset->setShortcut(Qt::CTRL | Qt::Key_N);
     addAction(mActionReset);
@@ -1076,8 +1117,8 @@ void GeodesicView::initActions()
 #endif // HAVE_LUA
 
     /* ------------------
-    *  Object actions
-    * ------------------ */
+     *  Object actions
+     * ------------------ */
     mActionLoadObjectFile = new QAction(QIcon(":/load.png"), "&Load object file", this);
     mActionLoadObjectFile->setShortcut(Qt::CTRL | Qt::Key_O);
     addAction(mActionLoadObjectFile);
@@ -1100,22 +1141,22 @@ void GeodesicView::initActions()
     // ------------------
     //  Report actions
     // ------------------
-    //mActionShowReport = new QAction(QIcon(":/display.png"), "&Show report", this);
-    //mActionShowReport->setShortcut(Qt::CTRL | Qt::Key_R);
-    //addAction(mActionShowReport);
-    //connect(mActionShowReport, SIGNAL(triggered()), this, SLOT(slot_show_report()));
+    // mActionShowReport = new QAction(QIcon(":/display.png"), "&Show report", this);
+    // mActionShowReport->setShortcut(Qt::CTRL | Qt::Key_R);
+    // addAction(mActionShowReport);
+    // connect(mActionShowReport, SIGNAL(triggered()), this, SLOT(slot_show_report()));
     //
-    //mActionSaveReport = new QAction(QIcon(":/save.png"), "&Save report", this);
-    //addAction(mActionSaveReport);
-    //connect(mActionSaveReport, SIGNAL(triggered()), this, SLOT(slot_save_report()));
+    // mActionSaveReport = new QAction(QIcon(":/save.png"), "&Save report", this);
+    // addAction(mActionSaveReport);
+    // connect(mActionSaveReport, SIGNAL(triggered()), this, SLOT(slot_save_report()));
 
     // ------------------
     //   Help actions
     // ------------------
-    //mActionDoc = new QAction(QIcon(":/html.png"), "&Manual", this);
-    //mActionDoc->setShortcut(Qt::CTRL | Qt::Key_M);
-    //addAction(mActionDoc);
-    //connect(mActionDoc, SIGNAL(triggered()), this, SLOT(slot_doc()));
+    // mActionDoc = new QAction(QIcon(":/html.png"), "&Manual", this);
+    // mActionDoc->setShortcut(Qt::CTRL | Qt::Key_M);
+    // addAction(mActionDoc);
+    // connect(mActionDoc, SIGNAL(triggered()), this, SLOT(slot_doc()));
 
     mActionAbout = new QAction(QIcon(":/about.png"), "&About", this);
     addAction(mActionAbout);
@@ -1201,10 +1242,10 @@ void GeodesicView::initMenus()
     mObjectMenu->addAction(mActionShowObjects);
 
     // ---- Report menu ----
-    //mReportMenu = menuBar()->addMenu("&Report");
-    //mReportMenu->addAction(mActionSaveReport);
-    //mReportMenu->addSeparator();
-    //mReportMenu->addAction(mActionShowReport);
+    // mReportMenu = menuBar()->addMenu("&Report");
+    // mReportMenu->addAction(mActionSaveReport);
+    // mReportMenu->addSeparator();
+    // mReportMenu->addAction(mActionShowReport);
 
     // ---- Help menu ----
     mHelpMenu = menuBar()->addMenu("&Help");
@@ -1281,7 +1322,7 @@ void GeodesicView::initGUI()
     tbw_metric_params->setAlternatingRowColors(true);
     QHeaderView* header = tbw_metric_params->horizontalHeader();
     header->setSectionResizeMode(QHeaderView::Stretch);
-
+    tbw_metric_params->setMaximumHeight(150);
     wgt_metric = new QWidget();
 
     QGridLayout* layout_metric = new QGridLayout();
@@ -1408,13 +1449,8 @@ void GeodesicView::initGUI()
     tab_metricInt->addTab(wgt_metric, tr("Metric"));
     tab_metricInt->addTab(wgt_integrator, tr("Integrator"));
     tab_metricInt->addTab(wgt_constants, tr("Constants"));
-    tab_metricInt->setMaximumHeight(220);
-    tab_metricInt->setMinimumWidth(DEF_TOOLS_WIDTH);
-    tab_metricInt->setMaximumWidth(DEF_TOOLS_WIDTH);
 
     QGroupBox* grb_metricInt = new QGroupBox("Metric/Integrator/Constants");
-    grb_metricInt->setMinimumWidth(DEF_GROUPBOX_WIDTH);
-    grb_metricInt->setMaximumWidth(DEF_GROUPBOX_WIDTH);
     QGridLayout* layout_metricInt = new QGridLayout();
     layout_metricInt->addWidget(tab_metricInt, 0, 0);
     grb_metricInt->setLayout(layout_metricInt);
@@ -1429,7 +1465,8 @@ void GeodesicView::initGUI()
     // ---------------------------------
     mOglJacobi = new OpenGLJacobiModel(&mParams);
     geo_view = new GeodView(&mParams, opengl, mOglJacobi);
-#ifdef WIN32 //Warum das hier nötig unter Windows ist weiß ich nicht so recht, aber so wird das CompassDial richtig dargestellt.
+#ifdef WIN32 // Warum das hier nötig unter Windows ist weiß ich nicht so recht, aber so wird das CompassDial richtig
+             // dargestellt.
     geo_view->setMinimumWidth(530);
 #endif
 
@@ -1450,10 +1487,9 @@ void GeodesicView::initGUI()
     scr_area->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     QFrame* frame = new QFrame();
-    frame->setContentsMargins(0, 0, 0, 0);
+    // frame->setContentsMargins(0, 0, 0, 0);
 
     QVBoxLayout* layout_frame = new QVBoxLayout();
-    layout_frame->setAlignment(Qt::AlignRight);
     layout_frame->addWidget(grb_metricInt);
     layout_frame->addWidget(lct_view);
     layout_frame->addWidget(geo_view);
@@ -1462,18 +1498,17 @@ void GeodesicView::initGUI()
     scr_area->setWidget(frame);
 
     // ---------------------------------
-    //  layout complete
+    //  layout
     // ---------------------------------
-    QGridLayout* layout_complete = new QGridLayout();
-    layout_complete->addWidget(tab_draw, 0, 0);
-    layout_complete->addWidget(scr_area, 0, 1);
-    layout_complete->setColumnStretch(0, 10);
+    QDockWidget* dw = new QDockWidget();
+    dw->setWidget(scr_area);
+    dw->setFeatures(
+        QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable);
+    dw->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
+    dw->setWindowTitle("Parameters");
 
-    QWidget* widget = new QWidget();
-    widget->setLayout(layout_complete);
-    widget->setMinimumWidth(DEF_GUI_WIDTH);
-    widget->setMinimumHeight(DEF_GUI_HEIGHT);
-    setCentralWidget(widget);
+    setCentralWidget(tab_draw);
+    addDockWidget(Qt::RightDockWidgetArea, dw);
 
     // ---------------------------
     //    status bar
@@ -1487,13 +1522,13 @@ void GeodesicView::initGUI()
 
     QLabel* lab_num_points = new QLabel("# points");
     lcd_num_points = new QLCDNumber();
-    //lcd_num_points->setDigitCount(6);
+    // lcd_num_points->setDigitCount(6);
     lcd_num_points->setSegmentStyle(QLCDNumber::Filled);
     lcd_num_points->display(0);
 
     led_status = new QLineEdit();
     led_status->setEnabled(false);
-    led_status->setMaximumWidth(400);
+    // led_status->setMaximumWidth(400);
 
     mStatus = new QStatusBar();
 #ifdef SHOW_CALC_TIME
@@ -1520,8 +1555,8 @@ void GeodesicView::initControl()
 
     connect(pub_si_units, SIGNAL(pressed()), this, SLOT(slot_setSIunits()));
     connect(pub_geom_units, SIGNAL(pressed()), this, SLOT(slot_setGeomUnits()));
-    //connect( pub_si_units,   SIGNAL( pressed() ), drw_view, SLOT( slot_embParamChanged() ) );
-    //connect( pub_geom_units, SIGNAL( pressed() ), drw_view, SLOT( slot_embParamChanged() ) );
+    // connect( pub_si_units,   SIGNAL( pressed() ), drw_view, SLOT( slot_embParamChanged() ) );
+    // connect( pub_geom_units, SIGNAL( pressed() ), drw_view, SLOT( slot_embParamChanged() ) );
 
     connect(led_maxpoints, SIGNAL(editingFinished()), this, SLOT(slot_setMaxNumPoints()));
     connect(chb_stepsize_controlled, SIGNAL(stateChanged(int)), this, SLOT(slot_setStepsizeControl()));
@@ -1591,7 +1626,6 @@ bool GeodesicView::setMetricNamesAndCoords()
 
         tbw_metric_params->setCellWidget(static_cast<int>(i), 1, led_value);
         tbw_metric_params->setCellWidget(static_cast<int>(i), 2, led_step);
-        tbw_metric_params->setRowHeight(static_cast<int>(i), DEF_MAXIMUM_ELEM_HEIGHT);
 
         connect(led_value, SIGNAL(editingFinished()), this, SLOT(slot_metricParamChanged()));
         connect(led_step, SIGNAL(editingFinished()), led_value, SLOT(slot_setStep()));
@@ -1624,43 +1658,43 @@ bool GeodesicView::setGeodSolver(m4d::enum_integrator type)
 
     const gsl_odeiv_step_type* step_type = gsl_odeiv_step_rk4;
     switch (mObject.geodSolverType) {
-    case m4d::gsUnknown:
-    case m4d::gsIrk4:
+        case m4d::gsUnknown:
+        case m4d::gsIrk4:
 #ifdef USE_DP_INT
-    case m4d::gsIdp54:
-    case m4d::gsIdp65:
+        case m4d::gsIdp54:
+        case m4d::gsIdp65:
 #endif
-    case m4d::gsInrbs:
-        break;
-    case m4d::gsIgslrk2:
-        step_type = gsl_odeiv_step_rk2;
-        break;
-    case m4d::gsIgslrk4:
-        step_type = gsl_odeiv_step_rk4;
-        break;
-    case m4d::gsIgslfehlberg:
-        step_type = gsl_odeiv_step_rkf45;
-        break;
-    case m4d::gsIgslcash:
-        step_type = gsl_odeiv_step_rkck;
-        break;
-    case m4d::gsIgslprinc:
-        step_type = gsl_odeiv_step_rk8pd;
-        break;
-    case m4d::gsIi2:
-        step_type = gsl_odeiv_step_rk2imp;
-        break;
-    /*
-        case m4d::gsIbs:
-        step_type = gsl_odeiv_step_bsimp;
-        break;
-        */
-    case m4d::gsIm1:
-        step_type = gsl_odeiv_step_gear1;
-        break;
-    case m4d::gsIm2:
-        step_type = gsl_odeiv_step_gear2;
-        break;
+        case m4d::gsInrbs:
+            break;
+        case m4d::gsIgslrk2:
+            step_type = gsl_odeiv_step_rk2;
+            break;
+        case m4d::gsIgslrk4:
+            step_type = gsl_odeiv_step_rk4;
+            break;
+        case m4d::gsIgslfehlberg:
+            step_type = gsl_odeiv_step_rkf45;
+            break;
+        case m4d::gsIgslcash:
+            step_type = gsl_odeiv_step_rkck;
+            break;
+        case m4d::gsIgslprinc:
+            step_type = gsl_odeiv_step_rk8pd;
+            break;
+        case m4d::gsIi2:
+            step_type = gsl_odeiv_step_rk2imp;
+            break;
+        /*
+            case m4d::gsIbs:
+            step_type = gsl_odeiv_step_bsimp;
+            break;
+            */
+        case m4d::gsIm1:
+            step_type = gsl_odeiv_step_gear1;
+            break;
+        case m4d::gsIm2:
+            step_type = gsl_odeiv_step_gear2;
+            break;
     }
 
     chb_stepsize_controlled->setEnabled(false);
@@ -1680,7 +1714,8 @@ bool GeodesicView::setGeodSolver(m4d::enum_integrator type)
         mObject.geodSolver->setStepSizeControlled(chb_stepsize_controlled->isChecked());
         mObject.geodSolver->setEpsilons(led_eps_abs->text().toDouble(), led_eps_rel->text().toDouble());
         mObject.geodSolver->setAffineParamStep(led_stepsize->text().toDouble());
-    } else if (type == m4d::gsIdp65) {
+    }
+    else if (type == m4d::gsIdp65) {
         chb_stepsize_controlled->setEnabled(true);
         led_eps_abs->setEnabled(true);
 
@@ -1697,12 +1732,14 @@ bool GeodesicView::setGeodSolver(m4d::enum_integrator type)
         mObject.geodSolver->setAffineParamStep(led_stepsize->text().toDouble());
         led_max_stepsize->setEnabled(true);
         mObject.geodSolver->setMaxAffineParamStep(led_max_stepsize->text().toDouble());
-    } else {
+    }
+    else {
         chb_stepsize_controlled->setEnabled(true);
         led_eps_abs->setEnabled(true);
         led_eps_rel->setEnabled(true);
 
-        mObject.geodSolver = new m4d::GeodesicGSL(mObject.currMetric, step_type, static_cast<int>(mObject.geodSolverType), mObject.type);
+        mObject.geodSolver = new m4d::GeodesicGSL(
+            mObject.currMetric, step_type, static_cast<int>(mObject.geodSolverType), mObject.type);
         mObject.geodSolver->setStepSizeControlled(chb_stepsize_controlled->isChecked());
         mObject.geodSolver->setEpsilons(led_eps_abs->text().toDouble(), led_eps_rel->text().toDouble());
         mObject.geodSolver->setAffineParamStep(led_stepsize->text().toDouble());
@@ -1710,7 +1747,9 @@ bool GeodesicView::setGeodSolver(m4d::enum_integrator type)
         mObject.geodSolver->setMaxAffineParamStep(led_max_stepsize->text().toDouble());
     }
 
-    mObject.geodSolver->setBoundingBox(m4d::vec4(-DBL_MAX, -DBL_MAX, -DBL_MAX, -DBL_MAX), m4d::vec4(DBL_MAX, DBL_MAX, DBL_MAX, DBL_MAX));
+    double dblmax = std::numeric_limits<double>::max();
+    mObject.geodSolver->setBoundingBox(
+        m4d::vec4(-dblmax, -dblmax, -dblmax, -dblmax), m4d::vec4(dblmax, dblmax, dblmax, dblmax));
     mObject.geodSolver->setGeodesicType(mObject.type);
 
     // mObject.geodSolver->print();
@@ -1757,7 +1796,8 @@ void GeodesicView::calculateGeodesic()
     }
 
     // Initial direction with respect to natural local tetrad:
-    m4d::vec4 locDir = SIGNUM(mObject.timeDirection) * y0 * b[0] + eta * (mObject.startDir[0] * b[1] + mObject.startDir[1] * b[2] + mObject.startDir[2] * b[3]);
+    m4d::vec4 locDir = SIGNUM(mObject.timeDirection) * y0 * b[0]
+        + eta * (mObject.startDir[0] * b[1] + mObject.startDir[1] * b[2] + mObject.startDir[2] * b[3]);
     m4d::vec3 nullDir = m4d::vec3(mObject.startDir[0], mObject.startDir[1], mObject.startDir[2]);
     m4d::vec4 coDir;
     mObject.currMetric->localToCoord(mObject.startPos, locDir, coDir, mObject.tetradType);
@@ -1776,34 +1816,38 @@ void GeodesicView::calculateGeodesic()
     m4d::vec3 lX, lY, lZ;
 
     switch (mParams.opengl_sachs_system) {
-    case enum_sachs_e1e2e3:
-        lX = locX;
-        lY = locY;
-        lZ = locZ;
-        break;
-    case enum_sachs_e2e3e1:
-        lX = locY;
-        lY = locZ;
-        lZ = locX;
-        break;
-    case enum_sachs_e3e1e2:
-        lX = locZ;
-        lY = locX;
-        lZ = locY;
-        break;
+        case enum_sachs_e1e2e3:
+            lX = locX;
+            lY = locY;
+            lZ = locZ;
+            break;
+        case enum_sachs_e2e3e1:
+            lX = locY;
+            lY = locZ;
+            lZ = locX;
+            break;
+        case enum_sachs_e3e1e2:
+            lX = locZ;
+            lY = locX;
+            lZ = locY;
+            break;
     }
 
     m4d::enum_break_condition breakCond = m4d::enum_break_none;
 
     // integrate either the standard geodesic equation...
     if (mObject.type == m4d::enum_geodesic_lightlike || mObject.type == m4d::enum_geodesic_timelike) {
-        breakCond = mObject.geodSolver->calculateGeodesic(mObject.startPos, coDir, mObject.maxNumPoints, mObject.points, mObject.dirs, mObject.lambda);
+        breakCond = mObject.geodSolver->calculateGeodesic(
+            mObject.startPos, coDir, mObject.maxNumPoints, mObject.points, mObject.dirs, mObject.lambda);
     }
     // ... or the geodesic equation together with the parallel transport of the Sachs basis and the Jacobi equation
     else if (mObject.type == m4d::enum_geodesic_lightlike_sachs) {
-        breakCond = mObject.geodSolver->calcSachsJacobi(mObject.startPos, coDir, nullDir, lX, lY, lZ, b[0], b[1], b[2], b[3], mObject.tetradType, mObject.maxNumPoints, mObject.points, mObject.dirs, mObject.lambda, mObject.sachs1, mObject.sachs2, mObject.jacobi, mObject.maxJacobi);
+        breakCond = mObject.geodSolver->calcSachsJacobi(mObject.startPos, coDir, nullDir, lX, lY, lZ, b[0], b[1], b[2],
+            b[3], mObject.tetradType, mObject.maxNumPoints, mObject.points, mObject.dirs, mObject.lambda,
+            mObject.sachs1, mObject.sachs2, mObject.jacobi, mObject.maxJacobi);
     }
-    // breakCond = mObject.geodSolver->calcSachsJacobi(mObject.startPos,nullDir,coDir,mObject.base[0],mObject.base[1],mObject.base[2],mObject.base[3],mObject.maxNumPoints,mObject.points,mObject.dirs,mObject.lambda,mObject.sachs1,mObject.sachs2,mObject.jacobi);
+    // breakCond =
+    // mObject.geodSolver->calcSachsJacobi(mObject.startPos,nullDir,coDir,mObject.base[0],mObject.base[1],mObject.base[2],mObject.base[3],mObject.maxNumPoints,mObject.points,mObject.dirs,mObject.lambda,mObject.sachs1,mObject.sachs2,mObject.jacobi);
 
     // ????? Welche der beiden oberen Methoden stimmt,  b[0]... oder mObject.base[0]... ??
 
@@ -1816,10 +1860,12 @@ void GeodesicView::calculateGeodesic()
         int absIdx, ordIdx;
         drw_view->getDrawAbsOrdIndex(absIdx, ordIdx);
         draw2d->setPoints(mObject.currMetric->getCurrDrawType(drw_view->getDrawTypeName()));
-    } else if (tab_draw->currentIndex() == 0) { // set sachs axes and points for 3D visualization...
+    }
+    else if (tab_draw->currentIndex() == 0) { // set sachs axes and points for 3D visualization...
         if (mObject.type == m4d::enum_geodesic_lightlike_sachs) {
             opengl->setSachsAxes(false);
-        } else {
+        }
+        else {
             opengl->clearSachsAxes();
         }
         opengl->setPoints(mObject.currMetric->getCurrDrawType(drw_view->getDrawType3DName()));
@@ -1859,7 +1905,8 @@ void GeodesicView::calculateGeodesicData()
             b[i] = mObject.lorentz * mObject.base[i];
         }
 
-        m4d::vec4 locDir = SIGNUM(mObject.timeDirection) * y0 * b[0] + eta * (mObject.startDir[0] * b[1] + mObject.startDir[1] * b[2] + mObject.startDir[2] * b[3]);
+        m4d::vec4 locDir = SIGNUM(mObject.timeDirection) * y0 * b[0]
+            + eta * (mObject.startDir[0] * b[1] + mObject.startDir[1] * b[2] + mObject.startDir[2] * b[3]);
         m4d::vec4 coDir;
         mObject.currMetric->localToCoord(mObject.startPos, locDir, coDir, mObject.tetradType);
 
@@ -1872,15 +1919,15 @@ void GeodesicView::calculateGeodesicData()
         if (!mEpsData.empty()) {
             mEpsData.clear();
         }
-        mObject.geodSolver->calculateGeodesicData(mObject.startPos, coDir, mObject.maxNumPoints, mPointData, mDirData, mEpsData, mObject.lambda);
+        mObject.geodSolver->calculateGeodesicData(
+            mObject.startPos, coDir, mObject.maxNumPoints, mPointData, mDirData, mEpsData, mObject.lambda);
     }
 }
 
 bool GeodesicView::saveSetting(QString filename)
 {
     QDate dt = QDate::currentDate();
-    if (!mObject.saveSettings(filename.toStdString().c_str(),
-            dt.toString(Qt::LocaleDate).toStdString().c_str())) {
+    if (!mObject.saveSettings(filename.toStdString().c_str(), dt.toString(Qt::LocaleDate).toStdString().c_str())) {
         led_status->setText("save settings failed");
         return false;
     }
@@ -1951,7 +1998,8 @@ void GeodesicView::setSetting()
 
     if (mObject.stepsizeControlled) {
         chb_stepsize_controlled->setCheckState(Qt::Checked);
-    } else {
+    }
+    else {
         chb_stepsize_controlled->setCheckState(Qt::Unchecked);
     }
 
@@ -1975,7 +2023,8 @@ void GeodesicView::loadObjects(QString filename)
     for (size_t i = 0; i < num; i++) {
         if (mObjects[i]->getObjectDim() == enum_object_dim_3d) {
             opengl->insertObject(mObjects[i]);
-        } else if (mObjects[i]->getObjectDim() == enum_object_dim_2d) {
+        }
+        else if (mObjects[i]->getObjectDim() == enum_object_dim_2d) {
             draw2d->insertObject(mObjects[i]);
         }
     }
@@ -1983,14 +2032,16 @@ void GeodesicView::loadObjects(QString filename)
 
 void GeodesicView::closeEvent(QCloseEvent* event)
 {
-    int button = QMessageBox::question(this, "Quit", "Really quit GeodesicViewer?", QMessageBox::Cancel | QMessageBox::Ok, QMessageBox::Ok);
+    int button = QMessageBox::question(
+        this, "Quit", "Really quit GeodesicViewer?", QMessageBox::Cancel | QMessageBox::Ok, QMessageBox::Ok);
     if (button == QMessageBox::Ok) {
         mObjectView->close();
         mProtDialog->close();
         mReportText->close();
         // mHelpDoc->close();
         event->accept();
-    } else {
+    }
+    else {
         event->ignore();
     }
 }
@@ -2019,16 +2070,16 @@ void GeodesicView::slot_readData()
 
     if (bytesRead == sizeof(gvs_socket_data)) {
         switch (sdata.task) {
-        case enum_stask_initdir: {
-            geo_view->setTimeDirection(static_cast<int>(sdata.vals[0]));
-            geo_view->setDirection(sdata.vals[1], sdata.vals[2], sdata.vals[3]); // val, ksi, chi
-            calculateGeodesic();
-            break;
-        }
-        case enum_stask_initpos: {
-            lct_view->setPosition(sdata.vals[0], sdata.vals[1], sdata.vals[2], sdata.vals[3]);
-            break;
-        }
+            case enum_stask_initdir: {
+                geo_view->setTimeDirection(static_cast<int>(sdata.vals[0]));
+                geo_view->setDirection(sdata.vals[1], sdata.vals[2], sdata.vals[3]); // val, ksi, chi
+                calculateGeodesic();
+                break;
+            }
+            case enum_stask_initpos: {
+                lct_view->setPosition(sdata.vals[0], sdata.vals[1], sdata.vals[2], sdata.vals[3]);
+                break;
+            }
         }
     }
 }
@@ -2092,90 +2143,95 @@ int laddGVObject(lua_State* L)
     getfield(L, "sizeZ", sizeZ);
 
     switch (objType) {
-    case enum_object_undefined: {
-        break;
-    }
-    case enum_object_sphere2d: {
-        if (center.size() > 1) {
-            obj->create_2d_sphere((float)center[0], (float)center[1], (float)radius, (float)num_points, (float)width);
+        case enum_object_undefined: {
+            break;
         }
-        break;
-    }
-    case enum_object_sphere3d: {
-        if (center.size() > 2) {
-            obj->create_3d_sphere((float)center[0], (float)center[1], (float)center[2], (float)radius, (float)slices, (float)stacks);
+        case enum_object_sphere2d: {
+            if (center.size() > 1) {
+                obj->create_2d_sphere(
+                    (float)center[0], (float)center[1], (float)radius, (float)num_points, (float)width);
+            }
+            break;
         }
-        break;
-    }
-    case enum_object_box2d: {
-        if (center.size() > 1) {
-            obj->create_2d_box((float)center[0], (float)center[1], (float)sizeX, (float)sizeY, (float)width);
+        case enum_object_sphere3d: {
+            if (center.size() > 2) {
+                obj->create_3d_sphere(
+                    (float)center[0], (float)center[1], (float)center[2], (float)radius, (float)slices, (float)stacks);
+            }
+            break;
         }
-        break;
-    }
-    case enum_object_box3d: {
-        if (center.size() > 2) {
-            obj->create_3d_box((float)center[0], (float)center[1], (float)center[2], (float)sizeX, (float)sizeY, (float)sizeZ, (float)width);
+        case enum_object_box2d: {
+            if (center.size() > 1) {
+                obj->create_2d_box((float)center[0], (float)center[1], (float)sizeX, (float)sizeY, (float)width);
+            }
+            break;
         }
-        break;
-    }
-    case enum_object_line2d: {
-        if (v1.size() > 1 && v2.size() > 1) {
-            obj->create_2d_line((float)v1[0], (float)v1[1], (float)v2[0], (float)v2[1], (float)width);
+        case enum_object_box3d: {
+            if (center.size() > 2) {
+                obj->create_3d_box((float)center[0], (float)center[1], (float)center[2], (float)sizeX, (float)sizeY,
+                    (float)sizeZ, (float)width);
+            }
+            break;
         }
-        break;
-    }
-    case enum_object_line3d: {
-        if (v1.size() > 2 && v2.size() > 2) {
-            obj->create_3d_line((float)v1[0], (float)v1[1], (float)v1[2], (float)v2[0], (float)v2[1], (float)v2[2], (float)width);
+        case enum_object_line2d: {
+            if (v1.size() > 1 && v2.size() > 1) {
+                obj->create_2d_line((float)v1[0], (float)v1[1], (float)v2[0], (float)v2[1], (float)width);
+            }
+            break;
         }
-        break;
-    }
-    case enum_object_quad2d: {
-        if (v1.size() > 1 && v2.size() > 1 && v3.size() > 1 && v4.size() > 1) {
-            obj->create_2d_quad((float)v1[0], (float)v1[1], (float)v2[0], (float)v2[1], (float)v3[0], (float)v3[1], (float)v4[0], (float)v4[1], (float)width);
+        case enum_object_line3d: {
+            if (v1.size() > 2 && v2.size() > 2) {
+                obj->create_3d_line(
+                    (float)v1[0], (float)v1[1], (float)v1[2], (float)v2[0], (float)v2[1], (float)v2[2], (float)width);
+            }
+            break;
         }
-        break;
-    }
-    case enum_object_plane3d: {
-        //obj->create_3d_plane();
-        break;
-    }
-    case enum_object_disk2d: {
-        if (center.size() > 1) {
-            obj->create_2d_disk((float)center[0], (float)center[1], (float)radius, (float)fans);
+        case enum_object_quad2d: {
+            if (v1.size() > 1 && v2.size() > 1 && v3.size() > 1 && v4.size() > 1) {
+                obj->create_2d_quad((float)v1[0], (float)v1[1], (float)v2[0], (float)v2[1], (float)v3[0], (float)v3[1],
+                    (float)v4[0], (float)v4[1], (float)width);
+            }
+            break;
         }
-        break;
-    }
-    case enum_object_disk3d: {
-        //if (base.size() > 2 && top.size() > 2) {
-        //obj->create_3d_disk((float)center[0],(float)center[1],(float)center[2],);
-        //}
-        break;
-    }
-    case enum_object_cylinder3d: {
-        if (base.size() > 2 && top.size() > 2) {
-            obj->create_3d_cylinder((float)base[0], (float)base[1], (float)base[2], (float)top[0], (float)top[2], (float)top[3],
-                (float)bRadius, (float)tRadius, (float)slices, (float(stacks)));
+        case enum_object_plane3d: {
+            // obj->create_3d_plane();
+            break;
         }
-        break;
-    }
-    case enum_object_torus3d: {
-        //obj->create_3d_torus();
-        break;
-    }
-    case enum_object_tube3d: {
-        //obj->create_3d_tube();
-        break;
-    }
-    case enum_object_text2d: {
-        //obj->create_2d_text();
-        break;
-    }
-    case enum_object_text3d: {
-        //obj->create_3d_text();
-        break;
-    }
+        case enum_object_disk2d: {
+            if (center.size() > 1) {
+                obj->create_2d_disk((float)center[0], (float)center[1], (float)radius, (float)fans);
+            }
+            break;
+        }
+        case enum_object_disk3d: {
+            // if (base.size() > 2 && top.size() > 2) {
+            // obj->create_3d_disk((float)center[0],(float)center[1],(float)center[2],);
+            //}
+            break;
+        }
+        case enum_object_cylinder3d: {
+            if (base.size() > 2 && top.size() > 2) {
+                obj->create_3d_cylinder((float)base[0], (float)base[1], (float)base[2], (float)top[0], (float)top[2],
+                    (float)top[3], (float)bRadius, (float)tRadius, (float)slices, (float(stacks)));
+            }
+            break;
+        }
+        case enum_object_torus3d: {
+            // obj->create_3d_torus();
+            break;
+        }
+        case enum_object_tube3d: {
+            // obj->create_3d_tube();
+            break;
+        }
+        case enum_object_text2d: {
+            // obj->create_2d_text();
+            break;
+        }
+        case enum_object_text3d: {
+            // obj->create_3d_text();
+            break;
+        }
     }
 
     if (color.size() > 2) {
@@ -2213,7 +2269,7 @@ int setGVCamera(lua_State* L)
     if (getfield(L, "dir", viewDir)) {
         if (viewDir.size() >= 3) {
             m4d::vec3 vdir = m4d::vec3(viewDir[0], viewDir[1], viewDir[2]);
-            //gv->opengl->setC
+            // gv->opengl->setC
         }
     }
 

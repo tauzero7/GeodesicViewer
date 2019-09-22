@@ -14,21 +14,12 @@
 #include <m4dGlobalDefs.h>
 #include <map>
 
-//must be before gl.h includes
+// must be before gl.h includes
 #ifdef _WIN32
 #include <windows.h>
 #endif
 
 #include <QOpenGLFunctions>
-
-#ifndef DEG_TO_RAD
-#define DEG_TO_RAD 0.017453292519943295770
-#define RAD_TO_DEG 57.295779513082320875
-#endif
-
-#ifndef DBL_MAX
-#define DBL_MAX 1.844674407370955616e19
-#endif
 
 // -----------------------------------
 //   GUI definitions
@@ -38,12 +29,6 @@
 #define DEF_DRAW2D_WIDTH 720
 #define DEF_OPENGL_WIDTH 720
 #define DEF_OPENGL_HEIGHT 590
-#define DEF_TOOLS_WIDTH 460
-#define DEF_GROUPBOX_WIDTH 480
-
-#define DEF_MAXIMUM_ELEM_HEIGHT 20
-#define DEF_MAXIMUM_LE_S_WIDTH 150
-#define DEF_MAXIMUM_LE_W_WIDTH 200
 
 #define DEF_INIT_EYE_POS_X 0.0
 #define DEF_INIT_EYE_POS_Y 0.0
@@ -94,14 +79,13 @@ enum enum_mouse_handle {
     enum_mouse_move_poi
 };
 
-const QStringList stl_mouse_handle = QStringList()
-    << "rotate local"
-    << "rotate around xyz"
-    << "rotate on sphere"
-    << "camera distance"
-    << "move along camera"
-    << "move along xyz"
-    << "move poi";
+const QStringList stl_mouse_handle = QStringList() << "rotate local"
+                                                   << "rotate around xyz"
+                                                   << "rotate on sphere"
+                                                   << "camera distance"
+                                                   << "move along camera"
+                                                   << "move along xyz"
+                                                   << "move poi";
 
 // -----------------------------------
 //   camera rotation
@@ -134,42 +118,28 @@ const QStringList stl_mouse_handle = QStringList()
 // -----------------------------------
 //   camera draw style
 // -----------------------------------
-enum enum_draw_style {
-    enum_draw_points = 0,
-    enum_draw_lines
-};
+enum enum_draw_style { enum_draw_points = 0, enum_draw_lines };
 
-const QStringList stl_draw_styles = QStringList()
-    << "points"
-    << "lines";
+const QStringList stl_draw_styles = QStringList() << "points"
+                                                  << "lines";
 
 // -----------------------------------
 //   camera projection
 // -----------------------------------
-enum enum_projection {
-    enum_proj_perspective = 0,
-    enum_proj_orthographic
-};
+enum enum_projection { enum_proj_perspective = 0, enum_proj_orthographic };
 
-const QStringList stl_projection = QStringList()
-    << "perspective"
-    << "orthographics";
+const QStringList stl_projection = QStringList() << "perspective"
+                                                 << "orthographics";
 
 // -----------------------------------
 //   camera predefined orientation
 // -----------------------------------
-enum enum_camera_predefs {
-    enum_camera_xy = 0,
-    enum_camera_zx,
-    enum_camera_yz,
-    enum_camera_custom
-};
+enum enum_camera_predefs { enum_camera_xy = 0, enum_camera_zx, enum_camera_yz, enum_camera_custom };
 
-const QStringList stl_camera_predefs = QStringList()
-    << "xy"
-    << "zx"
-    << "yz"
-    << "custom";
+const QStringList stl_camera_predefs = QStringList() << "xy"
+                                                     << "zx"
+                                                     << "yz"
+                                                     << "custom";
 
 // -----------------------------------
 //   stereo glasses
@@ -183,38 +153,27 @@ enum enum_stereo_glasses {
     enum_stereo_cyan_red
 };
 
-const QStringList stl_stereo_glasses = QStringList()
-    << "red - blue"
-    << "red - green"
-    << "red - cyan"
-    << "blue - red"
-    << "green - red"
-    << "cyan - red";
+const QStringList stl_stereo_glasses = QStringList() << "red - blue"
+                                                     << "red - green"
+                                                     << "red - cyan"
+                                                     << "blue - red"
+                                                     << "green - red"
+                                                     << "cyan - red";
 
-enum enum_stereo_type {
-    enum_stereo_off_axis = 0,
-    enum_stereo_parallel,
-    enum_stereo_toe_in
-};
+enum enum_stereo_type { enum_stereo_off_axis = 0, enum_stereo_parallel, enum_stereo_toe_in };
 
-const QStringList stl_stereo_types = QStringList()
-    << "off_axis"
-    << "parallel"
-    << "toe_in";
+const QStringList stl_stereo_types = QStringList() << "off_axis"
+                                                   << "parallel"
+                                                   << "toe_in";
 
 // -----------------------------------
 //   initial direction orientation
 // -----------------------------------
-enum enum_initdir_orient {
-    enum_initdir_axis_3 = 0,
-    enum_initdir_axis_1,
-    enum_initdir_axis_2
-};
+enum enum_initdir_orient { enum_initdir_axis_3 = 0, enum_initdir_axis_1, enum_initdir_axis_2 };
 
-const QStringList stl_initdir_orient = QStringList()
-    << "axis-3"
-    << "axis-1"
-    << "axis-2";
+const QStringList stl_initdir_orient = QStringList() << "axis-3"
+                                                     << "axis-1"
+                                                     << "axis-2";
 
 // -----------------------------------
 //   Sachs legs, system
@@ -227,23 +186,17 @@ enum enum_sachs_legs {
     enum_sachs_legs_all
 };
 
-const QStringList stl_sachs_legs = QStringList()
-    << "right-up"
-    << "up-left"
-    << "left-down"
-    << "down-right"
-    << "all";
+const QStringList stl_sachs_legs = QStringList() << "right-up"
+                                                 << "up-left"
+                                                 << "left-down"
+                                                 << "down-right"
+                                                 << "all";
 
-enum enum_sachs_system {
-    enum_sachs_e1e2e3 = 0,
-    enum_sachs_e2e3e1,
-    enum_sachs_e3e1e2
-};
+enum enum_sachs_system { enum_sachs_e1e2e3 = 0, enum_sachs_e2e3e1, enum_sachs_e3e1e2 };
 
-const QStringList stl_sachs_system = QStringList()
-    << "e1-e2-e3"
-    << "e2-e3-e1"
-    << "e3-e1-e2";
+const QStringList stl_sachs_system = QStringList() << "e1-e2-e3"
+                                                   << "e2-e3-e1"
+                                                   << "e3-e1-e2";
 
 enum enum_jacobi_param {
     enum_jacobi_dp = 0,
@@ -460,23 +413,22 @@ enum enum_object_type {
     enum_object_text3d
 };
 
-const QStringList stl_object_type = QStringList()
-    << "undefined"
-    << "sphere2d"
-    << "sphere3d"
-    << "box2d"
-    << "box3d"
-    << "line2d"
-    << "line3d"
-    << "quad2d"
-    << "plane3d"
-    << "disk2d"
-    << "disk3d"
-    << "cylinder3d"
-    << "torus3d"
-    << "tube3d"
-    << "text2d"
-    << "text3d";
+const QStringList stl_object_type = QStringList() << "undefined"
+                                                  << "sphere2d"
+                                                  << "sphere3d"
+                                                  << "box2d"
+                                                  << "box3d"
+                                                  << "line2d"
+                                                  << "line3d"
+                                                  << "quad2d"
+                                                  << "plane3d"
+                                                  << "disk2d"
+                                                  << "disk3d"
+                                                  << "cylinder3d"
+                                                  << "torus3d"
+                                                  << "tube3d"
+                                                  << "text2d"
+                                                  << "text3d";
 
 #define DEF_STRING_FORMAT QString("%-10s")
 #define DEF_TEXT_FORMAT QString("%-10s")
@@ -487,95 +439,72 @@ const QStringList stl_object_type = QStringList()
 const QStringList stl_object_format = QStringList()
     << QString() // enum_object_undefined
     << QString(DEF_STRING_FORMAT + " " // enum_object_sphere2d
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_SHORT_FORMAT + "  "
-           + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT)
+           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
+           + DEF_SHORT_FORMAT + "  " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT)
     << QString(DEF_STRING_FORMAT + " " // enum_object_sphere3d
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_FLOAT_FORMAT + " " + DEF_SHORT_FORMAT + " " + DEF_SHORT_FORMAT + "  "
-           + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT)
+           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  " + DEF_FLOAT_FORMAT + " "
+           + DEF_SHORT_FORMAT + " " + DEF_SHORT_FORMAT + "  " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " "
+           + DEF_COLOR_FORMAT)
     << QString(DEF_STRING_FORMAT + " " // enum_object_box2d
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_SHORT_FORMAT + "  "
-           + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT)
+           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
+           + DEF_SHORT_FORMAT + "  " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT)
     << QString(DEF_STRING_FORMAT + " " // enum_object_box3d
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_SHORT_FORMAT + "  "
-           + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT)
+           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  " + DEF_FLOAT_FORMAT + " "
+           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  " + DEF_SHORT_FORMAT + "  " + DEF_COLOR_FORMAT + " "
+           + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT)
     << QString(DEF_STRING_FORMAT + " " // enum_object_line2d
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_SHORT_FORMAT + "  "
-           + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT)
+           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
+           + DEF_SHORT_FORMAT + "  " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT)
     << QString(DEF_STRING_FORMAT + " " // enum_object_line3d
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_SHORT_FORMAT + "  "
-           + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT)
+           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  " + DEF_FLOAT_FORMAT + " "
+           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  " + DEF_SHORT_FORMAT + "  " + DEF_COLOR_FORMAT + " "
+           + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT)
     << QString(DEF_STRING_FORMAT + " " // enum_object_quad2d
            + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
            + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_SHORT_FORMAT + "  "
-           + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT)
+           + DEF_SHORT_FORMAT + "  " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT)
     << QString(DEF_STRING_FORMAT + " " // enum_object_plane3d
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT)
+           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  " + DEF_FLOAT_FORMAT + " "
+           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " "
+           + DEF_FLOAT_FORMAT + "  " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " "
+           + DEF_COLOR_FORMAT)
     << QString(DEF_STRING_FORMAT + " " // enum_object_disk2d
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_FLOAT_FORMAT + "  "
-           + DEF_SHORT_FORMAT + "  "
+           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  " + DEF_FLOAT_FORMAT + "  " + DEF_SHORT_FORMAT + "  "
            + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT)
     << QString(DEF_STRING_FORMAT + " " // enum_object_disk3d
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_SHORT_FORMAT + " " + DEF_SHORT_FORMAT + "  "
-           + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT)
+           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  " + DEF_FLOAT_FORMAT + " "
+           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
+           + DEF_SHORT_FORMAT + " " + DEF_SHORT_FORMAT + "  " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " "
+           + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT)
     << QString(DEF_STRING_FORMAT + " " // enum_object_cylinder3d
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_SHORT_FORMAT + " " + DEF_SHORT_FORMAT + "  "
-           + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT)
+           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  " + DEF_FLOAT_FORMAT + " "
+           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
+           + DEF_SHORT_FORMAT + " " + DEF_SHORT_FORMAT + "  " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " "
+           + DEF_COLOR_FORMAT)
     << QString(DEF_STRING_FORMAT + " " // enum_object_torus3d
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_SHORT_FORMAT + " " + DEF_SHORT_FORMAT + "  "
-           + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT)
+           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  " + DEF_FLOAT_FORMAT + " "
+           + DEF_FLOAT_FORMAT + "  " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
+           + DEF_SHORT_FORMAT + " " + DEF_SHORT_FORMAT + "  " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " "
+           + DEF_COLOR_FORMAT)
     << QString(DEF_STRING_FORMAT + " " // enum_object_tube3d
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_SHORT_FORMAT + " " + DEF_SHORT_FORMAT + "  "
-           + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT)
+           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  " + DEF_FLOAT_FORMAT + " "
+           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " "
+           + DEF_FLOAT_FORMAT + "  " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
+           + DEF_SHORT_FORMAT + " " + DEF_SHORT_FORMAT + "  " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " "
+           + DEF_COLOR_FORMAT)
     << QString(DEF_STRING_FORMAT + " " // enum_object_text2d
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_TEXT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
+           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  " + DEF_TEXT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
            + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT)
     << QString(DEF_STRING_FORMAT + " " // enum_object_text3d
-           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_TEXT_FORMAT + " " + DEF_FLOAT_FORMAT + "  "
-           + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT);
+           + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + " " + DEF_FLOAT_FORMAT + "  " + DEF_TEXT_FORMAT + " "
+           + DEF_FLOAT_FORMAT + "  " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT + " " + DEF_COLOR_FORMAT);
 
-enum enum_object_dim {
-    enum_object_dim_0d = 0,
-    enum_object_dim_1d,
-    enum_object_dim_2d,
-    enum_object_dim_3d
-};
+enum enum_object_dim { enum_object_dim_0d = 0, enum_object_dim_1d, enum_object_dim_2d, enum_object_dim_3d };
 
-const QStringList stl_object_dim = QStringList()
-    << "0d"
-    << "1d"
-    << "2d"
-    << "3d";
+const QStringList stl_object_dim = QStringList() << "0d"
+                                                 << "1d"
+                                                 << "2d"
+                                                 << "3d";
 
 const int NUM_OBJECT_MAX_VALUES = 14;
 
@@ -595,39 +524,35 @@ typedef struct _struct_obj {
 
 #define DEF_DRAW2D_X_STEP 12
 #define DEF_DRAW2D_Y_STEP 12
-const QStringList dbl_draw2d_steps = QStringList()
-    << "1e-8"
-    << "1e-7"
-    << "1e-6"
-    << "1e-5"
-    << "1e-4"
-    << "1e-3"
-    << "0.01"
-    << "0.02"
-    << "0.05"
-    << "0.1"
-    << "0.2"
-    << "0.5"
-    << "1.0"
-    << "2.0"
-    << "5.0"
-    << "10.0"
-    << "20.0"
-    << "50.0"
-    << "100.0"
-    << "200.0"
-    << "500.0"
-    << "1000.0"
-    << "10000.0"
-    << "100000.0"
-    << "1000000.0";
+const QStringList dbl_draw2d_steps = QStringList() << "1e-8"
+                                                   << "1e-7"
+                                                   << "1e-6"
+                                                   << "1e-5"
+                                                   << "1e-4"
+                                                   << "1e-3"
+                                                   << "0.01"
+                                                   << "0.02"
+                                                   << "0.05"
+                                                   << "0.1"
+                                                   << "0.2"
+                                                   << "0.5"
+                                                   << "1.0"
+                                                   << "2.0"
+                                                   << "5.0"
+                                                   << "10.0"
+                                                   << "20.0"
+                                                   << "50.0"
+                                                   << "100.0"
+                                                   << "200.0"
+                                                   << "500.0"
+                                                   << "1000.0"
+                                                   << "10000.0"
+                                                   << "100000.0"
+                                                   << "1000000.0";
 
 #define DEF_SOCKET_PORT 9900
 
-enum enum_socket_task {
-    enum_stask_initdir = 0,
-    enum_stask_initpos
-};
+enum enum_socket_task { enum_stask_initdir = 0, enum_stask_initpos };
 
 typedef struct gvs_socket_data_t {
     int task;
