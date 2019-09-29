@@ -12,7 +12,6 @@
 #include <cassert>
 #include <iostream>
 
-#include <QJSEngine>
 #include <QMainWindow>
 #include <QMenuBar>
 #include <QStatusBar>

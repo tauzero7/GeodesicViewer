@@ -97,11 +97,9 @@ CONFIG(release, debug|release) {
 }
 
 
-CONFIG  += console warn_on
+CONFIG  += console c++11  warn_on
 QT      += core gui opengl qml network
 TEMPLATE = app
-
-QMAKE_CXXFLAGS += -std=c++11
 
 HEADERS += $$VIEW_HEADERS  $$MODEL_HEADERS  $$UTILS_HEADERS  $$M4D_HEADERS gdefs.h
 SOURCES += $$VIEW_SOURCES  $$MODEL_SOURCES  $$UTILS_SOURCES  $$M4D_SOURCES $$PROJECT_MAIN

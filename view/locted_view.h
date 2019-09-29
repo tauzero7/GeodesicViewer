@@ -12,7 +12,6 @@
 #include <iostream>
 
 #include <QComboBox>
-#include <QJSEngine>
 #include <QLabel>
 #include <QPushButton>
 #include <QTabWidget>

@@ -13,7 +13,6 @@
 
 #include <QAction>
 #include <QCheckBox>
-#include <QJSEngine>
 #include <QLabel>
 #include <QPushButton>
 #include <QTextEdit>

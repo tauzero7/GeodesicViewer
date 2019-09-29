@@ -1,63 +1,134 @@
-## It should not be necessary to change
-## the TOP_DIR variable
+######################################################################  TOP Directory
 TOP_DIR = $$PWD
 
 ## Do not change this line
 HOME = $$system(echo $HOME)
 
-## This path should point to the location
-## where you have copied the Motion4D library.
-M4D_DIR      = $$TOP_DIR/../libMotion4D/
-
-## If your Gnu Scientific Library is not
-## installed in the standard paths, please
-## fix this variable accordingly.
-#unix: GSL_DIR = /usr/local/misc/gsl/2.5
-unix: GSL_DIR = /usr/local/gsl/2.4
-macx: GSL_DIR = /Users/tmueller/local/gsl/2.5
-win32: GSL_DIR  = D:/local/amplgsl
-
-M4D_SRC_DIR  = $$M4D_DIR/src
-M4D_LIB_DIR  = $$M4D_DIR/lib
-#GSL_LIB_DIR  = $$GSL_DIR/lib64
-GSL_LIB_DIR  = $$GSL_DIR/lib
-
-## Freetype available
-DEFINES += HAVE_FREETYPE
-FREETYPE_DIR =  /home/tmueller/HdA/Projekte/OGLView/externals/Release/freetype-2.10.0
-FREETYPE_LIB_DIR = $$FREETYPE_DIR/LIBS
-INCLUDEPATH += $$FREETYPE_DIR/include/freetype2
-LIBS += -L$$FREETYPE_LIB_DIR -lfreetype
-
-## Shows time needed to integrate
-## geodesic equation
-#DEFINES += SHOW_CALC_TIME
+## load local definitions, directory variables, ...
+include(local_vega_win.pri)
 
 
-## Show status tips
-#DEFINES += SHOW_STATUS_TIPS
+######################################################################  PROJECT NAME
+PROJECT_MAIN = gviewer_main.cpp
+
+######################################################################  RESSOURCES
+RESOURCES = gviewer.qrc
+
+######################################################################  RELATIVE PATHS
+VIEW_DIR  = $$TOP_DIR/view
+MODEL_DIR = $$TOP_DIR/model
+UTILS_DIR = $$TOP_DIR/utils
+
+######################################################################  HEADERS and SOURCES
+
+VIEW_HEADERS = \
+    $$VIEW_DIR/mapplication.h \
+    $$VIEW_DIR/dark_palette.h \
+    $$VIEW_DIR/geodesic_view.h \
+    $$VIEW_DIR/compass_dial.h \
+    $$VIEW_DIR/dialwdg.h \
+    $$VIEW_DIR/locted_view.h \
+    $$VIEW_DIR/geod_view.h \
+    $$VIEW_DIR/draw_view.h \
+    $$VIEW_DIR/object_view.h \
+    $$VIEW_DIR/prot_view.h \
+    $$VIEW_DIR/ledpub_widget.h \
+    $$VIEW_DIR/report_view.h
+
+VIEW_SOURCES = \
+    $$VIEW_DIR/mapplication.cpp \
+    $$VIEW_DIR/dark_palette.cpp \
+    $$VIEW_DIR/geodesic_view.cpp \
+    $$VIEW_DIR/compass_dial.cpp \
+    $$VIEW_DIR/dialwdg.cpp \
+    $$VIEW_DIR/locted_view.cpp \
+    $$VIEW_DIR/geod_view.cpp \
+    $$VIEW_DIR/draw_view.cpp \
+    $$VIEW_DIR/object_view.cpp \
+    $$VIEW_DIR/prot_view.cpp \
+    $$VIEW_DIR/ledpub_widget.cpp \
+    $$VIEW_DIR/report_view.cpp
+
+MODEL_HEADERS = \
+    $$MODEL_DIR/opengl3d_model.h \
+    $$MODEL_DIR/openglJacobi_model.h \
+    $$MODEL_DIR/opengl2d_model.h
+
+MODEL_SOURCES = \
+    $$MODEL_DIR/opengl3d_model.cpp \
+    $$MODEL_DIR/openglJacobi_model.cpp \
+    $$MODEL_DIR/opengl2d_model.cpp
+
+UTILS_HEADERS = \
+    $$UTILS_DIR/camera.h \
+    $$UTILS_DIR/quaternions.h \
+    $$UTILS_DIR/doubleedit_util.h \
+    $$UTILS_DIR/greek.h \
+    $$UTILS_DIR/mathutils.h \
+    $$UTILS_DIR/myobject.h \
+    $$UTILS_DIR/rendertext.h \
+    $$UTILS_DIR/utilities.h \
+    $$UTILS_DIR/gramschmidt.h
+
+UTILS_SOURCES = \
+    $$UTILS_DIR/camera.cpp \
+    $$UTILS_DIR/quaternions.cpp \
+    $$UTILS_DIR/doubleedit_util.cpp \
+    $$UTILS_DIR/greek.cpp \
+    $$UTILS_DIR/mathutils.cpp \
+    $$UTILS_DIR/myobject.cpp \
+    $$UTILS_DIR/rendertext.cpp \
+    $$UTILS_DIR/utilities.cpp \
+    $$UTILS_DIR/gramschmidt.cpp
+
+include($$M4D_DIR/m4d_sources.pri)
 
 
-## Use Dormand-Prince integrators
-## (experimental)
-#DEFINES += USE_DP_INT
+######################################################################  INCLUDE and DEPEND
+INCLUDEPATH +=  . .. $$VIEW_DIR  $$MODEL_DIR $$UTILS_DIR $$M4D_SRC_DIR \
+                $$GSL_DIR/include
+
+DEPENDPATH  +=
+
+CONFIG(debug, debug|release) {
+    TARGET       = GeodesicViewerd
+    DESTDIR      = $$TOP_DIR
+    MOC_DIR      = $$TOP_DIR/compiled/debug/moc
+    OBJECTS_DIR  = $$TOP_DIR/compiled/debug/object
+    RCC_DIR      = $$TOP_DIR/compiled/debug
+}
+
+CONFIG(release, debug|release) {
+    TARGET       = GeodesicViewer
+    DESTDIR      = $$TOP_DIR
+    MOC_DIR      = $$TOP_DIR/compiled/release/moc
+    OBJECTS_DIR  = $$TOP_DIR/compiled/release/object
+    RCC_DIR      = $$TOP_DIR/compiled/release
+}
 
 
-## If you have LUA available, you can
-## uncomment the following lines
-## (experimental)
-#LUA_DIR     = /usr/local/lua/5.3
-#LUA_LIB_DIR = $$LUA_DIR/lib
-#M4D_LUA_DIR = $$M4D_DIR/src/lua
+CONFIG  += console c++11  warn_on
+QT      += core gui opengl network
+TEMPLATE = app
 
-#INCLUDEPATH += $$LUA_DIR/include
-#DEFINES += HAVE_LUA
-#LIBS += -L$$LUA_LIB_DIR -llua -ldl
-
-#HEADERS += $$M4D_LUA_HEADERS
-#SOURCES += $$M4D_LUA_SOURCES
+HEADERS += $$VIEW_HEADERS  $$MODEL_HEADERS  $$UTILS_HEADERS  $$M4D_HEADERS gdefs.h
+SOURCES += $$VIEW_SOURCES  $$MODEL_SOURCES  $$UTILS_SOURCES  $$M4D_SOURCES $$PROJECT_MAIN
 
 
-## DO NOT CHANGE THIS LINE
-include(gviewer_m4d.pri)
+unix:!macx {
+    LIBS +=  -Wl,-rpath $$GSL_LIB_DIR \
+             -L$$GSL_LIB_DIR -lgsl -lgslcblas \
+             -L/usr/lib -lGL -lGLU
+}
+
+win32 {
+    DEFINES += METRIC_EXPORTS MOTION_EXPORTS MATH_EXPORTS EXTRA_EXPORTS  NOMINMAX  NODEFAULTLIB
+    LIBS +=   -L"$$GSL_LIB_DIR" -lgsl -lgslcblas \
+        -lopengl32 -lglu32
+}
+
+macx {
+    LIBS +=  -Wl,-rpath $$GSL_LIB_DIR \
+              -L$$GSL_LIB_DIR -lgsl -lgslcblas
+}
 

@@ -13,7 +13,6 @@
 
 #include <QAction>
 #include <QComboBox>
-#include <QJSEngine>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>

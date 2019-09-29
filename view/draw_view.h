@@ -22,7 +22,6 @@
 
 #include <QCheckBox>
 #include <QComboBox>
-#include <QJSEngine>
 #include <QLCDNumber>
 #include <QLabel>
 #include <QPushButton>

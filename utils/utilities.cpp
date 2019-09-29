@@ -5,7 +5,10 @@
  * This file is part of GeodesicView.
  */
 #include "utilities.h"
+
+#ifndef _WIN32
 #include <unistd.h>
+#endif // _WIN32
 
 #ifdef __APPLE__
 #include <mach-o/dyld.h>

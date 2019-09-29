@@ -236,7 +236,7 @@ void RenderText::render(const char* text, float posx, float posy, float sx, floa
 
     shader->bind();
 
-    glActiveTexture(GL_TEXTURE0);
+    //glActiveTexture(GL_TEXTURE0);
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, rtp->atlas_.texID);
 
