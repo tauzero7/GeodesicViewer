@@ -487,7 +487,7 @@ void GeodesicView::slot_about()
            "Current contact:\nDr. Thomas Müller\nHaus der Astronomie/Max Planck Institute for Astronomy\n69117 "
            "Heidelberg, Germany\n\n"
            "Email: tmueller@mpia.de\n\n"
-           "Details about the metrics can be found in the\n\"Catalogue of Spacetimes\"\narXiv:0904.4184 [gr-qc]"));
+           "Details about the metrics can be found in the\n\"Catalogue of Spacetimes\", arXiv:0904.4184 [gr-qc]"));
 }
 
 void GeodesicView::slot_changeDrawActive()
@@ -635,12 +635,13 @@ void GeodesicView::slot_objChanged()
 
 void GeodesicView::slot_show_report()
 {
-    std::string text;
+    char* text = nullptr;
     mObject.makeReport(text);
-    // std::cerr << text;
-
-    mReportText->setText(text);
-    mReportText->show();
+    if (text != nullptr) {
+        mReportText->setText(text);
+        mReportText->show();
+    }
+    SafeDelete<char>(text);
 }
 
 void GeodesicView::slot_save_report()
@@ -944,7 +945,7 @@ void GeodesicView::setSolver(QString name)
     unsigned int num = 0;
     while (num < m4d::NUM_GEOD_SOLVERS) {
         if (name.compare(QString(m4d::stl_solver_nicknames[num])) == 0) {
-            cob_integrator->setCurrentIndex(num);
+            cob_integrator->setCurrentIndex(static_cast<int>(num));
             slot_setGeodSolver();
             break;
         }
@@ -1141,10 +1142,10 @@ void GeodesicView::initActions()
     // ------------------
     //  Report actions
     // ------------------
-    // mActionShowReport = new QAction(QIcon(":/display.png"), "&Show report", this);
-    // mActionShowReport->setShortcut(Qt::CTRL | Qt::Key_R);
-    // addAction(mActionShowReport);
-    // connect(mActionShowReport, SIGNAL(triggered()), this, SLOT(slot_show_report()));
+    mActionShowReport = new QAction(QIcon(":/display.png"), "&Show report", this);
+    mActionShowReport->setShortcut(Qt::CTRL | Qt::Key_R);
+    addAction(mActionShowReport);
+    connect(mActionShowReport, SIGNAL(triggered()), this, SLOT(slot_show_report()));
     //
     // mActionSaveReport = new QAction(QIcon(":/save.png"), "&Save report", this);
     // addAction(mActionSaveReport);
@@ -1249,6 +1250,8 @@ void GeodesicView::initMenus()
 
     // ---- Help menu ----
     mHelpMenu = menuBar()->addMenu("&Help");
+    mHelpMenu->addAction(mActionShowReport);
+    mHelpMenu->addSeparator();
     // mHelpMenu -> addAction(mActionDoc);
     mHelpMenu->addAction(mActionAbout);
 }
@@ -1956,7 +1959,7 @@ bool GeodesicView::saveObjects(QString filename)
 
 bool GeodesicView::saveReport(QString filename)
 {
-    std::string text;
+    char* text = nullptr;
     mObject.makeReport(text);
 
     QFile outFile(filename);
@@ -1966,9 +1969,10 @@ bool GeodesicView::saveReport(QString filename)
     }
 
     QTextStream out(&outFile);
-    out << text.c_str();
+    out << text;
     outFile.close();
 
+    SafeDelete<char>(text);
     return true;
 }
 

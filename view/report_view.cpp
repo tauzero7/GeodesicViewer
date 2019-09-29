@@ -13,9 +13,7 @@ ReportDialog::ReportDialog(QWidget* parent)
     init();
 }
 
-ReportDialog::~ReportDialog()
-{
-}
+ReportDialog::~ReportDialog() {}
 
 void ReportDialog::setText(std::string text)
 {
@@ -44,7 +42,7 @@ void ReportDialog::initElements()
     ted_report = new QTextEdit();
     ted_report->setReadOnly(true);
 
-    QFont mfont("Courier", 10);
+    QFont mfont("Monospace", 10);
     ted_report->setFont(mfont);
 }
 
@@ -55,7 +53,7 @@ void ReportDialog::initGUI()
     layout_complete->addWidget(pub_close, 1, 0);
     setLayout(layout_complete);
 
-    setGeometry(0, 0, 700, 300);
+    setGeometry(250, 150, 700, 300);
     setWindowTitle("GeodesicViewer - Report");
 }
 
