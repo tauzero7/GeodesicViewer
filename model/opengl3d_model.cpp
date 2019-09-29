@@ -5,10 +5,12 @@
  * This file is part of GeodesicView.
  */
 #include "opengl3d_model.h"
+#include "math/TransCoordinates.h"
+#include "utils/utilities.h"
+
 #include <QApplication>
 #include <QDesktopWidget>
 #include <fstream>
-#include <math/TransCoordinates.h>
 
 extern m4d::Object mObject;
 
@@ -110,12 +112,8 @@ OpenGL3dModel::~OpenGL3dModel()
  */
 void OpenGL3dModel::setPoints(m4d::enum_draw_type dtype, bool needUpdate)
 {
-    if (mVerts != nullptr) {
-        delete[] mVerts;
-    }
-    if (mLambda != nullptr) {
-        delete[] mLambda;
-    }
+    SafeDelete<GLfloat>(mVerts);
+    SafeDelete<GLfloat>(mLambda);
 
     mNumVerts = static_cast<int>(mObject.points.size());
     mVerts = new GLfloat[mNumVerts * 3];
@@ -163,12 +161,8 @@ void OpenGL3dModel::setPoints(m4d::enum_draw_type dtype, bool needUpdate)
 
 void OpenGL3dModel::setSachsAxes(bool needUpdate)
 {
-    if (mSachsVerts1 != nullptr) {
-        delete[] mSachsVerts1;
-    }
-    if (mSachsVerts2 != nullptr) {
-        delete[] mSachsVerts2;
-    }
+    SafeDelete<GLfloat>(mSachsVerts1);
+    SafeDelete<GLfloat>(mSachsVerts2);
 
     mNumSachsVerts1 = static_cast<int>(mObject.sachs1.size());
     mNumSachsVerts2 = static_cast<int>(mObject.sachs2.size());
@@ -257,29 +251,17 @@ void OpenGL3dModel::setSachsAxes(bool needUpdate)
 
 void OpenGL3dModel::clearSachsAxes()
 {
-    if (mSachsVerts1 != nullptr) {
-        delete[] mSachsVerts1;
-    }
-    if (mSachsVerts2 != nullptr) {
-        delete[] mSachsVerts2;
-    }
+    SafeDelete<GLfloat>(mSachsVerts1);
+    SafeDelete<GLfloat>(mSachsVerts2);
 
-    mSachsVerts1 = mSachsVerts2 = nullptr;
     mNumSachsVerts1 = mNumSachsVerts2 = 0;
     update();
 }
 
 void OpenGL3dModel::clearPoints()
 {
-    if (mVerts != nullptr) {
-        delete[] mVerts;
-    }
-    mVerts = nullptr;
-
-    if (mLambda != nullptr) {
-        delete[] mLambda;
-    }
-    mLambda = nullptr;
+    SafeDelete<GLfloat>(mVerts);
+    SafeDelete<GLfloat>(mLambda);
 
     mNumVerts = 0;
     mShowNumVerts = 0;
@@ -288,37 +270,28 @@ void OpenGL3dModel::clearPoints()
 
 void OpenGL3dModel::genEmbed(m4d::Metric* currMetric)
 {
-    if (mEmbVerts != nullptr) {
-        delete[] mEmbVerts;
-    }
-    mEmbVerts = nullptr;
+    SafeDelete<GLfloat>(mEmbVerts);
 
     if (mEmbIndices != nullptr) {
         for (unsigned int j = 0; j < mEmbCounter; j++) {
             delete[] mEmbIndices[j];
         }
         delete[] mEmbIndices;
+        mEmbIndices = nullptr;
     }
-    mEmbIndices = nullptr;
     mEmbNumElems = mEmbCounter = 0;
 
-    if (mCount != nullptr) {
-        delete[] mCount;
-    }
-    mCount = nullptr;
+    SafeDelete<GLsizei>(mCount);
 
-    std::vector<m4d::vec3> vertices;
-    std::vector<int> indices;
+    unsigned int* indices = nullptr;
 
     if (currMetric == nullptr) {
         return;
     }
 
-    if (currMetric->getEmbeddingVertices(vertices, indices, mEmbNumElems, mEmbCounter) == 0) {
+    if ((mEmbNumVerts = currMetric->getEmbeddingVertices(mEmbVerts, indices, mEmbNumElems, mEmbCounter)) == 0) {
         return;
     }
-
-    mEmbNumVerts = static_cast<int>(vertices.size());
 
     mCount = new GLsizei[mEmbCounter];
     mEmbIndices = new unsigned int*[mEmbCounter];
@@ -333,27 +306,15 @@ void OpenGL3dModel::genEmbed(m4d::Metric* currMetric)
         for (unsigned int j = 0; j < mEmbNumElems * 2; j++) {
             mEmbIndices[i][j] = indices[k++];
         }
-        mCount[i] = mEmbNumElems * 2;
+        mCount[i] = static_cast<GLsizei>(mEmbNumElems * 2);
     }
 
-    mEmbVerts = new float[mEmbNumVerts * 3];
-    float* vptr = mEmbVerts;
-
-    for (int i = 0; i < mEmbNumVerts; i++) {
-        size_t idx = static_cast<size_t>(i);
-        *(vptr++) = static_cast<float>(vertices[idx][0]);
-        *(vptr++) = static_cast<float>(vertices[idx][1]);
-        *(vptr++) = static_cast<float>(vertices[idx][2]);
-    }
     update();
 }
 
 void OpenGL3dModel::clearEmbed()
 {
-    if (mEmbVerts != nullptr) {
-        delete[] mEmbVerts;
-    }
-    mEmbVerts = nullptr;
+    SafeDelete<GLfloat>(mEmbVerts);
     mEmbNumVerts = 0;
 
     if (mEmbIndices != nullptr) {
@@ -361,13 +322,10 @@ void OpenGL3dModel::clearEmbed()
             delete[] mEmbIndices[j];
         }
         delete[] mEmbIndices;
+        mEmbIndices = nullptr;
     }
-    mEmbIndices = nullptr;
 
-    if (mCount != nullptr) {
-        delete[] mCount;
-    }
-    mCount = nullptr;
+    SafeDelete<GLsizei>(mCount);
 
     mEmbNumElems = mEmbCounter = 0;
     update();

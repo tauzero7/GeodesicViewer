@@ -5,10 +5,11 @@
  * This file is part of GeodesicView.
  */
 #include "opengl2d_model.h"
+#include "math/TransCoordinates.h"
+#include "utils/utilities.h"
 #include <QApplication>
 #include <QDesktopWidget>
 #include <fstream>
-#include <math/TransCoordinates.h>
 
 extern m4d::Object mObject;
 
@@ -72,10 +73,8 @@ OpenGL2dModel::~OpenGL2dModel() {}
 
 void OpenGL2dModel::setPoints(m4d::enum_draw_type dtype, bool needUpdate)
 {
-    if (mVerts != nullptr) {
-        delete[] mVerts;
-    }
-    mVerts = nullptr;
+    SafeDelete<GLfloat>(mVerts);
+
     mNumVerts = 0;
     mShowNumVerts = 0;
     mDrawType = dtype;
@@ -87,13 +86,13 @@ void OpenGL2dModel::setPoints(m4d::enum_draw_type dtype, bool needUpdate)
         return;
     }
 
-    mNumVerts = static_cast<int>(mObject.points.size());
+    mNumVerts = mObject.points.size();
     mVerts = new GLfloat[mNumVerts * 2];
 
     GLfloat* vptr = mVerts;
 
     m4d::vec4 tp;
-    for (int i = 0; i < mNumVerts; i++) {
+    for (size_t i = 0; i < mNumVerts; i++) {
         switch (dtype) {
             case m4d::enum_draw_pseudocart: {
                 mObject.currMetric->transToPseudoCart(mObject.points[i], tp);
@@ -107,7 +106,7 @@ void OpenGL2dModel::setPoints(m4d::enum_draw_type dtype, bool needUpdate)
                     case enum_draw_coord_x1:
                     case enum_draw_coord_x2:
                     case enum_draw_coord_x3:
-                        *(vptr++) = GLfloat(mObject.points[i].x((int)mAbscissa));
+                        *(vptr++) = GLfloat(mObject.points[i].x(static_cast<int>(mAbscissa)));
                         break;
                     case enum_draw_lambda:
                         *(vptr++) = GLfloat(mObject.lambda[i]);
@@ -116,7 +115,7 @@ void OpenGL2dModel::setPoints(m4d::enum_draw_type dtype, bool needUpdate)
                     case enum_draw_coord_dx1:
                     case enum_draw_coord_dx2:
                     case enum_draw_coord_dx3:
-                        *(vptr++) = GLfloat(mObject.dirs[i].x(((int)mAbscissa) - 5));
+                        *(vptr++) = GLfloat(mObject.dirs[i].x(static_cast<int>(mAbscissa) - 5));
                         break;
                 }
                 switch (mOrdinate) {
@@ -124,7 +123,7 @@ void OpenGL2dModel::setPoints(m4d::enum_draw_type dtype, bool needUpdate)
                     case enum_draw_coord_x1:
                     case enum_draw_coord_x2:
                     case enum_draw_coord_x3:
-                        *(vptr++) = GLfloat(mObject.points[i].x((int)mOrdinate));
+                        *(vptr++) = GLfloat(mObject.points[i].x(static_cast<int>(mOrdinate)));
                         break;
                     case enum_draw_lambda:
                         *(vptr++) = GLfloat(mObject.lambda[i]);
@@ -133,7 +132,7 @@ void OpenGL2dModel::setPoints(m4d::enum_draw_type dtype, bool needUpdate)
                     case enum_draw_coord_dx1:
                     case enum_draw_coord_dx2:
                     case enum_draw_coord_dx3:
-                        *(vptr++) = GLfloat(mObject.dirs[i].x(((int)mOrdinate) - 5));
+                        *(vptr++) = GLfloat(mObject.dirs[i].x(static_cast<int>(mOrdinate) - 5));
                         break;
                 }
                 break;
@@ -161,10 +160,7 @@ void OpenGL2dModel::setPoints(m4d::enum_draw_type dtype, bool needUpdate)
 
 void OpenGL2dModel::clearPoints()
 {
-    if (mVerts != nullptr) {
-        delete[] mVerts;
-    }
-    mVerts = nullptr;
+    SafeDelete<GLfloat>(mVerts);
 
     mNumVerts = 0;
     mShowNumVerts = 0;
@@ -287,13 +283,7 @@ void OpenGL2dModel::setStyle(enum_draw_style style)
 
 void OpenGL2dModel::showNumVerts(int num)
 {
-    mShowNumVerts = num;
-    if (mShowNumVerts < 0) {
-        mShowNumVerts = 0;
-    }
-    else if (mShowNumVerts > mNumVerts) {
-        mShowNumVerts = mNumVerts;
-    }
+    mShowNumVerts = static_cast<size_t>(std::max(0, std::min(num, static_cast<int>(mNumVerts))));
     update();
 }
 
@@ -475,11 +465,12 @@ void OpenGL2dModel::paintGL()
     glVertexPointer(2, GL_FLOAT, 0, mVerts);
     glEnableClientState(GL_VERTEX_ARRAY);
     if (mDrawStyle == enum_draw_lines) {
-        glDrawArrays(GL_LINE_STRIP, 0, mShowNumVerts);
+        glDrawArrays(GL_LINE_STRIP, 0, static_cast<GLsizei>(mShowNumVerts));
     }
     else {
-        glDrawArrays(GL_POINTS, 0, mShowNumVerts);
+        glDrawArrays(GL_POINTS, 0, static_cast<GLsizei>(mShowNumVerts));
     }
+
     glDisableClientState(GL_VERTEX_ARRAY);
     glLineWidth(1);
     glDisable(GL_LINE_SMOOTH);

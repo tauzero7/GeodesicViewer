@@ -43,4 +43,22 @@ void setStandardParams(struct_params* par);
 bool loadParamFile(const std::string filename, struct_params* par);
 bool saveParamFile(const std::string filename, struct_params* par);
 
-#endif
+/**
+ * @brief Safely delete 1D arrays generated with 'new'.
+ *
+ *  Each pointer to a 1D array should be immediately
+ *  initialized or set to nullptr. This method checks
+ *  if pointer is not 'nullptr', deletes the array,
+ *  and sets the pointer to 'nullptr'.
+ *
+ * @tparam T  Pointer to data array.
+ */
+template <typename T> void SafeDelete(T*& ptr)
+{
+    if (ptr != nullptr) {
+        delete[] ptr;
+        ptr = nullptr;
+    }
+}
+
+#endif // UTILITIES_H

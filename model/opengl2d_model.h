@@ -107,10 +107,10 @@ private:
     QColor mGridColor;
 
     GLfloat* mVerts;
-    int mNumVerts;
+    size_t mNumVerts;
+    size_t mShowNumVerts;
     int mLineWidth;
     int mLineSmooth;
-    int mShowNumVerts;
 
     m4d::enum_draw_type mDrawType;
 
