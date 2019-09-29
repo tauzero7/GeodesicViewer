@@ -5,7 +5,7 @@ TOP_DIR = $$PWD
 HOME = $$system(echo $HOME)
 
 ## load local definitions, directory variables, ...
-include(local_vega_win.pri)
+include(local.pri)
 
 
 ######################################################################  PROJECT NAME

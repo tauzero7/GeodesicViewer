@@ -12,6 +12,7 @@
 #include <iostream>
 
 #include <QComboBox>
+#include <QGroupBox>
 #include <QLabel>
 #include <QPushButton>
 #include <QTabWidget>
@@ -28,7 +29,8 @@
 /**
  * @brief The LoctedView class
  */
-class LoctedView : public QWidget {
+class LoctedView : public QGroupBox
+{
     Q_OBJECT
 
 public:
@@ -48,7 +50,7 @@ public:
     void setBoostParams(double chi, double ksi, double vel);
     void resetBoost();
 
-    //void  addObjectsToScriptEngine(QScriptEngine* engine);
+    // void  addObjectsToScriptEngine(QScriptEngine* engine);
 
 public slots:
     void slot_setPosition();

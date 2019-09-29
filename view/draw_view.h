@@ -22,6 +22,7 @@
 
 #include <QCheckBox>
 #include <QComboBox>
+#include <QGroupBox>
 #include <QLCDNumber>
 #include <QLabel>
 #include <QPushButton>
@@ -43,7 +44,8 @@
 /**
  * @brief The DrawView class
  */
-class DrawView : public QWidget {
+class DrawView : public QGroupBox
+{
     Q_OBJECT
 
 public:
@@ -74,7 +76,7 @@ public:
 
     void setGeodLength(int num);
 
-    //void  addObjectsToScriptEngine(QScriptEngine* engine);
+    // void  addObjectsToScriptEngine(QScriptEngine* engine);
 
 public slots:
     void setType(int num);

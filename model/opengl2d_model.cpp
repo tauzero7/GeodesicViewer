@@ -383,7 +383,7 @@ void OpenGL2dModel::initializeGL()
     mDPIFactor[0] = QApplication::desktop()->devicePixelRatioF();
     mDPIFactor[1] = QApplication::desktop()->devicePixelRatioF();
 
-    renderText = new RenderText("DroidSansMono.ttf", 12);
+    renderText = new RenderText("resources/DroidSansMono.ttf", 12);
 }
 
 void OpenGL2dModel::paintGL()

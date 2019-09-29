@@ -12,7 +12,7 @@
 extern m4d::Object mObject;
 
 LoctedView::LoctedView(QWidget* parent)
-    : QWidget(parent)
+    : QGroupBox(parent)
 {
     mGramSchmidt = new GramSchmidt();
     init();
@@ -419,6 +419,7 @@ void LoctedView::initElements()
         layout_locted_position->addWidget(lst_led_locted_pos_step[i], i + 1, 4);
     }
     layout_locted_position->addWidget(pub_pos_reset, 5, 1);
+    layout_locted_position->setRowStretch(6, 10);
     wgt_locted_position->setLayout(layout_locted_position);
 
     // ----------------------
@@ -468,6 +469,7 @@ void LoctedView::initElements()
     layout_locted_tetrads->addWidget(pub_locted_set, 1, 1);
     layout_locted_tetrads->addWidget(pub_locted_ortho, 1, 2);
     layout_locted_tetrads->addWidget(cob_locted_predef, 1, 3);
+    layout_locted_tetrads->setRowStretch(2, 10);
 
     wgt_locted_tetrads = new QWidget();
     wgt_locted_tetrads->setLayout(layout_locted_tetrads);
@@ -530,17 +532,12 @@ void LoctedView::initElements()
 
 void LoctedView::initGUI()
 {
-    QGroupBox* grb_locted = new QGroupBox("Local Tetrad");
+    this->setTitle("Local Tetrad");
     QGridLayout* layout_locted = new QGridLayout();
     layout_locted->addWidget(lab_locted_type, 0, 0);
     layout_locted->addWidget(cob_locted_type, 0, 1);
     layout_locted->addWidget(tab_locted, 1, 0, 1, 2);
-    grb_locted->setLayout(layout_locted);
-
-    QVBoxLayout* layout_complete = new QVBoxLayout();
-    layout_complete->addWidget(grb_locted);
-
-    setLayout(layout_complete);
+    this->setLayout(layout_locted);
 }
 
 void LoctedView::initControl()

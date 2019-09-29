@@ -17,9 +17,9 @@ MApplication::MApplication(int& argc, char** argv, char* exePath)
     setPalette(darkPalette);
 
 #ifdef _WIN32
-    QString cssFilename = QString(exePath) + "/viewer_win.css";
+    QString cssFilename = QString(exePath) + "/resources/viewer_win.css";
 #else
-    QString cssFilename = QString(exePath) + "/viewer.css";
+    QString cssFilename = QString(exePath) + "/resources/viewer.css";
 #endif
     QString cssStyle;
     QFile cssFile(cssFilename);
@@ -33,7 +33,8 @@ MApplication::MApplication(int& argc, char** argv, char* exePath)
         }
         cssFile.close();
         setStyleSheet(cssStyle);
-    } else {
+    }
+    else {
         fprintf(stderr, "Could not open stylesheet file '%s'.\n", cssFilename.toStdString().c_str());
     }
 }

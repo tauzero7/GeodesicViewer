@@ -26,6 +26,8 @@ Makefile
 GeodesicViewer
 GeodesicViewerd
 
+local*
+
 *_debug
 .project
 .cproject

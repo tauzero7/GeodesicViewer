@@ -12,7 +12,7 @@
 extern m4d::Object mObject;
 
 GeodView::GeodView(struct_params* par, OpenGL3dModel* opengl, OpenGLJacobiModel* openglJacobi, QWidget* parent)
-    : QWidget(parent)
+    : QGroupBox(parent)
 {
     assert(opengl != NULL && openglJacobi != NULL);
     mParams = par;
@@ -566,10 +566,7 @@ void GeodView::initElements()
 
 void GeodView::initGUI()
 {
-    // -----------------------------------
-    //    layout geodesic
-    // -----------------------------------
-    QGroupBox* grb_geodesic = new QGroupBox("Geodesic");
+    this->setTitle("Geodesic");
     QGridLayout* layout_geodesic = new QGridLayout();
     layout_geodesic->addWidget(lab_geod_type, 0, 0);
     layout_geodesic->addWidget(cob_geod_type, 0, 1);
@@ -580,11 +577,7 @@ void GeodView::initGUI()
     layout_geodesic->addWidget(lab_geod_vel_step, 1, 2);
     layout_geodesic->addWidget(led_geod_vel_step, 1, 3);
     layout_geodesic->addWidget(tab_geodesic, 2, 0, 1, 4);
-    grb_geodesic->setLayout(layout_geodesic);
-
-    QVBoxLayout* layout_complete = new QVBoxLayout();
-    layout_complete->addWidget(grb_geodesic);
-    setLayout(layout_complete);
+    this->setLayout(layout_geodesic);
 }
 
 void GeodView::initControl()

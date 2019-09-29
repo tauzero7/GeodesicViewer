@@ -1451,8 +1451,9 @@ void GeodesicView::initGUI()
     tab_metricInt->addTab(wgt_constants, tr("Constants"));
 
     QGroupBox* grb_metricInt = new QGroupBox("Metric/Integrator/Constants");
-    QGridLayout* layout_metricInt = new QGridLayout();
-    layout_metricInt->addWidget(tab_metricInt, 0, 0);
+    QVBoxLayout* layout_metricInt = new QVBoxLayout();
+    layout_metricInt->addWidget(tab_metricInt);
+    layout_metricInt->addStretch(10);
     grb_metricInt->setLayout(layout_metricInt);
 
     // ---------------------------
@@ -1485,6 +1486,7 @@ void GeodesicView::initGUI()
     QScrollArea* scr_area = new QScrollArea();
     scr_area->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     scr_area->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    scr_area->setWidgetResizable(true);
 
     QFrame* frame = new QFrame();
     // frame->setContentsMargins(0, 0, 0, 0);

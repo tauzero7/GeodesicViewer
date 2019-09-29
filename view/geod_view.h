@@ -7,8 +7,8 @@
         The initial direction of a geodesic is defined with respect to the local
         reference frame given in the LocalTetrad window. With the initial
         angles &xi; and %chi; the four-vector of a null geodesic reads
-        \f[ \mathbf{k} = \mathbf{e}_{(0)} + \sin\chi\cos\xi\mathbf{e}_{(1)} + \sin\chi\sin\xi\mathbf{e}_{(2)} + \cos\chi\mathbf{e}_{(3)}.\f]
-     <img src="../pics/geodesic.png"> \sa lab_geod_timedir
+        \f[ \mathbf{k} = \mathbf{e}_{(0)} + \sin\chi\cos\xi\mathbf{e}_{(1)} + \sin\chi\sin\xi\mathbf{e}_{(2)} +
+ \cos\chi\mathbf{e}_{(3)}.\f] <img src="../pics/geodesic.png"> \sa lab_geod_timedir
  *
  * This file is part of GeodesicView.
  */
@@ -18,6 +18,7 @@
 #include <iostream>
 
 #include <QComboBox>
+#include <QGroupBox>
 #include <QLabel>
 #include <QRadioButton>
 #include <QTabWidget>
@@ -33,7 +34,8 @@
 #include <extra/m4dObject.h>
 #include <m4dGlobalDefs.h>
 
-class GeodView : public QWidget {
+class GeodView : public QGroupBox
+{
     Q_OBJECT
 
 public:
@@ -44,12 +46,11 @@ public:
      * @param openglJacobi
      * @param parent
      */
-    GeodView(struct_params* par,
-        OpenGL3dModel* opengl, OpenGLJacobiModel* openglJacobi, QWidget* parent = nullptr);
+    GeodView(struct_params* par, OpenGL3dModel* opengl, OpenGLJacobiModel* openglJacobi, QWidget* parent = nullptr);
     ~GeodView();
 
 public:
-    //void  addObjectsToScriptEngine(QScriptEngine* engine);
+    // void  addObjectsToScriptEngine(QScriptEngine* engine);
     void resetAll();
     void updateData();
     void updateParams();

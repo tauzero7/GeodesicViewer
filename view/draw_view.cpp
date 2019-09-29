@@ -16,7 +16,7 @@ extern m4d::Object mObject;
 
 DrawView::DrawView(
     OpenGL3dModel* opengl, OpenGL2dModel* draw, OpenGLJacobiModel* oglJacobi, struct_params* par, QWidget* parent)
-    : QWidget(parent)
+    : QGroupBox(parent)
 {
     mOpenGL = opengl;
     mDraw = draw;
@@ -1022,7 +1022,6 @@ void DrawView::init()
     initElements();
     initGUI();
     initControl();
-
     initStatusTips();
 }
 
@@ -1543,14 +1542,10 @@ void DrawView::initGUI()
     tab_draw->addTab(wgt_draw_3demb, "3D emb");
     tab_draw->addTab(wgt_draw_2d, "2D");
 
-    QGroupBox* grb_draw = new QGroupBox("DrawHandling");
+    this->setTitle("DrawHandling");
     QGridLayout* layout_draw = new QGridLayout();
     layout_draw->addWidget(tab_draw);
-    grb_draw->setLayout(layout_draw);
-
-    QVBoxLayout* layout_complete = new QVBoxLayout();
-    layout_complete->addWidget(grb_draw);
-    setLayout(layout_complete);
+    this->setLayout(layout_draw);
 }
 
 void DrawView::initControl()

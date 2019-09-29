@@ -1,4 +1,20 @@
 
+QCheckBox {
+    font-family: Monospace;
+    font-size: 10pt;
+}
+
+QCheckBox::disabled {
+    color: black
+}
+
+QComboBox { 
+    font-family: Monospace;
+    font-size: 10pt;
+    height: 16px;
+    max-width: 300px;
+}
+
 QGroupBox {
     border:1px solid #555;
     border-radius: 2px;
@@ -17,21 +33,6 @@ QGroupBox::title {
     padding-top: 0px;    
     font-family: Monospace;
     color: #c6c6ff;
-}
-
-QCheckBox {
-    font-family: Monospace;
-    font-size: 10pt;
-}
-
-QCheckBox::disabled {
-    color: black
-}
-
-QComboBox { 
-    font-family: Monospace;
-    font-size: 10pt;
-    height: 16px;
 }
 
 QLabel {
@@ -64,6 +65,10 @@ QLineEdit[readOnly="true"] {
 DoubleEdit {
     font-size: 10pt;
     color: black;
+}
+
+QMenu::separator {
+    background: #333;
 }
 
 QPushButton { 

@@ -1,0 +1,121 @@
+
+QGroupBox {
+    border:1px solid #555;
+    border-radius: 4px;
+    margin-top: 20px;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #353535, 
+        stop: 0.5 #454545,
+        stop: 1 #353535);
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;    
+    font-family: Consolas;
+    color: #c6c6ff;
+}
+
+QCheckBox {
+    font-family: Consolas;
+    font-size: 12pt;
+}
+
+QCheckBox::disabled {
+    color: black
+}
+
+
+QComboBox { 
+    font-family: Consolas;
+    font-size: 12pt;
+    height: 16px;
+}
+
+
+QLabel {
+    font-family: Consolas;
+    font-size: 12pt;
+}
+
+QLabel::disabled {
+    color: darkgray;
+}
+
+QLCDNumber {
+    background-color: black;
+    color:rgb(220,220,220);
+    font-family: Times;
+    font-size: 8pt;
+}
+
+QLineEdit { 
+    font-family: Consolas;
+    font-size: 12pt;
+    height: 16px;
+    width: 80px;
+} 
+
+QLineEdit[readOnly="true"] {
+    color: #bbb;
+}
+
+QPushButton { 
+    font-family: Consolas;
+    font-size: 12pt;
+    height: 16px;
+}  
+
+QPushButton:focus {
+}
+
+QRadioButton::disabled {
+    color: black
+}
+
+QPushButton::disabled {
+    color: black
+}
+
+QSpinBox { 
+    font-family: Consolas;
+    font-size: 12pt;
+    height: 16px
+}
+
+QSpinBox[readOnly="true"] {
+    color: #bbb;
+}
+
+QSpinBox::disabled {
+    color: black
+}
+
+QDoubleSpinBox { 
+    font-family: Consolas;
+    font-size: 12pt;
+    width:  50px;
+    height: 16px
+}
+
+QMenu::item::disabled {
+    background-color: transparent;
+    color: gray;
+}
+
+QTabBar::tab:!enabled {
+    color: #555;
+}
+
+QTableView {
+    font-family: Consolas;
+    font-size: 12pt;
+}
+
+QTextEdit {
+    font-family: Consolas;
+    font-size: 12pt;
+}
