@@ -14,7 +14,7 @@ extern m4d::Object mObject;
 GeodView::GeodView(struct_params* par, OpenGL3dModel* opengl, OpenGLJacobiModel* openglJacobi, QWidget* parent)
     : QGroupBox(parent)
 {
-    assert(opengl != NULL && openglJacobi != NULL);
+    assert(opengl != nullptr && openglJacobi != nullptr);
     mParams = par;
 
     mOpenGL = opengl;
@@ -132,7 +132,7 @@ void GeodView::slot_showLastJacobi(int num)
     }
 
     if (num >= 0 && num <= static_cast<int>(mObject.jacobi.size())) {
-        last_jacobi = mObject.jacobi[num];
+        last_jacobi = mObject.jacobi[static_cast<size_t>(num)];
         if (num >= static_cast<int>(mObject.maxNumPoints)) {
             last_jacobi = mObject.jacobi[mObject.maxNumPoints - 1];
         }
@@ -179,10 +179,10 @@ void GeodView::slot_setLegFreq()
 
     if (led->text() != QString()) {
         if (led->objectName() == "leg1freq") {
-            mParams->opengl_leg1_freq = led->text().toFloat();
+            mParams->opengl_leg1_freq = led->text().toDouble();
         }
         else if (led->objectName() == "leg2freq") {
-            mParams->opengl_leg2_freq = led->text().toFloat();
+            mParams->opengl_leg2_freq = led->text().toDouble();
         }
 
         mOpenGL->update();
@@ -218,7 +218,7 @@ void GeodView::setGeodesicType(int type)
 void GeodView::setGeodesicType(QString name)
 {
     int num = 0;
-    while (num < (int)m4d::NUM_ENUM_GEODESIC_TYPE - 1) {
+    while (num < static_cast<int>(m4d::NUM_ENUM_GEODESIC_TYPE) - 1) {
         if (name.compare(QString(m4d::stl_geodesic_type[num])) == 0) {
             cob_geod_type->setCurrentIndex(num);
             slot_setGeodType();
@@ -228,11 +228,6 @@ void GeodView::setGeodesicType(QString name)
     }
 }
 
-/*! Set time direction for geodesic.
- *
- *  Use this function only from a script.
- * \param dir : time direction: +1:future, -1:past
- */
 void GeodView::setTimeDirection(int dir)
 {
     if (dir == 1) {
@@ -250,11 +245,6 @@ void GeodView::setTimeDirection(int dir)
     }
 }
 
-/*! Set initial velocity for timelike geodesic.
- *
- *  Use this function only from a script.
- * \param val : velocity scaled by c.
- */
 void GeodView::setVelocity(double val)
 {
     led_geod_vel->setValue(val);
@@ -288,7 +278,8 @@ void GeodView::slot_setGeodType()
             led_geod_vel->setEnabled(false);
             led_geod_vel_step->setEnabled(false);
             tab_geodesic->setTabEnabled(1, false);
-        } break;
+            break;
+        }
         case m4d::enum_geodesic_lightlike_sachs: {
             mObject.type = m4d::enum_geodesic_lightlike_sachs;
             mObject.geodSolver->setGeodesicType(mObject.type);
@@ -296,7 +287,8 @@ void GeodView::slot_setGeodType()
             led_geod_vel->setEnabled(false);
             led_geod_vel_step->setEnabled(false);
             tab_geodesic->setTabEnabled(1, true);
-        } break;
+            break;
+        }
         case m4d::enum_geodesic_timelike: {
             mObject.type = m4d::enum_geodesic_timelike;
             mObject.geodSolver->setGeodesicType(mObject.type);
@@ -304,7 +296,8 @@ void GeodView::slot_setGeodType()
             led_geod_vel->setEnabled(true);
             led_geod_vel_step->setEnabled(true);
             tab_geodesic->setTabEnabled(1, false);
-        } break;
+            break;
+        }
     }
     emit calcGeodesic();
     emit changeGeodType();

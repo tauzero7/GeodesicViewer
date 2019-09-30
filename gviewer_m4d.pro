@@ -117,8 +117,7 @@ SOURCES += $$VIEW_SOURCES  $$MODEL_SOURCES  $$UTILS_SOURCES  $$M4D_SOURCES $$PRO
 
 unix:!macx {
     LIBS +=  -Wl,-rpath $$GSL_LIB_DIR \
-             -L$$GSL_LIB_DIR -lgsl -lgslcblas \
-             -L/usr/lib -lGL -lGLU
+             -L$$GSL_LIB_DIR -lgsl -lgslcblas
 }
 
 win32 {

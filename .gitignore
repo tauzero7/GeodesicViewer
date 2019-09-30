@@ -4,6 +4,7 @@
 build
 config
 compiled
+data
 doc
 lib
 test

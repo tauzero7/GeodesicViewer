@@ -68,7 +68,19 @@ public slots:
     // script functions
     void setGeodesicType(int type);
     void setGeodesicType(QString name);
+
+    /**
+     * @brief Set time direction for geodesic.
+     *  Use this function only from a script.
+     * @param dir : time direction: +1:future, -1:past
+     */
     void setTimeDirection(int dir);
+
+    /**
+     * @brief Set initial velocity for timelike geodesic.
+     *  Use this function only from a script.
+     * @param val : velocity scaled by c.
+     */
     void setVelocity(double val);
 
 signals:

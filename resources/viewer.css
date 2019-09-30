@@ -12,7 +12,7 @@ QComboBox {
     font-family: Monospace;
     font-size: 10pt;
     height: 16px;
-    max-width: 300px;
+    max-width: 330px;
 }
 
 QGroupBox {
