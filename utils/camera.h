@@ -12,7 +12,7 @@
 #include <gdefs.h>
 #include <iostream>
 
-//must be before gl.h includes
+// must be before gl.h includes
 #ifdef _WIN32
 #include <windows.h>
 #endif
@@ -23,7 +23,8 @@
 /**
  * @brief The Camera class
  */
-class Camera {
+class Camera
+{
 public:
     Camera();
     virtual ~Camera();
@@ -47,6 +48,8 @@ public:
 
     m4d::vec3 getRight();
 
+    double getDistance();
+
     void setFovY(double fovy);
     double getFovY();
 
@@ -67,7 +70,18 @@ public:
     void fixRotAroundZ(double angle);
 
     void getSphericalEyePos(double& theta, double& phi, double& dist);
+
+    /*! Move camera along sphere.
+     * \param theta : angle theta.
+     * \param phi : angle phi.
+     * \param dist : radius of sphere.
+     */
     void moveOnSphere(double theta, double phi, double dist);
+
+    void rotate(double dazi, double dlat, bool use_local_z = true);
+
+    void setSpecialPos(enum_coord_axis pos);
+    void setPosRFrame(m4d::vec3 pos, m4d::vec3 dir, m4d::vec3 up);
 
     void lookAt();
     void lookAtCenter();
@@ -108,6 +122,7 @@ protected:
 
     m4d::vec3 mRight;
     m4d::vec3 mPOI;
+    Quaternion mQuat;
 };
 
 #endif // CAMERA_H

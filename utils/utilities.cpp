@@ -28,7 +28,7 @@ bool CopyString(const char* src, char*& dest)
     bool isOkay = true;
 #ifdef _WIN32
     dest = new char[len + 4];
-    isOkay &= (strncpy_s(dest, len + 4, src, len) == NULL);
+    isOkay &= (strncpy_s(dest, len + 4, src, len) == nullptr);
 #else
     dest = new char[len + 2];
     isOkay &= (strcpy(dest, src) != nullptr);
@@ -50,10 +50,10 @@ bool GetExePath(char*& path)
 
     char* cwd = new char[nSize];
 #ifdef _WIN32
-    if (::GetModuleFileNameA(NULL, cwd, nSize)
-        == ERROR_INSUFFICIENT_BUFFER) {
+    if (::GetModuleFileNameA(nullptr, cwd, nSize) == ERROR_INSUFFICIENT_BUFFER) {
         cwd[0] = 0;
-    } else {
+    }
+    else {
         if (::GetLastError() != ERROR_SUCCESS) {
             cwd[0] = 0;
         }
@@ -63,7 +63,8 @@ bool GetExePath(char*& path)
     uint32_t asize = sizeof(apath);
     if (_NSGetExecutablePath(apath, &asize) == 0) {
         realpath(apath, cwd);
-    } else {
+    }
+    else {
         cwd[0] = 0;
     }
 #else
@@ -72,7 +73,8 @@ bool GetExePath(char*& path)
     ssize_t size = readlink(tmp, cwd, nSize - 1);
     if (size >= 0) {
         cwd[size] = 0;
-    } else {
+    }
+    else {
         cwd[0] = 0;
     }
     delete[] tmp;
@@ -108,7 +110,8 @@ bool GetFilePath(const char* filename, char*& path)
     size_t offset = fname.rfind("\\");
     if (offset != std::string::npos) {
         mpath = fname.substr(0, offset) + "\\";
-    } else {
+    }
+    else {
         offset = fname.rfind("/");
         if (offset != std::string::npos) {
             mpath = fname.substr(0, offset) + "/";
@@ -118,7 +121,8 @@ bool GetFilePath(const char* filename, char*& path)
     size_t offset = fname.rfind("/");
     if (offset == std::string::npos) {
         mpath = std::string("");
-    } else {
+    }
+    else {
         mpath = fname.substr(0, offset) + "/";
     }
 #endif
@@ -127,7 +131,7 @@ bool GetFilePath(const char* filename, char*& path)
     return true;
 }
 
-bool tokenizeFile(const std::string filename, std::vector<std::vector<std::string>>& tokens)
+bool tokenizeFile(const std::string& filename, std::vector<std::vector<std::string>>& tokens)
 {
     std::ifstream in(filename.c_str());
 
@@ -167,13 +171,7 @@ bool tokenizeFile(const std::string filename, std::vector<std::vector<std::strin
     return true;
 }
 
-/*! Read object file.
- *  \param filename : name of file
- *  \param objects : reference to object list
- *  \param clear : if true then clear object list
- * \return number of objects
- */
-int readObjectFile(const std::string filename, std::vector<MyObject*>& objects, bool clear)
+int readObjectFile(const std::string& filename, std::vector<MyObject*>& objects, bool clear)
 {
     if (clear && !objects.empty()) {
         objects.clear();
@@ -187,16 +185,11 @@ int readObjectFile(const std::string filename, std::vector<MyObject*>& objects, 
     return readObjectsFromTokens(tokens, objects);
 }
 
-/*! Read objects from tokens.
- * \param tokens : reference to token list
- * \param objects : reference to object list
- * \return number of objects
- */
 int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::vector<MyObject*>& objects)
 {
     MyObject* obj;
     for (unsigned int i = 0; i < tokens.size(); i++) {
-        //std::cerr << tokens[i][0] << std::endl;
+        // std::cerr << tokens[i][0] << std::endl;
         // ------------------------------
         //     text2d
         // ------------------------------
@@ -206,7 +199,8 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
                 obj->setColor(atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()), atof(tokens[i][7].c_str()));
             }
 
-            obj->create_2d_text(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), tokens[i][3], atof(tokens[i][4].c_str()));
+            obj->create_2d_text(
+                atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), tokens[i][3], atof(tokens[i][4].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -218,7 +212,8 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
                 obj->setColor(atof(tokens[i][6].c_str()), atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()));
             }
 
-            obj->create_3d_text(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()), tokens[i][4], atof(tokens[i][5].c_str()));
+            obj->create_3d_text(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
+                tokens[i][4], atof(tokens[i][5].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -230,7 +225,8 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
                 obj->setColor(atof(tokens[i][6].c_str()), atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()));
             }
 
-            obj->create_2d_sphere(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()), atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()));
+            obj->create_2d_sphere(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
+                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -239,12 +235,15 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
         else if (tokens[i][0] == stl_object_type[enum_object_sphere3d].toStdString() && tokens[i].size() > 6) {
             obj = new MyObject();
             if (tokens[i].size() > 10) {
-                obj->setColor(atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()), atof(tokens[i][10].c_str()));
-            } else if (tokens[i].size() > 9) {
+                obj->setColor(atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()),
+                    atof(tokens[i][10].c_str()));
+            }
+            else if (tokens[i].size() > 9) {
                 obj->setColor(atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()));
             }
 
-            obj->create_3d_sphere(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()), atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()));
+            obj->create_3d_sphere(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
+                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -256,7 +255,8 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
                 obj->setColor(atof(tokens[i][6].c_str()), atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()));
             }
 
-            obj->create_2d_box(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()), atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()));
+            obj->create_2d_box(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
+                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -268,7 +268,9 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
                 obj->setColor(atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()), atof(tokens[i][10].c_str()));
             }
 
-            obj->create_3d_box(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()), atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()), atof(tokens[i][7].c_str()));
+            obj->create_3d_box(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
+                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
+                atof(tokens[i][7].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -280,7 +282,8 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
                 obj->setColor(atof(tokens[i][6].c_str()), atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()));
             }
 
-            obj->create_2d_line(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()), atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()));
+            obj->create_2d_line(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
+                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -292,7 +295,9 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
                 obj->setColor(atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()), atof(tokens[i][10].c_str()));
             }
 
-            obj->create_3d_line(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()), atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()), atof(tokens[i][7].c_str()));
+            obj->create_3d_line(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
+                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
+                atof(tokens[i][7].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -301,12 +306,16 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
         else if (tokens[i][0] == stl_object_type[enum_object_quad2d].toStdString() && tokens[i].size() > 9) {
             obj = new MyObject();
             if (tokens[i].size() > 13) {
-                obj->setColor(atof(tokens[i][10].c_str()), atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()), atof(tokens[i][13].c_str()));
-            } else if (tokens[i].size() > 12) {
+                obj->setColor(atof(tokens[i][10].c_str()), atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()),
+                    atof(tokens[i][13].c_str()));
+            }
+            else if (tokens[i].size() > 12) {
                 obj->setColor(atof(tokens[i][10].c_str()), atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()));
             }
 
-            obj->create_2d_quad(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()), atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()), atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()));
+            obj->create_2d_quad(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
+                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
+                atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -315,8 +324,10 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
         else if (tokens[i][0] == stl_object_type[enum_object_plane3d].toStdString() && tokens[i].size() > 9) {
             obj = new MyObject();
             if (tokens[i].size() > 13) {
-                obj->setColor(atof(tokens[i][10].c_str()), atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()), atof(tokens[i][13].c_str()));
-            } else if (tokens[i].size() > 12) {
+                obj->setColor(atof(tokens[i][10].c_str()), atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()),
+                    atof(tokens[i][13].c_str()));
+            }
+            else if (tokens[i].size() > 12) {
                 obj->setColor(atof(tokens[i][10].c_str()), atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()));
             }
 
@@ -334,7 +345,8 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
                 obj->setColor(atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()), atof(tokens[i][7].c_str()));
             }
 
-            obj->create_2d_disk(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()), atof(tokens[i][4].c_str()));
+            obj->create_2d_disk(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
+                atof(tokens[i][4].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -343,8 +355,10 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
         else if (tokens[i][0] == stl_object_type[enum_object_disk3d].toStdString() && tokens[i].size() > 9) {
             obj = new MyObject();
             if (tokens[i].size() > 14) {
-                obj->setColor(atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()), atof(tokens[i][13].c_str()), atof(tokens[i][14].c_str()));
-            } else if (tokens[i].size() > 13) {
+                obj->setColor(atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()), atof(tokens[i][13].c_str()),
+                    atof(tokens[i][14].c_str()));
+            }
+            else if (tokens[i].size() > 13) {
                 obj->setColor(atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()), atof(tokens[i][13].c_str()));
             }
 
@@ -360,15 +374,17 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
         else if (tokens[i][0] == stl_object_type[enum_object_cylinder3d].toStdString() && tokens[i].size() > 10) {
             obj = new MyObject();
             if (tokens[i].size() > 14) {
-                obj->setColor(atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()), atof(tokens[i][13].c_str()), atof(tokens[i][14].c_str()));
-            } else if (tokens[i].size() > 13) {
+                obj->setColor(atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()), atof(tokens[i][13].c_str()),
+                    atof(tokens[i][14].c_str()));
+            }
+            else if (tokens[i].size() > 13) {
                 obj->setColor(atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()), atof(tokens[i][13].c_str()));
             }
 
             obj->create_3d_cylinder(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
                 atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
-                atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()),
-                atof(tokens[i][9].c_str()), atof(tokens[i][10].c_str()));
+                atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()),
+                atof(tokens[i][10].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -377,15 +393,17 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
         else if (tokens[i][0] == stl_object_type[enum_object_torus3d].toStdString() && tokens[i].size() > 10) {
             obj = new MyObject();
             if (tokens[i].size() > 14) {
-                obj->setColor(atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()), atof(tokens[i][13].c_str()), atof(tokens[i][14].c_str()));
-            } else if (tokens[i].size() > 13) {
+                obj->setColor(atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()), atof(tokens[i][13].c_str()),
+                    atof(tokens[i][14].c_str()));
+            }
+            else if (tokens[i].size() > 13) {
                 obj->setColor(atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()), atof(tokens[i][13].c_str()));
             }
 
             obj->create_3d_torus(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
                 atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
-                atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()),
-                atof(tokens[i][9].c_str()), atof(tokens[i][10].c_str()));
+                atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()),
+                atof(tokens[i][10].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -394,8 +412,10 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
         else if (tokens[i][0] == stl_object_type[enum_object_tube3d].toStdString() && tokens[i].size() > 14) {
             obj = new MyObject();
             if (tokens[i].size() > 18) {
-                obj->setColor(atof(tokens[i][15].c_str()), atof(tokens[i][16].c_str()), atof(tokens[i][17].c_str()), atof(tokens[i][17].c_str()));
-            } else if (tokens[i].size() > 17) {
+                obj->setColor(atof(tokens[i][15].c_str()), atof(tokens[i][16].c_str()), atof(tokens[i][17].c_str()),
+                    atof(tokens[i][17].c_str()));
+            }
+            else if (tokens[i].size() > 17) {
                 obj->setColor(atof(tokens[i][15].c_str()), atof(tokens[i][16].c_str()), atof(tokens[i][17].c_str()));
             }
 
@@ -442,7 +462,7 @@ void setStandardParams(struct_params* par)
 
     par->opengl_stereo_use = 0;
     par->opengl_stereo_glasses = enum_stereo_red_cyan;
-    par->opengl_stereo_type = (enum_stereo_type)DEF_STEREO_TYPE;
+    par->opengl_stereo_type = static_cast<enum_stereo_type>(DEF_STEREO_TYPE);
     par->opengl_stereo_sep = DEF_STEREO_SEP;
     par->opengl_stereo_step = DEF_STEREO_STEP;
 
@@ -476,7 +496,8 @@ void setStandardParams(struct_params* par)
     par->opengl_sachs_legs = enum_sachs_legs_right_up;
     par->opengl_sachs_scale = 0.3;
 
-    double aspect = (DEF_OPENGL_HEIGHT - DEF_DRAW2D_BOTTOM_BORDER) / (double)(DEF_OPENGL_WIDTH - DEF_DRAW2D_LEFT_BORDER);
+    double aspect = (DEF_OPENGL_HEIGHT - DEF_DRAW2D_BOTTOM_BORDER)
+        / static_cast<double>(DEF_OPENGL_WIDTH - DEF_DRAW2D_LEFT_BORDER);
     par->draw2d_xMin = DEF_DRAW2D_X_INIT_MIN;
     par->draw2d_xMax = DEF_DRAW2D_X_INIT_MAX;
     par->draw2d_yMin = -(DEF_DRAW2D_X_INIT_MAX - DEF_DRAW2D_X_INIT_MIN) * 0.5 * aspect;
@@ -489,17 +510,12 @@ void setStandardParams(struct_params* par)
 
     par->draw2d_grid_color = QColor(DEF_DRAW2D_GRID_COLOR);
 
-    par->draw2d_representation = (m4d::enum_draw_type)0;
+    par->draw2d_representation = static_cast<m4d::enum_draw_type>(0);
     par->draw2d_abscissa = 0;
     par->draw2d_ordinate = 0;
 }
 
-/*! Load cfg-parameter file.
- *  \param filename : file name.
- *  \param par      : pointer to parameter structure.
- *  \return true : successfull.
- */
-bool loadParamFile(const std::string filename, struct_params* par)
+bool loadParamFile(const std::string& filename, struct_params* par)
 {
     std::vector<std::vector<std::string>> tokens;
     if (!tokenizeFile(filename, tokens)) {
@@ -522,125 +538,182 @@ bool loadParamFile(const std::string filename, struct_params* par)
         std::string baseString = tokens[i][0];
         if (baseString.compare("OGL_PROJECTION") == 0 && tokens[i].size() > 1) {
             par->opengl_projection = atoi(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_DRAW3D_TYPE") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_DRAW3D_TYPE") == 0 && tokens[i].size() > 1) {
             par->opengl_draw3d_type = (m4d::enum_draw_type)atoi(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_EYE_POS") == 0 && tokens[i].size() > 3) {
-            par->opengl_eye_pos = m4d::vec3(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()));
-        } else if (baseString.compare("OGL_EYE_POS_STEP") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_EYE_POS") == 0 && tokens[i].size() > 3) {
+            par->opengl_eye_pos
+                = m4d::vec3(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()));
+        }
+        else if (baseString.compare("OGL_EYE_POS_STEP") == 0 && tokens[i].size() > 1) {
             par->opengl_eye_pos_step = atof(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_EYE_POI") == 0 && tokens[i].size() > 3) {
-            par->opengl_eye_poi = m4d::vec3(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()));
-        } else if (baseString.compare("OGL_EYE_POI_STEP") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_EYE_POI") == 0 && tokens[i].size() > 3) {
+            par->opengl_eye_poi
+                = m4d::vec3(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()));
+        }
+        else if (baseString.compare("OGL_EYE_POI_STEP") == 0 && tokens[i].size() > 1) {
             par->opengl_eye_poi_step = atof(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_EYE_VUP") == 0 && tokens[i].size() > 3) {
-            par->opengl_eye_vup = m4d::vec3(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()));
-        } else if (baseString.compare("OGL_EYE_DIR") == 0 && tokens[i].size() > 3) {
-            par->opengl_eye_dir = m4d::vec3(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()));
-        } else if (baseString.compare("OGL_FOV") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_EYE_VUP") == 0 && tokens[i].size() > 3) {
+            par->opengl_eye_vup
+                = m4d::vec3(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()));
+        }
+        else if (baseString.compare("OGL_EYE_DIR") == 0 && tokens[i].size() > 3) {
+            par->opengl_eye_dir
+                = m4d::vec3(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()));
+        }
+        else if (baseString.compare("OGL_FOV") == 0 && tokens[i].size() > 1) {
             par->opengl_fov = atof(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_FOV_STEP") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_FOV_STEP") == 0 && tokens[i].size() > 1) {
             par->opengl_fov_step = atof(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_LINE_COLOR") == 0 && tokens[i].size() > 3) {
-            par->opengl_line_color = QColor(atoi(tokens[i][1].c_str()), atoi(tokens[i][2].c_str()), atoi(tokens[i][3].c_str()));
-        } else if (baseString.compare("OGL_LINE_WIDTH") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_LINE_COLOR") == 0 && tokens[i].size() > 3) {
+            par->opengl_line_color
+                = QColor(atoi(tokens[i][1].c_str()), atoi(tokens[i][2].c_str()), atoi(tokens[i][3].c_str()));
+        }
+        else if (baseString.compare("OGL_LINE_WIDTH") == 0 && tokens[i].size() > 1) {
             par->opengl_line_width = atoi(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_LINE_SMOOTH") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_LINE_SMOOTH") == 0 && tokens[i].size() > 1) {
             par->opengl_line_smooth = atoi(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_BG_COLOR") == 0 && tokens[i].size() > 3) {
-            par->opengl_bg_color = QColor(atoi(tokens[i][1].c_str()), atoi(tokens[i][2].c_str()), atoi(tokens[i][3].c_str()));
-        } else if (baseString.compare("OGL_EMBED_COLOR") == 0 && tokens[i].size() > 3) {
-            par->opengl_emb_color = QColor(atoi(tokens[i][1].c_str()), atoi(tokens[i][2].c_str()), atoi(tokens[i][3].c_str()));
-        } else if (baseString.compare("OGL_STEREO_USE") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_BG_COLOR") == 0 && tokens[i].size() > 3) {
+            par->opengl_bg_color
+                = QColor(atoi(tokens[i][1].c_str()), atoi(tokens[i][2].c_str()), atoi(tokens[i][3].c_str()));
+        }
+        else if (baseString.compare("OGL_EMBED_COLOR") == 0 && tokens[i].size() > 3) {
+            par->opengl_emb_color
+                = QColor(atoi(tokens[i][1].c_str()), atoi(tokens[i][2].c_str()), atoi(tokens[i][3].c_str()));
+        }
+        else if (baseString.compare("OGL_STEREO_USE") == 0 && tokens[i].size() > 1) {
             par->opengl_stereo_use = atoi(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_STEREO_GLASSES") == 0 && tokens[i].size() > 1) {
-            par->opengl_stereo_glasses = (enum_stereo_glasses)atoi(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_STEREO_TYPE") == 0 && tokens[i].size() > 1) {
-            par->opengl_stereo_type = (enum_stereo_type)atoi(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_STEREO_SEP") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_STEREO_GLASSES") == 0 && tokens[i].size() > 1) {
+            par->opengl_stereo_glasses = static_cast<enum_stereo_glasses>(atoi(tokens[i][1].c_str()));
+        }
+        else if (baseString.compare("OGL_STEREO_TYPE") == 0 && tokens[i].size() > 1) {
+            par->opengl_stereo_type = static_cast<enum_stereo_type>(atoi(tokens[i][1].c_str()));
+        }
+        else if (baseString.compare("OGL_STEREO_SEP") == 0 && tokens[i].size() > 1) {
             par->opengl_stereo_sep = atof(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_STEREO_STEP") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_STEREO_STEP") == 0 && tokens[i].size() > 1) {
             par->opengl_stereo_step = atof(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_FOG_USE") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_FOG_USE") == 0 && tokens[i].size() > 1) {
             par->opengl_fog_use = atoi(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_FOG_DENSITY") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_FOG_DENSITY") == 0 && tokens[i].size() > 1) {
             par->opengl_fog_init = atof(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_FOG_STEP") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_FOG_STEP") == 0 && tokens[i].size() > 1) {
             par->opengl_fog_step = atof(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_SCALE_X") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_SCALE_X") == 0 && tokens[i].size() > 1) {
             par->opengl_scale_x = atof(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_SCALE_Y") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_SCALE_Y") == 0 && tokens[i].size() > 1) {
             par->opengl_scale_y = atof(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_SCALE_Z") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_SCALE_Z") == 0 && tokens[i].size() > 1) {
             par->opengl_scale_z = atof(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_ANIM_LOCAL") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_ANIM_LOCAL") == 0 && tokens[i].size() > 1) {
             par->opengl_anim_local = atoi(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_ANIM_ROT_X") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_ANIM_ROT_X") == 0 && tokens[i].size() > 1) {
             par->opengl_anim_rot_x = atof(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_ANIM_ROT_Y") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_ANIM_ROT_Y") == 0 && tokens[i].size() > 1) {
             par->opengl_anim_rot_y = atof(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_ANIM_ROT_Z") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_ANIM_ROT_Z") == 0 && tokens[i].size() > 1) {
             par->opengl_anim_rot_z = atof(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_SACHS_SYSTEM") == 0 && tokens[i].size() > 1) {
-            par->opengl_sachs_system = (enum_sachs_system)atoi(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_SACHS_LEGS") == 0 && tokens[i].size() > 1) {
-            par->opengl_sachs_legs = (enum_sachs_legs)atoi(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_SACHS_SCALE") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_SACHS_SYSTEM") == 0 && tokens[i].size() > 1) {
+            par->opengl_sachs_system = static_cast<enum_sachs_system>(atoi(tokens[i][1].c_str()));
+        }
+        else if (baseString.compare("OGL_SACHS_LEGS") == 0 && tokens[i].size() > 1) {
+            par->opengl_sachs_legs = static_cast<enum_sachs_legs>(atoi(tokens[i][1].c_str()));
+        }
+        else if (baseString.compare("OGL_SACHS_SCALE") == 0 && tokens[i].size() > 1) {
             par->opengl_sachs_scale = atof(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_LEG_1_COL_1") == 0 && tokens[i].size() > 3) {
-            par->opengl_leg1_col1 = QColor(atoi(tokens[i][1].c_str()), atoi(tokens[i][2].c_str()), atoi(tokens[i][3].c_str()));
-        } else if (baseString.compare("OGL_LEG_1_COL_2") == 0 && tokens[i].size() > 3) {
-            par->opengl_leg1_col2 = QColor(atoi(tokens[i][1].c_str()), atoi(tokens[i][2].c_str()), atoi(tokens[i][3].c_str()));
-        } else if (baseString.compare("OGL_LEG_1_FREQ") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_LEG_1_COL_1") == 0 && tokens[i].size() > 3) {
+            par->opengl_leg1_col1
+                = QColor(atoi(tokens[i][1].c_str()), atoi(tokens[i][2].c_str()), atoi(tokens[i][3].c_str()));
+        }
+        else if (baseString.compare("OGL_LEG_1_COL_2") == 0 && tokens[i].size() > 3) {
+            par->opengl_leg1_col2
+                = QColor(atoi(tokens[i][1].c_str()), atoi(tokens[i][2].c_str()), atoi(tokens[i][3].c_str()));
+        }
+        else if (baseString.compare("OGL_LEG_1_FREQ") == 0 && tokens[i].size() > 1) {
             par->opengl_leg1_freq = atof(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_LEG_2_COL_1") == 0 && tokens[i].size() > 3) {
-            par->opengl_leg2_col1 = QColor(atoi(tokens[i][1].c_str()), atoi(tokens[i][2].c_str()), atoi(tokens[i][3].c_str()));
-        } else if (baseString.compare("OGL_LEG_2_COL_2") == 0 && tokens[i].size() > 3) {
-            par->opengl_leg2_col2 = QColor(atoi(tokens[i][1].c_str()), atoi(tokens[i][2].c_str()), atoi(tokens[i][3].c_str()));
-        } else if (baseString.compare("OGL_LEG_2_FREQ") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("OGL_LEG_2_COL_1") == 0 && tokens[i].size() > 3) {
+            par->opengl_leg2_col1
+                = QColor(atoi(tokens[i][1].c_str()), atoi(tokens[i][2].c_str()), atoi(tokens[i][3].c_str()));
+        }
+        else if (baseString.compare("OGL_LEG_2_COL_2") == 0 && tokens[i].size() > 3) {
+            par->opengl_leg2_col2
+                = QColor(atoi(tokens[i][1].c_str()), atoi(tokens[i][2].c_str()), atoi(tokens[i][3].c_str()));
+        }
+        else if (baseString.compare("OGL_LEG_2_FREQ") == 0 && tokens[i].size() > 1) {
             par->opengl_leg2_freq = atof(tokens[i][1].c_str());
-        } else if (baseString.compare("OGL_EMB") == 0 && tokens[i].size() > 2) {
+        }
+        else if (baseString.compare("OGL_EMB") == 0 && tokens[i].size() > 2) {
             par->opengl_emb_params.insert(std::pair<std::string, double>(tokens[i][1], atof(tokens[i][2].c_str())));
-        } else if (baseString.compare("DRAW2D_BORDER") == 0 && tokens[i].size() > 4) {
+        }
+        else if (baseString.compare("DRAW2D_BORDER") == 0 && tokens[i].size() > 4) {
             par->draw2d_xMin = atof(tokens[i][1].c_str());
             par->draw2d_xMax = atof(tokens[i][2].c_str());
             par->draw2d_yMin = atof(tokens[i][3].c_str());
             par->draw2d_yMax = atof(tokens[i][4].c_str());
-        } else if (baseString.compare("DRAW2D_BG_COLOR") == 0 && tokens[i].size() > 3) {
-            par->draw2d_bg_color = QColor(atoi(tokens[i][1].c_str()), atoi(tokens[i][2].c_str()), atoi(tokens[i][3].c_str()));
-        } else if (baseString.compare("DRAW2D_LINE_COLOR") == 0 && tokens[i].size() > 3) {
-            par->draw2d_line_color = QColor(atoi(tokens[i][1].c_str()), atoi(tokens[i][2].c_str()), atoi(tokens[i][3].c_str()));
-        } else if (baseString.compare("DRAW2D_LINE_WIDTH") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("DRAW2D_BG_COLOR") == 0 && tokens[i].size() > 3) {
+            par->draw2d_bg_color
+                = QColor(atoi(tokens[i][1].c_str()), atoi(tokens[i][2].c_str()), atoi(tokens[i][3].c_str()));
+        }
+        else if (baseString.compare("DRAW2D_LINE_COLOR") == 0 && tokens[i].size() > 3) {
+            par->draw2d_line_color
+                = QColor(atoi(tokens[i][1].c_str()), atoi(tokens[i][2].c_str()), atoi(tokens[i][3].c_str()));
+        }
+        else if (baseString.compare("DRAW2D_LINE_WIDTH") == 0 && tokens[i].size() > 1) {
             par->draw2d_line_width = atoi(tokens[i][1].c_str());
-        } else if (baseString.compare("DRAW2D_LINE_SMOOTH") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("DRAW2D_LINE_SMOOTH") == 0 && tokens[i].size() > 1) {
             par->draw2d_line_smooth = atoi(tokens[i][1].c_str());
-        } else if (baseString.compare("DRAW2D_GRID_COLOR") == 0 && tokens[i].size() > 3) {
-            par->draw2d_grid_color = QColor(atoi(tokens[i][1].c_str()), atoi(tokens[i][2].c_str()), atoi(tokens[i][3].c_str()));
-        } else if (baseString.compare("DRAW2D_REPRESENTATION") == 0 && tokens[i].size() > 1) {
-            par->draw2d_representation = (m4d::enum_draw_type)atoi(tokens[i][1].c_str());
-        } else if (baseString.compare("DRAW2D_ABSCISSA") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("DRAW2D_GRID_COLOR") == 0 && tokens[i].size() > 3) {
+            par->draw2d_grid_color
+                = QColor(atoi(tokens[i][1].c_str()), atoi(tokens[i][2].c_str()), atoi(tokens[i][3].c_str()));
+        }
+        else if (baseString.compare("DRAW2D_REPRESENTATION") == 0 && tokens[i].size() > 1) {
+            par->draw2d_representation = static_cast<m4d::enum_draw_type>(atoi(tokens[i][1].c_str()));
+        }
+        else if (baseString.compare("DRAW2D_ABSCISSA") == 0 && tokens[i].size() > 1) {
             par->draw2d_abscissa = atoi(tokens[i][1].c_str());
-        } else if (baseString.compare("DRAW2D_ORDINATE") == 0 && tokens[i].size() > 1) {
+        }
+        else if (baseString.compare("DRAW2D_ORDINATE") == 0 && tokens[i].size() > 1) {
             par->draw2d_ordinate = atoi(tokens[i][1].c_str());
         }
     }
     return true;
 }
 
-/*! Save cfg-parameter file.
- *  \param filename : file name.
- *  \param par      : pointer to parameter structure.
- *  \return true : successfull.
- */
-bool saveParamFile(const std::string filename, struct_params* par)
+bool saveParamFile(const std::string& filename, struct_params* par)
 {
-    FILE* fptr = NULL;
+    FILE* fptr = nullptr;
 #ifdef _WIN32
     fopen_s(&fptr, filename.c_str(), "w");
 #else
     fptr = fopen(filename.c_str(), "w");
 #endif
 
-    if (fptr == NULL) {
+    if (fptr == nullptr) {
         fprintf(stderr, "Cannot open %s for parameter output!\n", filename.c_str());
         return false;
     }
@@ -650,28 +723,35 @@ bool saveParamFile(const std::string filename, struct_params* par)
     fprintf(fptr, "# ----------------------------------------------------------\n");
 
     fprintf(fptr, "OGL_PROJECTION       %d\n", par->opengl_projection);
-    fprintf(fptr, "OGL_DRAW3D_TYPE      %d\n", (int)par->opengl_draw3d_type);
+    fprintf(fptr, "OGL_DRAW3D_TYPE      %d\n", static_cast<int>(par->opengl_draw3d_type));
     fprintf(fptr, "# -----\n");
-    fprintf(fptr, "OGL_EYE_POS          %16.12f %16.12f %16.12f\n", par->opengl_eye_pos[0], par->opengl_eye_pos[1], par->opengl_eye_pos[2]);
+    fprintf(fptr, "OGL_EYE_POS          %16.12f %16.12f %16.12f\n", par->opengl_eye_pos[0], par->opengl_eye_pos[1],
+        par->opengl_eye_pos[2]);
     fprintf(fptr, "OGL_EYE_POS_STEP     %16.12f\n", par->opengl_eye_pos_step);
-    fprintf(fptr, "OGL_EYE_POI          %16.12f %16.12f %16.12f\n", par->opengl_eye_poi[0], par->opengl_eye_poi[1], par->opengl_eye_poi[2]);
+    fprintf(fptr, "OGL_EYE_POI          %16.12f %16.12f %16.12f\n", par->opengl_eye_poi[0], par->opengl_eye_poi[1],
+        par->opengl_eye_poi[2]);
     fprintf(fptr, "OGL_EYE_POI_STEP     %16.12f\n", par->opengl_eye_poi_step);
-    fprintf(fptr, "OGL_EYE_VUP          %16.12f %16.12f %16.12f\n", par->opengl_eye_vup[0], par->opengl_eye_vup[1], par->opengl_eye_vup[2]);
-    fprintf(fptr, "OGL_EYE_DIR          %16.12f %16.12f %16.12f\n", par->opengl_eye_dir[0], par->opengl_eye_dir[1], par->opengl_eye_dir[2]);
+    fprintf(fptr, "OGL_EYE_VUP          %16.12f %16.12f %16.12f\n", par->opengl_eye_vup[0], par->opengl_eye_vup[1],
+        par->opengl_eye_vup[2]);
+    fprintf(fptr, "OGL_EYE_DIR          %16.12f %16.12f %16.12f\n", par->opengl_eye_dir[0], par->opengl_eye_dir[1],
+        par->opengl_eye_dir[2]);
     fprintf(fptr, "OGL_FOV              %16.12f\n", par->opengl_fov);
     fprintf(fptr, "OGL_FOV_STEP         %16.12f\n", par->opengl_fov_step);
     fprintf(fptr, "# -----\n");
-    fprintf(fptr, "OGL_LINE_COLOR       %3d %3d %3d\n", par->opengl_line_color.red(), par->opengl_line_color.green(), par->opengl_line_color.blue());
+    fprintf(fptr, "OGL_LINE_COLOR       %3d %3d %3d\n", par->opengl_line_color.red(), par->opengl_line_color.green(),
+        par->opengl_line_color.blue());
     fprintf(fptr, "OGL_LINE_WIDTH       %d\n", par->opengl_line_width);
     fprintf(fptr, "OGL_LINE_SMOOTH      %d\n", par->opengl_line_smooth);
-    fprintf(fptr, "OGL_BG_COLOR         %3d %3d %3d\n", par->opengl_bg_color.red(), par->opengl_bg_color.green(), par->opengl_bg_color.blue());
-    fprintf(fptr, "OGL_EMBED_COLOR      %3d %3d %3d\n", par->opengl_emb_color.red(), par->opengl_emb_color.green(), par->opengl_emb_color.blue());
+    fprintf(fptr, "OGL_BG_COLOR         %3d %3d %3d\n", par->opengl_bg_color.red(), par->opengl_bg_color.green(),
+        par->opengl_bg_color.blue());
+    fprintf(fptr, "OGL_EMBED_COLOR      %3d %3d %3d\n", par->opengl_emb_color.red(), par->opengl_emb_color.green(),
+        par->opengl_emb_color.blue());
     if (par->opengl_emb_params.size() > 0) {
         fprintf(fptr, "# -----\n");
         std::map<std::string, double>::iterator mapItr = par->opengl_emb_params.begin();
         while (mapItr != par->opengl_emb_params.end()) {
             fprintf(fptr, "OGL_EMB              %-12s %10.6f\n", mapItr->first.c_str(), mapItr->second);
-            mapItr++;
+            ++mapItr;
         }
     }
     fprintf(fptr, "# -----\n");
@@ -691,22 +771,30 @@ bool saveParamFile(const std::string filename, struct_params* par)
     fprintf(fptr, "OGL_ANIM_ROT_Y         %6.4f\n", par->opengl_anim_rot_y);
     fprintf(fptr, "OGL_ANIM_ROT_Z         %6.4f\n", par->opengl_anim_rot_z);
     fprintf(fptr, "# -----\n");
-    fprintf(fptr, "OGL_SACHS_SYSTEM       %d\n", (int)par->opengl_sachs_system);
-    fprintf(fptr, "OGL_SACHS_LEGS         %d\n", (int)par->opengl_sachs_legs);
+    fprintf(fptr, "OGL_SACHS_SYSTEM       %d\n", static_cast<int>(par->opengl_sachs_system));
+    fprintf(fptr, "OGL_SACHS_LEGS         %d\n", static_cast<int>(par->opengl_sachs_legs));
     fprintf(fptr, "OGL_SACHS_SCALE        %4.1f\n", par->opengl_sachs_scale);
-    fprintf(fptr, "OGL_LEG_1_COL_1        %3d %3d %3d\n", par->opengl_leg1_col1.red(), par->opengl_leg1_col1.green(), par->opengl_leg1_col1.blue());
-    fprintf(fptr, "OGL_LEG_1_COL_2        %3d %3d %3d\n", par->opengl_leg1_col2.red(), par->opengl_leg1_col2.green(), par->opengl_leg1_col2.blue());
+    fprintf(fptr, "OGL_LEG_1_COL_1        %3d %3d %3d\n", par->opengl_leg1_col1.red(), par->opengl_leg1_col1.green(),
+        par->opengl_leg1_col1.blue());
+    fprintf(fptr, "OGL_LEG_1_COL_2        %3d %3d %3d\n", par->opengl_leg1_col2.red(), par->opengl_leg1_col2.green(),
+        par->opengl_leg1_col2.blue());
     fprintf(fptr, "OGL_LEG_1_FREQ         %4.1f\n", par->opengl_leg1_freq);
-    fprintf(fptr, "OGL_LEG_2_COL_1        %3d %3d %3d\n", par->opengl_leg2_col1.red(), par->opengl_leg2_col1.green(), par->opengl_leg2_col1.blue());
-    fprintf(fptr, "OGL_LEG_2_COL_2        %3d %3d %3d\n", par->opengl_leg2_col2.red(), par->opengl_leg2_col2.green(), par->opengl_leg2_col2.blue());
+    fprintf(fptr, "OGL_LEG_2_COL_1        %3d %3d %3d\n", par->opengl_leg2_col1.red(), par->opengl_leg2_col1.green(),
+        par->opengl_leg2_col1.blue());
+    fprintf(fptr, "OGL_LEG_2_COL_2        %3d %3d %3d\n", par->opengl_leg2_col2.red(), par->opengl_leg2_col2.green(),
+        par->opengl_leg2_col2.blue());
     fprintf(fptr, "OGL_LEG_2_FREQ         %4.1f\n", par->opengl_leg2_freq);
     fprintf(fptr, "# -----\n");
-    fprintf(fptr, "DRAW2D_BORDER          %10.6f %10.6f %10.6f %10.6f\n", par->draw2d_xMin, par->draw2d_xMax, par->draw2d_yMin, par->draw2d_yMax);
-    fprintf(fptr, "DRAW2D_BG_COLOR        %3d %3d %3d\n", par->draw2d_bg_color.red(), par->draw2d_bg_color.green(), par->draw2d_bg_color.blue());
-    fprintf(fptr, "DRAW2D_LINE_COLOR      %3d %3d %3d\n", par->draw2d_line_color.red(), par->draw2d_line_color.green(), par->draw2d_line_color.blue());
+    fprintf(fptr, "DRAW2D_BORDER          %10.6f %10.6f %10.6f %10.6f\n", par->draw2d_xMin, par->draw2d_xMax,
+        par->draw2d_yMin, par->draw2d_yMax);
+    fprintf(fptr, "DRAW2D_BG_COLOR        %3d %3d %3d\n", par->draw2d_bg_color.red(), par->draw2d_bg_color.green(),
+        par->draw2d_bg_color.blue());
+    fprintf(fptr, "DRAW2D_LINE_COLOR      %3d %3d %3d\n", par->draw2d_line_color.red(), par->draw2d_line_color.green(),
+        par->draw2d_line_color.blue());
     fprintf(fptr, "DRAW2D_LINE_WIDTH      %d\n", par->draw2d_line_width);
     fprintf(fptr, "DRAW2D_LINE_SMOOTH     %d\n", par->draw2d_line_smooth);
-    fprintf(fptr, "DRAW2D_GRID_COLOR      %3d %3d %3d\n", par->draw2d_grid_color.red(), par->draw2d_grid_color.green(), par->draw2d_grid_color.blue());
+    fprintf(fptr, "DRAW2D_GRID_COLOR      %3d %3d %3d\n", par->draw2d_grid_color.red(), par->draw2d_grid_color.green(),
+        par->draw2d_grid_color.blue());
     fprintf(fptr, "DRAW2D_REPRESENTATION  %d\n", (int)par->draw2d_representation);
     fprintf(fptr, "DRAW2D_ABSCISSA        %d\n", par->draw2d_abscissa);
     fprintf(fptr, "DRAW2D_ORDINATE        %d\n", par->draw2d_ordinate);

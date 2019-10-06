@@ -1985,7 +1985,6 @@ void GeodesicView::setSetting()
     drw_view->adjustEmbParams();
 
     opengl->clearEmbed();
-    opengl->setCameraPredefs(enum_camera_xy);
 
     cob_integrator->setCurrentIndex(static_cast<int>(mObject.geodSolverType));
     setGeodSolver(mObject.geodSolverType);

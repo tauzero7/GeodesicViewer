@@ -15,11 +15,10 @@
 Camera::Camera()
 {
     setStandardParams();
+    mQuat = Quaternion(0, 0, 0, 1);
 }
 
-Camera::~Camera()
-{
-}
+Camera::~Camera() {}
 
 void Camera::setStandardParams()
 {
@@ -117,6 +116,11 @@ m4d::vec3 Camera::getVup()
 m4d::vec3 Camera::getRight()
 {
     return mRight;
+}
+
+double Camera::getDistance()
+{
+    return (mPos - mPOI).getNorm();
 }
 
 /*! Set field-of-view in y-direction.
@@ -320,11 +324,6 @@ void Camera::getSphericalEyePos(double& theta, double& phi, double& dist)
     phi = atan2(dp.x(1), dp.x(0));
 }
 
-/*! Move camera along sphere.
- * \param theta : angle theta.
- * \param phi : angle phi.
- * \param dist : radius of sphere.
- */
 void Camera::moveOnSphere(double theta, double phi, double dist)
 {
     if (dist <= 0.0) {
@@ -349,8 +348,112 @@ void Camera::moveOnSphere(double theta, double phi, double dist)
     mVup = mRight ^ mDir;
 }
 
-/*! Call gluLookAt method with internal parameters
- */
+void Camera::rotate(double dazi, double dlat, bool use_local_z)
+{
+    double scaleFactor = 1.0;
+    double al = dlat * scaleFactor;
+    double az = dazi * scaleFactor;
+
+    Quaternion rz;
+    if (use_local_z) {
+        rz.setRot(az, 0.0, 0.0, 1.0);
+    }
+    else {
+        rz.setRot(az, mVup);
+    }
+
+    Quaternion rl;
+    rl.setRot(al, mRight);
+    mQuat = rz * rl * mQuat;
+
+    double dist = getDistance();
+    mPos = m4d::vec3(0, 0, dist);
+
+    Quaternion p(0.0, mPos);
+    p = p | mQuat;
+
+    mPos = p.getVector();
+    mPos += mPOI;
+
+    mQuat.calcMat();
+    mDir = -mQuat.getCamDir();
+    mDir.normalize();
+
+    mRight = mQuat.getCamRight();
+    mRight.normalize();
+
+    mVup = mQuat.getCamVup();
+    mVup.normalize();
+}
+
+void Camera::setSpecialPos(enum_coord_axis pos)
+{
+    double dist = getDistance();
+    Quaternion r1, r2;
+    mQuat = Quaternion(0, 0, 0, 1);
+
+    m4d::vec3 poi = m4d::vec3();
+    mPOI = poi;
+
+    switch (pos) {
+        case enum_coord_axis_xpos: {
+            mPos = poi + m4d::vec3(dist, 0, 0);
+            r1.setRot(-90.0 * DEG_TO_RAD, 0.0, 0.0, 1.0);
+            r2.setRot(90.0 * DEG_TO_RAD, 1.0, 0.0, 0.0);
+            mQuat = mQuat * r1 * r2;
+            setPosRFrame(mPos, m4d::vec3(-1.0, 0.0, 0.0), m4d::vec3(0.0, 0.0, 1.0));
+            break;
+        }
+        case enum_coord_axis_xneg: {
+            mPos = poi + m4d::vec3(dist, 0.0, 0.0);
+            r1.setRot(90.0 * DEG_TO_RAD, 0.0, 0.0, 1.0);
+            r2.setRot(90.0 * DEG_TO_RAD, 1.0, 0.0, 0.0);
+            mQuat = mQuat * r1 * r2;
+            setPosRFrame(mPos, m4d::vec3(1.0, 0.0, 0.0), m4d::vec3(0.0, 0.0, 1.0));
+            break;
+        }
+        case enum_coord_axis_ypos: {
+            mPos = poi + m4d::vec3(0.0, dist, 0.0);
+            r1.setRot(90.0 * DEG_TO_RAD, 1.0, 0.0, 0.0);
+            mQuat = mQuat * r1;
+            setPosRFrame(mPos, m4d::vec3(0.0, -1.0, 0.0), m4d::vec3(0.0, 0.0, 1.0));
+            break;
+        }
+        case enum_coord_axis_yneg: {
+            mPos = poi + m4d::vec3(0.0, dist, 0.0);
+            r1.setRot(-90.0 * DEG_TO_RAD, 1.0, 0.0, 0.0);
+            mQuat = mQuat * r1;
+            setPosRFrame(mPos, m4d::vec3(0.0, 1.0, 0.0), m4d::vec3(0.0, 0.0, 1.0));
+            break;
+        }
+        case enum_coord_axis_zpos: {
+            mPos = poi + m4d::vec3(0.0, -0.0001, dist);
+            r1.setRot(180.0 * DEG_TO_RAD, 0.0, 0.0, 1.0);
+            mQuat = mQuat * r1;
+            setPosRFrame(mPos, m4d::vec3(0.0, 0.0, -1.0), m4d::vec3(0.0, 1.0, 0.0));
+            break;
+        }
+        case enum_coord_axis_zneg: {
+            mPos = poi - m4d::vec3(0.0, -0.0001, dist);
+            r1.setRot(180.0 * DEG_TO_RAD, 0.0, 0.0, 1.0);
+            r2.setRot(180.0 * DEG_TO_RAD, 0.0, 1.0, 0.0);
+            mQuat = mQuat * r1 * r2;
+            setPosRFrame(mPos, m4d::vec3(0.0, 0.0, 1.0), m4d::vec3(0.0, 1.0, 0.0));
+            break;
+        }
+    }
+}
+
+void Camera::setPosRFrame(m4d::vec3 pos, m4d::vec3 dir, m4d::vec3 up)
+{
+    mPos = pos;
+    mDir = dir.getNormalized();
+    mVup = up;
+
+    mRight = (mDir ^ mVup).getNormalized();
+    mVup = mRight ^ mDir;
+}
+
 void Camera::lookAt()
 {
     m4d::vec3 c = mPos + mDir;
@@ -366,7 +469,8 @@ void Camera::lookAtCenter()
     m4d::vec3 normedPos = mPos.getNormalized();
     float fac = 37.0;
 
-    gluLookAt(normedPos.x(0) * fac, normedPos.x(1) * fac, normedPos.x(2) * fac, 0.0, 0.0, 0.0, mVup.x(0), mVup.x(1), mVup.x(2));
+    gluLookAt(normedPos.x(0) * fac, normedPos.x(1) * fac, normedPos.x(2) * fac, 0.0, 0.0, 0.0, mVup.x(0), mVup.x(1),
+        mVup.x(2));
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 }
 
@@ -433,48 +537,48 @@ void Camera::lookAtMV_Left()
 
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     switch (mStereoGlasses) {
-    case enum_stereo_red_blue:
-    case enum_stereo_red_green:
-    case enum_stereo_red_cyan:
-        glColorMask(GL_TRUE, GL_FALSE, GL_FALSE, GL_TRUE);
-        break;
-    case enum_stereo_blue_red:
-        glColorMask(GL_FALSE, GL_FALSE, GL_TRUE, GL_TRUE);
-        break;
-    case enum_stereo_green_red:
-        glColorMask(GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
-        break;
-    case enum_stereo_cyan_red:
-        glColorMask(GL_FALSE, GL_TRUE, GL_TRUE, GL_TRUE);
-        break;
+        case enum_stereo_red_blue:
+        case enum_stereo_red_green:
+        case enum_stereo_red_cyan:
+            glColorMask(GL_TRUE, GL_FALSE, GL_FALSE, GL_TRUE);
+            break;
+        case enum_stereo_blue_red:
+            glColorMask(GL_FALSE, GL_FALSE, GL_TRUE, GL_TRUE);
+            break;
+        case enum_stereo_green_red:
+            glColorMask(GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
+            break;
+        case enum_stereo_cyan_red:
+            glColorMask(GL_FALSE, GL_TRUE, GL_TRUE, GL_TRUE);
+            break;
     }
 
     m4d::vec3 eye = mPos - mRight * 0.5 * mEyeSep;
     m4d::vec3 focus = mPOI;
     switch (mStereoType) {
-    default:
-    case enum_stereo_off_axis: {
-        double focallength = (mPos - mPOI).getNorm();
-        double wd2 = mZnear * tan(mFovY * DEG_TO_RAD * 0.5);
-        double ndfl = mZnear / focallength;
+        default:
+        case enum_stereo_off_axis: {
+            double focallength = (mPos - mPOI).getNorm();
+            double wd2 = mZnear * tan(mFovY * DEG_TO_RAD * 0.5);
+            double ndfl = mZnear / focallength;
 
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        double left = -mAspect * wd2 - 0.5 * mEyeSep * ndfl;
-        double right = mAspect * wd2 - 0.5 * mEyeSep * ndfl;
-        double top = wd2;
-        double bottom = -wd2;
-        glFrustum(left, right, bottom, top, mZnear, mZfar);
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            double left = -mAspect * wd2 - 0.5 * mEyeSep * ndfl;
+            double right = mAspect * wd2 - 0.5 * mEyeSep * ndfl;
+            double top = wd2;
+            double bottom = -wd2;
+            glFrustum(left, right, bottom, top, mZnear, mZfar);
 
-        focus = focus - mRight * 0.5 * mEyeSep + mDir;
-        break;
-    }
-    case enum_stereo_parallel: {
-        focus = focus - mRight * 0.5 * mEyeSep;
-        break;
-    }
-    case enum_stereo_toe_in:
-        break;
+            focus = focus - mRight * 0.5 * mEyeSep + mDir;
+            break;
+        }
+        case enum_stereo_parallel: {
+            focus = focus - mRight * 0.5 * mEyeSep;
+            break;
+        }
+        case enum_stereo_toe_in:
+            break;
     }
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -490,48 +594,48 @@ void Camera::lookAtMV_Right()
 
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     switch (mStereoGlasses) {
-    case enum_stereo_red_blue:
-        glColorMask(GL_FALSE, GL_FALSE, GL_TRUE, GL_TRUE);
-        break;
-    case enum_stereo_red_green:
-        glColorMask(GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
-        break;
-    case enum_stereo_red_cyan:
-        glColorMask(GL_FALSE, GL_TRUE, GL_TRUE, GL_TRUE);
-        break;
-    case enum_stereo_blue_red:
-    case enum_stereo_green_red:
-    case enum_stereo_cyan_red:
-        glColorMask(GL_TRUE, GL_FALSE, GL_FALSE, GL_TRUE);
-        break;
+        case enum_stereo_red_blue:
+            glColorMask(GL_FALSE, GL_FALSE, GL_TRUE, GL_TRUE);
+            break;
+        case enum_stereo_red_green:
+            glColorMask(GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
+            break;
+        case enum_stereo_red_cyan:
+            glColorMask(GL_FALSE, GL_TRUE, GL_TRUE, GL_TRUE);
+            break;
+        case enum_stereo_blue_red:
+        case enum_stereo_green_red:
+        case enum_stereo_cyan_red:
+            glColorMask(GL_TRUE, GL_FALSE, GL_FALSE, GL_TRUE);
+            break;
     }
 
     m4d::vec3 eye = mPos + mRight * 0.5 * mEyeSep;
     m4d::vec3 focus = mPOI;
     switch (mStereoType) {
-    default:
-    case enum_stereo_off_axis: {
-        double focallength = (mPos - mPOI).getNorm();
-        double wd2 = mZnear * tan(mFovY * DEG_TO_RAD * 0.5);
-        double ndfl = mZnear / focallength;
+        default:
+        case enum_stereo_off_axis: {
+            double focallength = (mPos - mPOI).getNorm();
+            double wd2 = mZnear * tan(mFovY * DEG_TO_RAD * 0.5);
+            double ndfl = mZnear / focallength;
 
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        double left = -mAspect * wd2 + 0.5 * mEyeSep * ndfl;
-        double right = mAspect * wd2 + 0.5 * mEyeSep * ndfl;
-        double top = wd2;
-        double bottom = -wd2;
-        glFrustum(left, right, bottom, top, mZnear, mZfar);
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            double left = -mAspect * wd2 + 0.5 * mEyeSep * ndfl;
+            double right = mAspect * wd2 + 0.5 * mEyeSep * ndfl;
+            double top = wd2;
+            double bottom = -wd2;
+            glFrustum(left, right, bottom, top, mZnear, mZfar);
 
-        focus = focus + mRight * 0.5 * mEyeSep + mDir;
-        break;
-    }
-    case enum_stereo_parallel: {
-        focus = focus + mRight * 0.5 * mEyeSep;
-        break;
-    }
-    case enum_stereo_toe_in:
-        break;
+            focus = focus + mRight * 0.5 * mEyeSep + mDir;
+            break;
+        }
+        case enum_stereo_parallel: {
+            focus = focus + mRight * 0.5 * mEyeSep;
+            break;
+        }
+        case enum_stereo_toe_in:
+            break;
     }
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();

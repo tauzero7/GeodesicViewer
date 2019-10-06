@@ -64,8 +64,9 @@ public:
 
     void getWinSize(int& width, int& height);
 
-    Q_INVOKABLE void center();
-    Q_INVOKABLE void reset();
+    void center();
+    void reset();
+    void makeUniform();
 
 signals:
     void scalingChanged();
@@ -94,11 +95,12 @@ private:
 
     int mWinSize[2];
     double mDPIFactor[2];
-    enum_mouse_handle mMouseHandle;
+
     enum_draw_style mDrawStyle;
 
     QPoint mLastPos;
     int mKeyPressed;
+    Qt::KeyboardModifiers mModifiers;
     Qt::MouseButton mButtonPressed;
 
     QFont mTicksFont;

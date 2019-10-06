@@ -32,7 +32,7 @@ QGroupBox::title {
     padding-right: 0px;
     padding-top: 0px;    
     font-family: Monospace;
-    color: #c6c6ff;
+    color: #abcdff;
 }
 
 QLabel {
@@ -41,7 +41,7 @@ QLabel {
 }
 
 QLabel::disabled {
-    color: darkgray;
+    color: #a66;
 }
 
 QLCDNumber {
@@ -59,12 +59,17 @@ QLineEdit {
 } 
 
 QLineEdit[readOnly="true"] {
-    color: #555;
+    color: #a55;
+    background-color: black;
 }
 
 DoubleEdit {
     font-size: 10pt;
-    color: black;
+    color: white;
+}
+
+DoubleEdit::disabled {
+    color: #a55;
 }
 
 QMenu::separator {

@@ -1,19 +1,21 @@
 
-## This path should point to the location
-## where you have copied the Motion4D library.
-M4D_DIR   = $$TOP_DIR/../libMotion4D/
+## ------------------------------------------------
+##  Motion4D library
+## ------------------------------------------------
+M4D_DIR = $$TOP_DIR/../libMotion4D/
 
-M4D_SRC_DIR  = $$M4D_DIR/src
-M4D_LIB_DIR  = $$M4D_DIR/lib
+M4D_SRC_DIR = $$M4D_DIR/src
+M4D_LIB_DIR = $$M4D_DIR/lib
 
-## If your Gnu Scientific Library is not
-## installed in the standard paths, please
-## fix this variable accordingly.
-GSL_DIR  = 
+## ------------------------------------------------
+##  GSL - Gnu Scientific Library
+## ------------------------------------------------
+GSL_DIR = 
+GSL_LIB_DIR = $$GSL_DIR/lib
 
-GSL_LIB_DIR  = $$GSL_DIR/lib
-
-## Freetype available
+## ------------------------------------------------
+##  Freetype
+## ------------------------------------------------
 DEFINES += HAVE_FREETYPE
 FREETYPE_DIR =  
 FREETYPE_LIB_DIR = $$FREETYPE_DIR/lib

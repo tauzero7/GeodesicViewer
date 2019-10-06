@@ -28,7 +28,7 @@ GeodView::~GeodView() {}
 void GeodView::resetAll()
 {
     cob_geod_type->setCurrentIndex(0);
-    led_geod_vel->setValueAndStep(0.99, 0.01);
+    led_geod_vel->setValueAndStep(0.5, 0.01);
     led_geod_vel->setEnabled(false);
     led_geod_vel_step->setValueAndStep(0.01, 0.001);
     led_geod_vel_step->setEnabled(false);
@@ -392,7 +392,7 @@ void GeodView::initElements()
     }
 
     lab_geod_vel = new QLabel(tr("velocity ") + QString(mGreekLetter.toChar("beta")));
-    led_geod_vel = new DoubleEdit(DEF_PREC_VELOCITY, 0.99, 0.01);
+    led_geod_vel = new DoubleEdit(DEF_PREC_VELOCITY, 0.5, 0.01);
     led_geod_vel->setEnabled(false);
 
     lab_geod_vel_step = new QLabel(tr("step"));

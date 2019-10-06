@@ -19,7 +19,7 @@ DoubleEdit::DoubleEdit(int prec, double value, double step, QWidget* parent)
     mMin = -std::numeric_limits<double>::max();
     mMax = std::numeric_limits<double>::max();
 
-    setPalette(QPalette(QColor(DEF_DOUBLE_EDIT_COLOR)));
+    // setPalette(QPalette(QColor(DEF_DOUBLE_EDIT_COLOR)));
 }
 
 DoubleEdit::~DoubleEdit() {}

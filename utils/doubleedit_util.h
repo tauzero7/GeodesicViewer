@@ -20,14 +20,14 @@
 /**
  * @brief The DoubleEdit class
  */
-class DoubleEdit : public QLineEdit {
+class DoubleEdit : public QLineEdit
+{
     Q_OBJECT
 
 public:
     DoubleEdit(int prec, double value = 0.0, double step = 0.01, QWidget* parent = nullptr);
     ~DoubleEdit();
 
-    // --------- public methods -----------
 public:
     void setValue(double value);
     double getValue();
@@ -41,16 +41,13 @@ public:
     void setRange(double min, double max);
     void getRange(double& min, double& max);
 
-    // --------- public slots -----------
 public slots:
     void slot_setValue();
     void slot_setStep();
 
-    // --------- protected methods -----------
 protected:
     virtual void wheelEvent(QWheelEvent* event);
 
-    // ------ protected attributes --------
 protected:
     int mPrecision;
     double mStep;

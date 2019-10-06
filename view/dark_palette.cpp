@@ -19,7 +19,7 @@ DarkPalette::DarkPalette()
     setColor(QPalette::Button, QColor(53, 53, 53));
     setColor(QPalette::ButtonText, Qt::white);
     setColor(QPalette::BrightText, Qt::red);
-    setColor(QPalette::Link, QColor(42, 130, 218));
+    setColor(QPalette::Link, QColor(120, 120, 120));
     setColor(QPalette::Highlight, QColor(0xc6, 0xc6, 0xff));
     setColor(QPalette::HighlightedText, Qt::black);
 }

@@ -18,12 +18,18 @@ OpenGL3dModel::OpenGL3dModel(struct_params* par, QWidget* parent)
     : QOpenGLWidget(parent)
 {
     mParams = par;
+    mDPIFactor[0] = mDPIFactor[1] = 1.0;
+    mLineSmooth = 0;
+    mEmbNumElems = 0;
+    mGLSLsupported = false;
+    shader = nullptr;
 
     mCamera.setSize(DEF_OPENGL_WIDTH, DEF_OPENGL_HEIGHT);
     mCamera.setEyePos(m4d::vec3(&mParams->opengl_eye_pos[0]));
     mCamera.setPOI(m4d::vec3(&mParams->opengl_eye_poi[0]));
     mCamera.setVup(m4d::vec3(&mParams->opengl_eye_vup[0]));
     mCamera.setFovY(mParams->opengl_fov);
+    mCamera.setSpecialPos(enum_coord_axis_zpos);
 
     mButtonPressed = Qt::NoButton;
     setFocusPolicy(Qt::ClickFocus);
@@ -32,10 +38,9 @@ OpenGL3dModel::OpenGL3dModel(struct_params* par, QWidget* parent)
     mBGcolor = mParams->opengl_bg_color;
     mFGcolor = mParams->opengl_line_color;
 
-    mEmbColor = Qt::lightGray;
+    mEmbColor = mParams->opengl_emb_color;
     mLineWidth = mParams->opengl_line_width;
 
-    mMouseHandle = enum_mouse_rotate;
     mProjection = static_cast<enum_projection>(mParams->opengl_projection);
     mDrawStyle = enum_draw_lines;
 
@@ -90,8 +95,6 @@ OpenGL3dModel::OpenGL3dModel(struct_params* par, QWidget* parent)
     mNameOfZaxis = QString("z");
 }
 
-/*! Standard destructor.
- */
 OpenGL3dModel::~OpenGL3dModel()
 {
     if (mQuadricAxis != nullptr) {
@@ -104,12 +107,6 @@ OpenGL3dModel::~OpenGL3dModel()
     mQuadricDisk = nullptr;
 }
 
-// ************************************ public methods ********************************
-/*! Set geodesic points.
- *  \param  data : pointer to object.
- *  \param  dtype : type of drawing.
- *  \param  update : update gl.
- */
 void OpenGL3dModel::setPoints(m4d::enum_draw_type dtype, bool needUpdate)
 {
     SafeDelete<GLfloat>(mVerts);
@@ -177,12 +174,13 @@ void OpenGL3dModel::setSachsAxes(bool needUpdate)
     m4d::vec4 tp;
     m4d::vec4 d1, d2, s1, s2;
 
-    double f, l1a, l1b, l2a, l2b;
     int n1 = 0, n2 = 0;
     while (n1 < mNumSachsVerts1 && n2 < mNumSachsVerts2 && n1 < mv) {
+        double f, l1a = 0.0, l1b = 0.0, l2a = 0.0, l2b = 0.0;
         size_t ni1 = static_cast<size_t>(n1);
         size_t ni2 = static_cast<size_t>(n2);
-        // Umparametrisierung
+
+        // reparametrization
         f = mObject.sachs1[ni1].x(0) / mObject.dirs[ni1].x(0);
         s1 = mObject.sachs1[ni1] - f * mObject.dirs[ni1];
         f = mObject.sachs2[ni2].x(0) / mObject.dirs[ni2].x(0);
@@ -331,11 +329,6 @@ void OpenGL3dModel::clearEmbed()
     update();
 }
 
-void OpenGL3dModel::setMouseHandle(enum_mouse_handle handle)
-{
-    mMouseHandle = handle;
-}
-
 void OpenGL3dModel::setProjection(enum_projection proj)
 {
     mProjection = proj;
@@ -421,49 +414,6 @@ void OpenGL3dModel::setCameraSphere(double theta, double phi, double dist)
 void OpenGL3dModel::getCameraSphere(double& theta, double& phi, double& dist)
 {
     mCamera.getSphericalEyePos(theta, phi, dist);
-}
-
-void OpenGL3dModel::setCameraPredefs(enum_camera_predefs type)
-{
-    m4d::vec3 eye = mCamera.getEyePos();
-    m4d::vec3 dir;
-    m4d::vec3 vup;
-
-    double dist = eye.getNorm();
-    switch (type) {
-        case enum_camera_xy:
-            eye = m4d::vec3(0.0, 0.0, dist);
-            dir = m4d::vec3(0.0, 0.0, -1.0);
-            vup = m4d::vec3(0.0, 1.0, 0.0);
-            break;
-        case enum_camera_zx:
-            eye = m4d::vec3(0.0, dist, 0.0);
-            dir = m4d::vec3(0.0, -1.0, 0.0);
-            vup = m4d::vec3(1.0, 0.0, 0.0);
-            break;
-        case enum_camera_yz:
-            eye = m4d::vec3(dist, 0.0, 0.0);
-            dir = m4d::vec3(-1.0, 0.0, 0.0);
-            vup = m4d::vec3(0.0, 0.0, 1.0);
-            break;
-        case enum_camera_custom:
-            double sr3 = 1.0 / sqrt(3.0);
-            eye = dist * sr3 * m4d::vec3(1.0, 1.0, 1.0);
-            dir = sr3 * m4d::vec3(-1.0, -1.0, -1.0);
-            vup = sr3 * m4d::vec3(-1.0, -1.0, 1.0);
-            break;
-    }
-    mCamera.setEyePos(eye);
-    mCamera.setDir(dir);
-    mCamera.setVup(vup);
-    mCamera.setPOI(m4d::vec3());
-
-    mParams->opengl_eye_pos = eye;
-    mParams->opengl_eye_dir = dir;
-    mParams->opengl_eye_vup = vup;
-    mParams->opengl_eye_poi = m4d::vec3(0.0, 0.0, 0.0);
-
-    update();
 }
 
 void OpenGL3dModel::clearAllObjects()
@@ -797,9 +747,9 @@ void OpenGL3dModel::paintGL_mono()
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_white);
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_white);
 
-    /* -----------------------
-     *   draw embedding
-     * ----------------------- */
+    // -----------------------
+    //   draw embedding
+    // -----------------------
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     if (mEmbVerts != nullptr && mEmbIndices != nullptr) {
@@ -887,8 +837,8 @@ void OpenGL3dModel::paintGL_mono()
     shader->setUniformValue("fogFactor", static_cast<float>(-mFogDensity * mFogDensity * 1.442695));
     shader->setUniformValue("eyePos", light_position[0], light_position[1], light_position[2]);
 
-    int num1, num2;
     if (mNumSachsVerts1 > 0) {
+        int num1, num2;
         glBegin(GL_QUAD_STRIP);
         for (int i = 0; i < mShowNumVerts; i++) {
             num1 = 6 * i;
@@ -1055,33 +1005,40 @@ void OpenGL3dModel::resizeGL(int width, int height)
 void OpenGL3dModel::keyPressEvent(QKeyEvent* event)
 {
     mKeyPressed = event->key();
+    mModifiers = event->modifiers();
 
     if (mKeyPressed == Qt::Key_I) {
-        mCamera.setEyePos(m4d::vec3(DEF_INIT_EYE_POS_X, DEF_INIT_EYE_POS_Y, DEF_INIT_EYE_POS_Z));
-        mCamera.setPOI(m4d::vec3(DEF_INIT_POI_X, DEF_INIT_POI_Y, DEF_INIT_POI_Z));
-        mCamera.setVup(m4d::vec3(DEF_INIT_VUP_X, DEF_INIT_VUP_Y, DEF_INIT_VUP_Z));
-        mCamera.setFovY(DEF_INIT_FOV);
+        //        mCamera.setEyePos(m4d::vec3(DEF_INIT_EYE_POS_X, DEF_INIT_EYE_POS_Y, DEF_INIT_EYE_POS_Z));
+        //        mCamera.setPOI(m4d::vec3(DEF_INIT_POI_X, DEF_INIT_POI_Y, DEF_INIT_POI_Z));
+        //        mCamera.setVup(m4d::vec3(DEF_INIT_VUP_X, DEF_INIT_VUP_Y, DEF_INIT_VUP_Z));
+        //        mCamera.setFovY(DEF_INIT_FOV);
         emit cameraMoved();
     }
     else if (mKeyPressed == Qt::Key_X) {
-        m4d::vec3 pos = mCamera.getEyePos();
-        mCamera.setEyePos(m4d::vec3(pos.getNorm(), 0.0, 0.0));
-        mCamera.setPOI(m4d::vec3(0.0, 0.0, 0.0));
-        mCamera.setVup(m4d::vec3(0.0, 0.0, 1.0));
+        if (mModifiers == Qt::ShiftModifier) {
+            mCamera.setSpecialPos(enum_coord_axis_xneg);
+        }
+        else {
+            mCamera.setSpecialPos(enum_coord_axis_xpos);
+        }
         emit cameraMoved();
     }
     else if (mKeyPressed == Qt::Key_Y) {
-        m4d::vec3 pos = mCamera.getEyePos();
-        mCamera.setEyePos(m4d::vec3(0.0, pos.getNorm(), 0.0));
-        mCamera.setPOI(m4d::vec3(0.0, 0.0, 0.0));
-        mCamera.setVup(m4d::vec3(1.0, 0.0, 0.0));
+        if (mModifiers == Qt::ShiftModifier) {
+            mCamera.setSpecialPos(enum_coord_axis_yneg);
+        }
+        else {
+            mCamera.setSpecialPos(enum_coord_axis_ypos);
+        }
         emit cameraMoved();
     }
     else if (mKeyPressed == Qt::Key_Z) {
-        m4d::vec3 pos = mCamera.getEyePos();
-        mCamera.setEyePos(m4d::vec3(0.0, 0.0, pos.getNorm()));
-        mCamera.setPOI(m4d::vec3(0.0, 0.0, 0.0));
-        mCamera.setVup(m4d::vec3(0.0, 1.0, 0.0));
+        if (mModifiers == Qt::ShiftModifier) {
+            mCamera.setSpecialPos(enum_coord_axis_zneg);
+        }
+        else {
+            mCamera.setSpecialPos(enum_coord_axis_zpos);
+        }
         emit cameraMoved();
     }
     else if (mKeyPressed == Qt::Key_Up) {
@@ -1137,6 +1094,7 @@ void OpenGL3dModel::keyPressEvent(QKeyEvent* event)
 void OpenGL3dModel::keyReleaseEvent(QKeyEvent* event)
 {
     mKeyPressed = Qt::Key_No;
+    mModifiers = Qt::NoModifier;
     event->ignore();
 }
 
@@ -1163,140 +1121,34 @@ void OpenGL3dModel::mouseMoveEvent(QMouseEvent* event)
     QPoint dxy = cp - mLastPos;
     mLastPos = cp;
 
-    switch (mMouseHandle) {
-        // ------------------------------
-        //      rotate local
-        // ------------------------------
-        case enum_mouse_rotate: {
-            if (mButtonPressed == DEF_CAM_ROT_LOCAL_VUP) {
-                double angle = DEF_CAM_ROT_LOCAL_VUP_SCALE * M_PI * DEF_CAM_ROT_LOCAL_VUP_XY;
-                mCamera.fixRotAroundVup(angle);
-            }
-            else if (mButtonPressed == DEF_CAM_ROT_LOCAL_RIGHT) {
-                double angle = DEF_CAM_ROT_LOCAL_RIGHT_SCALE * M_PI * DEF_CAM_ROT_LOCAL_RIGHT_XY;
-                mCamera.fixRotAroundRight(angle);
-            }
-            else if (mButtonPressed == DEF_CAM_ROT_LOCAL_DIR) {
-                double angle = DEF_CAM_ROT_LOCAL_DIR_SCALE * M_PI * DEF_CAM_ROT_LOCAL_DIR_XY;
-                mCamera.fixRotAroundDir(angle);
-            }
-            emit cameraMoved();
-            break;
+    if (mButtonPressed == Qt::LeftButton) {
+        bool use_local_z = !(mModifiers == Qt::ControlModifier);
+        mCamera.rotate(-dxy.x() * 0.01, -dxy.y() * 0.01, use_local_z);
+        emit cameraMoved();
+    }
+    else if (mButtonPressed == Qt::MidButton) {
+        m4d::vec3 pos = mCamera.getEyePos();
+        m4d::vec3 poi = mCamera.getPOI();
+        double fac = 0.001 * mCamera.getDistance();
+
+        if (mModifiers == Qt::ControlModifier) {
+            pos = pos + fac * (dxy.y() * mCamera.getVup() - dxy.x() * mCamera.getRight());
+            poi = poi + fac * (dxy.y() * mCamera.getVup() - dxy.x() * mCamera.getRight());
         }
-        // ------------------------------
-        //      rotate global
-        // ------------------------------
-        case enum_mouse_rotate_global: {
-            if (mButtonPressed == DEF_CAM_ROT_GLOBAL_Z) {
-                double angle = DEF_CAM_ROT_GLOBAL_Z_SCALE * M_PI * DEF_CAM_ROT_GLOBAL_Z_XY;
-                mCamera.fixRotAroundZ(angle);
-            }
-            else if (mButtonPressed == DEF_CAM_ROT_GLOBAL_Y) {
-                double angle = DEF_CAM_ROT_GLOBAL_Y_SCALE * M_PI * DEF_CAM_ROT_GLOBAL_Y_XY;
-                mCamera.fixRotAroundY(angle);
-            }
-            else if (mButtonPressed == DEF_CAM_ROT_GLOBAL_X) {
-                double angle = DEF_CAM_ROT_GLOBAL_X_SCALE * M_PI * DEF_CAM_ROT_GLOBAL_X_XY;
-                mCamera.fixRotAroundX(angle);
-            }
-            emit cameraMoved();
-            break;
+        else {
+            pos.setX(2, pos.x(2) + dxy.y() * fac);
+            poi.setX(2, poi.x(2) + dxy.y() * fac);
         }
-        // ------------------------------
-        //      rotate on sphere
-        // ------------------------------
-        case enum_mouse_rotate_sphere: {
-            double theta, phi, dist;
-            mCamera.getSphericalEyePos(theta, phi, dist);
-            if (mButtonPressed == DEF_CAM_ROT_SPHERE_THETA_PHI) {
-                theta -= dxy.y() * DEF_CAM_ROT_SPHERE_TP_SCALE;
-                phi -= dxy.x() * DEF_CAM_ROT_SPHERE_TP_SCALE;
-                mCamera.moveOnSphere(theta, phi, dist);
-            }
-            else if (mButtonPressed == DEF_CAM_ROT_SPHERE_DISTANCE) {
-                dist += dxy.y() * DEF_CAM_ROT_SPHERE_DIST_SCALE;
-                mCamera.moveOnSphere(theta, phi, dist);
-            }
-            else if (mButtonPressed == Qt::RightButton) {
-                dist -= dxy.y() * DEF_CAM_ROT_SPHERE_DIST_SCALE * 0.4 * dist;
-                mCamera.moveOnSphere(theta, phi, dist);
-            }
-            emit cameraMoved();
-            break;
-        }
-        // ------------------------------
-        //      move local
-        // ------------------------------
-        case enum_mouse_camera_dist: {
-            m4d::vec3 pos = mCamera.getEyePos();
-            pos = pos + 0.05 * dxy.y() * mCamera.getDir();
-            mCamera.setEyePos(pos);
-            emit cameraMoved();
-            break;
-        }
-        // ------------------------------
-        //      move local
-        // ------------------------------
-        case enum_mouse_move_local: {
-            if (mButtonPressed == Qt::LeftButton) {
-                m4d::vec3 pos = mCamera.getEyePos();
-                m4d::vec3 poi = mCamera.getPOI();
-                pos = pos + 0.01 * (dxy.y() * mCamera.getVup() - dxy.x() * mCamera.getRight());
-                poi = poi + 0.01 * (dxy.y() * mCamera.getVup() - dxy.x() * mCamera.getRight());
-                mCamera.setEyePos(pos);
-                mCamera.setPOI(poi);
-            }
-            else if (mButtonPressed == Qt::MidButton) {
-                m4d::vec3 pos = mCamera.getEyePos();
-                m4d::vec3 poi = mCamera.getPOI();
-                pos = pos + 0.05 * dxy.y() * mCamera.getDir();
-                poi = poi + 0.05 * dxy.y() * mCamera.getDir();
-                mCamera.setEyePos(pos);
-                mCamera.setPOI(poi);
-            }
-            emit cameraMoved();
-            break;
-        }
-        // ------------------------------
-        //      move global
-        // ------------------------------
-        case enum_mouse_move_global: {
-            if (mButtonPressed == Qt::LeftButton) {
-                m4d::vec3 pos = mCamera.getEyePos();
-                m4d::vec3 poi = mCamera.getPOI();
-                pos = pos + 0.01 * m4d::vec3(-dxy.x(), dxy.y(), 0.0);
-                poi = poi + 0.01 * m4d::vec3(-dxy.x(), dxy.y(), 0.0);
-                mCamera.setEyePos(pos);
-                mCamera.setPOI(poi);
-            }
-            else if (mButtonPressed == Qt::MidButton) {
-                m4d::vec3 pos = mCamera.getEyePos();
-                m4d::vec3 poi = mCamera.getPOI();
-                pos = pos + 0.01 * m4d::vec3(0.0, 0.0, dxy.y());
-                poi = poi + 0.01 * m4d::vec3(0.0, 0.0, dxy.y());
-                mCamera.setEyePos(pos);
-                mCamera.setPOI(poi);
-            }
-            emit cameraMoved();
-            break;
-        }
-        // ------------------------------
-        //      move poi
-        // ------------------------------
-        case enum_mouse_move_poi: {
-            if (mButtonPressed == Qt::LeftButton) {
-                m4d::vec3 poi = mCamera.getPOI();
-                poi = poi + 0.01 * m4d::vec3(-dxy.x(), dxy.y(), 0.0);
-                mCamera.setPOI(poi);
-            }
-            else if (mButtonPressed == Qt::MidButton) {
-                m4d::vec3 poi = mCamera.getPOI();
-                poi = poi + 0.01 * m4d::vec3(0.0, 0.0, dxy.y());
-                mCamera.setPOI(poi);
-            }
-            emit cameraMoved();
-            break;
-        }
+
+        mCamera.setEyePos(pos);
+        mCamera.setPOI(poi);
+        emit cameraMoved();
+    }
+    else if (mButtonPressed == Qt::RightButton) {
+        m4d::vec3 pos = mCamera.getEyePos();
+        pos = pos + 0.01 * dxy.y() * mCamera.getDistance() * mCamera.getDir();
+        mCamera.setEyePos(pos);
+        emit cameraMoved();
     }
 
     update();

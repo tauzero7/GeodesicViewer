@@ -21,7 +21,7 @@ DrawView::DrawView(
     mOpenGL = opengl;
     mDraw = draw;
 
-    assert(oglJacobi != NULL);
+    assert(oglJacobi != nullptr);
     mOglJacobi = oglJacobi;
 
     mParams = par;
@@ -41,9 +41,6 @@ DrawView::~DrawView() {}
 
 void DrawView::resetAll()
 {
-    cob_mousehandle->setCurrentIndex(0);
-    mOpenGL->setMouseHandle(static_cast<enum_mouse_handle>(0));
-
     led_draw2d_x_min->setValueAndStep(DEF_DRAW2D_X_INIT_MIN, DEF_DRAW2D_X_STEP);
     led_draw2d_y_min->setValueAndStep(DEF_DRAW2D_Y_INIT_MIN, DEF_DRAW2D_Y_STEP);
     led_draw2d_x_max->setValueAndStep(DEF_DRAW2D_X_INIT_MAX, DEF_DRAW2D_X_STEP);
@@ -66,7 +63,6 @@ void DrawView::resetAll()
     cob_projection->setCurrentIndex(mParams->opengl_projection);
     int dt = cob_drawtype3d->findText(m4d::stl_draw_type[static_cast<int>(mParams->opengl_draw3d_type)]);
     cob_drawtype3d->setCurrentIndex(dt);
-    cob_view->setCurrentIndex(0);
 
     led_fov->setValueAndStep(mParams->opengl_fov, mParams->opengl_fov_step);
     m4d::vec3 eye = mParams->opengl_eye_pos;
@@ -151,7 +147,7 @@ void DrawView::updateParams()
     // if (mParams->draw2d_representation>=0 && mParams->draw2d_representation<cob_drawtype->count())
     //  cob_drawtype->setCurrentIndex(mParams->draw2d_representation);
 
-    if (mParams->draw2d_representation >= 0 && mParams->draw2d_representation < m4d::NUM_ENUM_DRAW_TYPE) {
+    if (mParams->draw2d_representation < m4d::NUM_ENUM_DRAW_TYPE) {
         for (int i = 0; i < cob_drawtype->count(); i++) {
             // std::cerr << cob_drawtype->itemText(i).toStdString() << " " <<
             // m4d::stl_draw_type[mParams->draw2d_representation] << std::endl;
@@ -228,7 +224,7 @@ void DrawView::updateParams()
         std::map<std::string, double>::iterator mapItr = mParams->opengl_emb_params.begin();
         while (mapItr != mParams->opengl_emb_params.end()) {
             mObject.currMetric->setEmbeddingParam(mapItr->first.c_str(), mapItr->second);
-            mapItr++;
+            ++mapItr;
         }
     }
     adjustEmbParams();
@@ -391,15 +387,12 @@ void DrawView::adjustEmbParams()
 
 void DrawView::adjustLastPoint(unsigned int num)
 {
-    m4d::vec4 last_point;
-    double last_affine;
-
     if (mObject.points.size() == 0) {
         return;
     }
 
     if (num < mObject.points.size()) {
-        last_point = mObject.points[num];
+        m4d::vec4 last_point = mObject.points[num];
         if (num >= mObject.maxNumPoints) {
             last_point = mObject.points[mObject.maxNumPoints - 1];
         }
@@ -410,7 +403,7 @@ void DrawView::adjustLastPoint(unsigned int num)
     }
 
     if (num < mObject.lambda.size()) {
-        last_affine = mObject.lambda[num];
+        double last_affine = mObject.lambda[num];
         if (num >= mObject.maxNumPoints) {
             last_affine = mObject.lambda[mObject.maxNumPoints - 1];
         }
@@ -429,7 +422,7 @@ int DrawView::getDrawType3DIndex()
     return cob_drawtype3d->currentIndex();
 }
 
-std::string DrawView ::getDrawTypeName()
+std::string DrawView::getDrawTypeName()
 {
     return cob_drawtype->currentText().toStdString();
 }
@@ -698,12 +691,6 @@ void DrawView::slot_set2dLineWidth()
     mDraw->setLineWidth(mParams->draw2d_line_width);
 }
 
-void DrawView::slot_setMouseHandle()
-{
-    enum_mouse_handle handle = enum_mouse_handle(cob_mousehandle->currentIndex());
-    mOpenGL->setMouseHandle(handle);
-}
-
 void DrawView::slot_setProjection()
 {
     enum_projection proj = enum_projection(cob_projection->currentIndex());
@@ -740,13 +727,6 @@ void DrawView::slot_setCameraPoi()
 {
     mParams->opengl_eye_poi = m4d::vec3(led_poi_x->getValue(), led_poi_y->getValue(), led_poi_z->getValue());
     mOpenGL->setCameraPoi(mParams->opengl_eye_poi);
-}
-
-void DrawView::slot_setCameraPredefs()
-{
-    enum_camera_predefs type = enum_camera_predefs(cob_view->currentIndex());
-    mOpenGL->setCameraPredefs(type);
-    slot_adjustCamera();
 }
 
 void DrawView::slot_resetPoi()
@@ -1104,10 +1084,6 @@ void DrawView::initElements()
     cob_projection->addItems(stl_projection);
     cob_projection->setCurrentIndex(mParams->opengl_projection);
 
-    lab_view = new QLabel("view");
-    cob_view = new QComboBox();
-    cob_view->addItems(stl_camera_predefs);
-
     lab_fov = new QLabel("FoV");
     led_fov = new DoubleEdit(DEF_PREC_DRAW, mParams->opengl_fov, mParams->opengl_fov_step);
     led_fov->setRange(1.0, 170.0);
@@ -1303,13 +1279,6 @@ void DrawView::initElements()
     lab_emb_color = new QLabel("Color");
     pub_emb_color = new QPushButton();
     pub_emb_color->setPalette(QPalette(mParams->opengl_emb_color));
-
-    // ---------------------------------
-    //    mouse handle
-    // ---------------------------------
-    lab_mousehandle = new QLabel("mouse");
-    cob_mousehandle = new QComboBox();
-    cob_mousehandle->addItems(stl_mouse_handle);
 }
 
 void DrawView::initGUI()
@@ -1369,16 +1338,6 @@ void DrawView::initGUI()
     // ---------------------------------
     //    3-D
     // ---------------------------------
-    QGridLayout* layout_3d = new QGridLayout();
-    layout_3d->addWidget(lab_mousehandle, 0, 0);
-    layout_3d->addWidget(cob_mousehandle, 0, 1);
-    layout_3d->addWidget(lab_projection, 0, 2);
-    layout_3d->addWidget(cob_projection, 0, 3);
-    layout_3d->addWidget(lab_drawtype3d, 1, 0);
-    layout_3d->addWidget(cob_drawtype3d, 1, 1);
-    layout_3d->addWidget(lab_view, 1, 2);
-    layout_3d->addWidget(cob_view, 1, 3);
-
     QGroupBox* grb_3d_col = new QGroupBox("Colors and line props");
     QHBoxLayout* layout_3d_line = new QHBoxLayout();
     layout_3d_line->addWidget(lab_fgcolor);
@@ -1414,8 +1373,13 @@ void DrawView::initGUI()
     layout_3d_pos->addWidget(pub_reset_poi, 3, 3);
     grb_3d_pos->setLayout(layout_3d_pos);
 
-    layout_3d->addWidget(grb_3d_pos, 2, 0, 1, 4);
-    layout_3d->addWidget(grb_3d_col, 3, 0, 1, 4);
+    QGridLayout* layout_3d = new QGridLayout();
+    layout_3d->addWidget(lab_drawtype3d, 0, 0);
+    layout_3d->addWidget(cob_drawtype3d, 0, 1);
+    layout_3d->addWidget(lab_projection, 0, 2);
+    layout_3d->addWidget(cob_projection, 0, 3);
+    layout_3d->addWidget(grb_3d_pos, 1, 0, 1, 4);
+    layout_3d->addWidget(grb_3d_col, 2, 0, 1, 4);
     wgt_draw_3d->setLayout(layout_3d);
 
     // ---------------------------------
@@ -1569,9 +1533,7 @@ void DrawView::initControl()
     connect(pub_draw2d_gridcolor, SIGNAL(pressed()), this, SLOT(slot_set2dGridColor()));
     connect(spb_draw2d_linewidth, SIGNAL(valueChanged(int)), SLOT(slot_set2dLineWidth()));
 
-    connect(cob_mousehandle, SIGNAL(activated(int)), this, SLOT(slot_setMouseHandle()));
     connect(cob_projection, SIGNAL(activated(int)), this, SLOT(slot_setProjection()));
-    connect(cob_view, SIGNAL(activated(int)), this, SLOT(slot_setCameraPredefs()));
 
     connect(led_fov, SIGNAL(editingFinished()), this, SLOT(slot_setFieldOfView()));
 
@@ -1639,7 +1601,6 @@ void DrawView::initStatusTips()
     led_draw2d_currX->setStatusTip(tr("Current cursor position (abscissa)."));
     led_draw2d_currY->setStatusTip(tr("Current cursor position (ordinate)."));
 
-    cob_mousehandle->setStatusTip(tr("Select mouse control."));
     cob_projection->setStatusTip(tr("Projection type for 3D view."));
     cob_drawtype3d->setStatusTip(tr("Representation for 3D view."));
     cob_view->setStatusTip(tr("Select predefined relative camera position."));

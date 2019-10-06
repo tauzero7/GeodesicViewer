@@ -204,6 +204,18 @@ void OpenGL2dModel::center()
     mYmin = -deltaY;
     mYmax = +deltaY;
     setLattice();
+    update();
+}
+
+void OpenGL2dModel::makeUniform()
+{
+    double xcenter = (mXmin + mXmax) * 0.5;
+    double yrange = mYmax - mYmin;
+    double aspect
+        = (mWinSize[0] - DEF_DRAW2D_LEFT_BORDER) / static_cast<double>(mWinSize[1] - DEF_DRAW2D_BOTTOM_BORDER);
+    mXmin = xcenter - 0.5 * yrange * aspect;
+    mXmax = xcenter + 0.5 * yrange * aspect;
+    setScaling(mXmin, mXmax, mYmin, mYmax);
 }
 
 void OpenGL2dModel::setStepIdx(int xidx, int yidx)
@@ -588,6 +600,7 @@ void OpenGL2dModel::drawLattice()
 void OpenGL2dModel::keyPressEvent(QKeyEvent* event)
 {
     mKeyPressed = event->key();
+    mModifiers = event->modifiers();
 
     if (mKeyPressed == Qt::Key_C) {
         center();
@@ -595,6 +608,10 @@ void OpenGL2dModel::keyPressEvent(QKeyEvent* event)
     }
     else if (mKeyPressed == Qt::Key_R) {
         emit scalingReset();
+    }
+    else if (mKeyPressed == Qt::Key_S) {
+        makeUniform();
+        emit scalingChanged();
     }
     else if (mKeyPressed == Qt::Key_PageDown) {
         double zoomFactor = (mXmax - mXmin) * 0.1;
@@ -620,6 +637,7 @@ void OpenGL2dModel::keyPressEvent(QKeyEvent* event)
 void OpenGL2dModel::keyReleaseEvent(QKeyEvent* event)
 {
     mKeyPressed = Qt::Key_No;
+    mModifiers = Qt::NoModifier;
     event->ignore();
 }
 
@@ -630,7 +648,7 @@ void OpenGL2dModel::mousePressEvent(QMouseEvent* event)
     mLastPos.setX(static_cast<int>(mLastPos.x() * mDPIFactor[0]));
     mLastPos.setY(static_cast<int>(mLastPos.y() * mDPIFactor[1]));
 
-    if (mButtonPressed == Qt::RightButton) {
+    if (mButtonPressed == Qt::LeftButton && mModifiers == Qt::ControlModifier) {
         getXY(mLastPos, mZoomXul, mZoomYul);
         mZoomXlr = mZoomXul;
         mZoomYlr = mZoomYul;
@@ -675,14 +693,8 @@ void OpenGL2dModel::mouseMoveEvent(QMouseEvent* event)
     mLastPos = cp;
 
     if (mButtonPressed == Qt::LeftButton) {
-        if (event->modifiers() == Qt::ControlModifier) {
-            double zoomFactor = 0.005 * (mYmax - mYmin);
-            mXmin += dxy.y() * zoomFactor * mAspect;
-            mXmax -= dxy.y() * zoomFactor * mAspect;
-            mYmin += dxy.y() * zoomFactor;
-            mYmax -= dxy.y() * zoomFactor;
-            adjust();
-            setLattice();
+        if (mModifiers == Qt::ControlModifier) {
+            getXY(mLastPos, mZoomXlr, mZoomYlr);
         }
         else {
             mXmin -= dxy.x() * mFactorX;
@@ -695,7 +707,13 @@ void OpenGL2dModel::mouseMoveEvent(QMouseEvent* event)
     else if (mButtonPressed == Qt::MidButton) {
     }
     else if (mButtonPressed == Qt::RightButton) {
-        getXY(mLastPos, mZoomXlr, mZoomYlr);
+        double zoomFactor = 0.005 * (mYmax - mYmin);
+        mXmin += dxy.y() * zoomFactor * mAspect;
+        mXmax -= dxy.y() * zoomFactor * mAspect;
+        mYmin += dxy.y() * zoomFactor;
+        mYmax -= dxy.y() * zoomFactor;
+        adjust();
+        setLattice();
     }
 
     mParams->draw2d_xMin = mXmin;

@@ -34,14 +34,38 @@ bool GetFilePath(const char* filename, char*& path);
  * @param tokens : reference of tokens build from the file
  * @return true : success
  */
-bool tokenizeFile(const std::string filename, std::vector<std::vector<std::string>>& tokens);
+bool tokenizeFile(const std::string& filename, std::vector<std::vector<std::string>>& tokens);
 
-int readObjectFile(const std::string filename, std::vector<MyObject*>& objects, bool clear = true);
+/*! Read object file.
+ * @param filename : name of file
+ * @param objects : reference to object list
+ * @param clear : if true then clear object list
+ * @return number of objects
+ */
+int readObjectFile(const std::string& filename, std::vector<MyObject*>& objects, bool clear = true);
+
+/*! Read objects from tokens.
+ * @param tokens : reference to token list
+ * @param objects : reference to object list
+ * @return number of objects
+ */
 int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::vector<MyObject*>& objects);
 
 void setStandardParams(struct_params* par);
-bool loadParamFile(const std::string filename, struct_params* par);
-bool saveParamFile(const std::string filename, struct_params* par);
+
+/*! Load cfg-parameter file.
+ * @param filename : file name.
+ * @param par      : pointer to parameter structure.
+ * @return true : successfull.
+ */
+bool loadParamFile(const std::string& filename, struct_params* par);
+
+/*! Save cfg-parameter file.
+ * @param filename : file name.
+ * @param par      : pointer to parameter structure.
+ * @return true : successfull.
+ */
+bool saveParamFile(const std::string& filename, struct_params* par);
 
 /**
  * @brief Safely delete 1D arrays generated with 'new'.

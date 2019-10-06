@@ -67,55 +67,6 @@
 #define DEF_IMG_FILE_ENDING ".png"
 
 // -----------------------------------
-//   mouse handling
-// -----------------------------------
-enum enum_mouse_handle {
-    enum_mouse_rotate = 0,
-    enum_mouse_rotate_global,
-    enum_mouse_rotate_sphere,
-    enum_mouse_camera_dist,
-    enum_mouse_move_local,
-    enum_mouse_move_global,
-    enum_mouse_move_poi
-};
-
-const QStringList stl_mouse_handle = QStringList() << "rotate local"
-                                                   << "rotate around xyz"
-                                                   << "rotate on sphere"
-                                                   << "camera distance"
-                                                   << "move along camera"
-                                                   << "move along xyz"
-                                                   << "move poi";
-
-// -----------------------------------
-//   camera rotation
-// -----------------------------------
-#define DEF_CAM_ROT_LOCAL_VUP Qt::LeftButton
-#define DEF_CAM_ROT_LOCAL_VUP_XY dxy.x()
-#define DEF_CAM_ROT_LOCAL_VUP_SCALE 0.003
-#define DEF_CAM_ROT_LOCAL_RIGHT Qt::MidButton
-#define DEF_CAM_ROT_LOCAL_RIGHT_XY dxy.y()
-#define DEF_CAM_ROT_LOCAL_RIGHT_SCALE 0.003
-#define DEF_CAM_ROT_LOCAL_DIR Qt::RightButton
-#define DEF_CAM_ROT_LOCAL_DIR_XY dxy.x()
-#define DEF_CAM_ROT_LOCAL_DIR_SCALE 0.003
-
-#define DEF_CAM_ROT_GLOBAL_X Qt::RightButton
-#define DEF_CAM_ROT_GLOBAL_X_XY dxy.x()
-#define DEF_CAM_ROT_GLOBAL_X_SCALE -0.003
-#define DEF_CAM_ROT_GLOBAL_Y Qt::MidButton
-#define DEF_CAM_ROT_GLOBAL_Y_XY dxy.y()
-#define DEF_CAM_ROT_GLOBAL_Y_SCALE 0.003
-#define DEF_CAM_ROT_GLOBAL_Z Qt::LeftButton
-#define DEF_CAM_ROT_GLOBAL_Z_XY dxy.x()
-#define DEF_CAM_ROT_GLOBAL_Z_SCALE 0.003
-
-#define DEF_CAM_ROT_SPHERE_THETA_PHI Qt::LeftButton
-#define DEF_CAM_ROT_SPHERE_TP_SCALE 0.01
-#define DEF_CAM_ROT_SPHERE_DISTANCE Qt::MidButton
-#define DEF_CAM_ROT_SPHERE_DIST_SCALE 0.05
-
-// -----------------------------------
 //   camera draw style
 // -----------------------------------
 enum enum_draw_style { enum_draw_points = 0, enum_draw_lines };
@@ -130,16 +81,6 @@ enum enum_projection { enum_proj_perspective = 0, enum_proj_orthographic };
 
 const QStringList stl_projection = QStringList() << "perspective"
                                                  << "orthographics";
-
-// -----------------------------------
-//   camera predefined orientation
-// -----------------------------------
-enum enum_camera_predefs { enum_camera_xy = 0, enum_camera_zx, enum_camera_yz, enum_camera_custom };
-
-const QStringList stl_camera_predefs = QStringList() << "xy"
-                                                     << "zx"
-                                                     << "yz"
-                                                     << "custom";
 
 // -----------------------------------
 //   stereo glasses
@@ -282,7 +223,7 @@ enum enum_draw_coord_num {
 #define DEF_OPENGL_LEG1_FREQ 40.0
 #define DEF_OPENGL_LEG2_FREQ 40.0
 
-#define DEF_OPENGL_EMB_COLOR 192, 192, 192
+#define DEF_OPENGL_EMB_COLOR 100, 100, 100
 
 #define DEF_OPENGL_ANIM_ROT_X_INIT 0.0
 #define DEF_OPENGL_ANIM_ROT_Y_INIT 0.0
@@ -290,8 +231,8 @@ enum enum_draw_coord_num {
 
 #define DEF_DOUBLE_EDIT_COLOR 200, 240, 255
 
-#define DEF_DRAW2D_BG_COLOR 220, 220, 220
-#define DEF_DRAW2D_LINE_COLOR 0, 0, 255
+#define DEF_DRAW2D_BG_COLOR 120, 120, 120
+#define DEF_DRAW2D_LINE_COLOR 255, 255, 0
 #define DEF_DRAW2D_LINE_WIDTH 1
 #define DEF_DRAW2D_GRID_COLOR 0, 0, 0
 
@@ -558,5 +499,14 @@ typedef struct gvs_socket_data_t {
     int task;
     double vals[4];
 } gvs_socket_data;
+
+enum enum_coord_axis {
+    enum_coord_axis_xpos = 0,
+    enum_coord_axis_xneg,
+    enum_coord_axis_ypos,
+    enum_coord_axis_yneg,
+    enum_coord_axis_zpos,
+    enum_coord_axis_zneg
+};
 
 #endif

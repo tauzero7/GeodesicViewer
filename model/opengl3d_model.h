@@ -25,7 +25,8 @@
 /**
  * @brief The OpenGL3dModel class
  */
-class OpenGL3dModel : public QOpenGLWidget {
+class OpenGL3dModel : public QOpenGLWidget
+{
     Q_OBJECT
 
 public:
@@ -42,8 +43,6 @@ public:
     void genEmbed(m4d::Metric* currMetric);
     void clearEmbed();
 
-    void setMouseHandle(enum_mouse_handle handle);
-
     void setProjection(enum_projection proj);
     void setFieldOfView(double fov);
     double getFieldOfView();
@@ -59,8 +58,6 @@ public:
 
     void setCameraSphere(double theta, double phi, double dist);
     void getCameraSphere(double& theta, double& phi, double& dist);
-
-    void setCameraPredefs(enum_camera_predefs type);
 
     void clearAllObjects();
     void insertObject(MyObject* obj);
@@ -121,13 +118,14 @@ private:
     struct_params* mParams;
     Camera mCamera;
     double mDPIFactor[2];
-    enum_mouse_handle mMouseHandle;
+
     enum_projection mProjection;
     enum_draw_style mDrawStyle;
     bool mStereo;
 
     QPoint mLastPos;
     int mKeyPressed;
+    Qt::KeyboardModifiers mModifiers;
     Qt::MouseButton mButtonPressed;
 
     QColor mFGcolor;

@@ -105,14 +105,11 @@ protected slots:
     void slot_set2dGridColor();
     void slot_set2dLineWidth();
 
-    void slot_setMouseHandle();
-
     void slot_setProjection();
     void slot_setFieldOfView();
     void slot_adjustCamera();
     void slot_setCameraPos();
     void slot_setCameraPoi();
-    void slot_setCameraPredefs();
     void slot_resetPoi();
 
     void slot_setDrawType3d();
@@ -213,8 +210,6 @@ private:
     // ----------------------
     QLabel* lab_projection;
     QComboBox* cob_projection;
-    QLabel* lab_view;
-    QComboBox* cob_view;
     QLabel* lab_bgcolor;
     QPushButton* pub_bgcolor;
     QLabel* lab_fgcolor;
@@ -305,12 +300,6 @@ private:
     QTableWidget* tbw_emb_params;
     QLabel* lab_emb_color;
     QPushButton* pub_emb_color;
-
-    // ----------------------
-    //    mouse handling
-    // ----------------------
-    QLabel* lab_mousehandle;
-    QComboBox* cob_mousehandle;
 
     // ----------------------
     //    other things
