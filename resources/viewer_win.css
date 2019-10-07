@@ -1,4 +1,20 @@
 
+QCheckBox {
+    font-family: Consolas;
+    font-size: 12pt;
+}
+
+QCheckBox::disabled {
+    color: black
+}
+
+QComboBox { 
+    font-family: Consolas;
+    font-size: 12pt;
+    height: 16px;
+    max-width: 330px;
+}
+
 QGroupBox {
     border:1px solid #555;
     border-radius: 4px;
@@ -19,30 +35,13 @@ QGroupBox::title {
     color: #c6c6ff;
 }
 
-QCheckBox {
-    font-family: Consolas;
-    font-size: 12pt;
-}
-
-QCheckBox::disabled {
-    color: black
-}
-
-
-QComboBox { 
-    font-family: Consolas;
-    font-size: 12pt;
-    height: 16px;
-}
-
-
 QLabel {
     font-family: Consolas;
     font-size: 12pt;
 }
 
 QLabel::disabled {
-    color: darkgray;
+    color: #a66;
 }
 
 QLCDNumber {
@@ -61,6 +60,20 @@ QLineEdit {
 
 QLineEdit[readOnly="true"] {
     color: #bbb;
+    background-color: black;
+}
+
+DoubleEdit {
+    font-size: 12pt;
+    color: white;
+}
+
+DoubleEdit::disabled {
+    color: #a55;
+}
+
+QMenu::separator {
+    background: #333;
 }
 
 QPushButton { 
@@ -110,9 +123,14 @@ QTabBar::tab:!enabled {
     color: #555;
 }
 
-QTableView {
-    font-family: Consolas;
+QTableWidget {
+    font-family: Monospace;
     font-size: 12pt;
+}
+
+QTableWidget::item {
+   border: 0px;
+   padding: 0px 0px 0px 0px;
 }
 
 QTextEdit {

@@ -133,7 +133,6 @@ QTableWidget::item {
    padding: 0px 0px 0px 0px;
 }
 
-
 QTextEdit {
     font-family: Monospace;
     font-size: 10pt;

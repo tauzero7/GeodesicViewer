@@ -131,7 +131,7 @@ void GeodView::slot_showLastJacobi(int num)
         return;
     }
 
-    if (num >= 0 && num <= static_cast<int>(mObject.jacobi.size())) {
+    if (num >= 0 && num < static_cast<int>(mObject.jacobi.size())) {
         last_jacobi = mObject.jacobi[static_cast<size_t>(num)];
         if (num >= static_cast<int>(mObject.maxNumPoints)) {
             last_jacobi = mObject.jacobi[mObject.maxNumPoints - 1];
