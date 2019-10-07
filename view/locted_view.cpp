@@ -449,6 +449,7 @@ void LoctedView::initElements()
         totalHeight += tbw_locted_tetrad->verticalHeader()->sectionSize(row);
     }
     tbw_locted_tetrad->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    tbw_locted_tetrad->setMinimumHeight(totalHeight);
     tbw_locted_tetrad->setMaximumHeight(totalHeight);
 
     QHeaderView* header = tbw_locted_tetrad->horizontalHeader();

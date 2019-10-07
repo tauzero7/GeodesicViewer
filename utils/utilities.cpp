@@ -196,11 +196,12 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
         if (tokens[i][0] == stl_object_type[enum_object_text2d].toStdString() && tokens[i].size() > 4) {
             obj = new MyObject();
             if (tokens[i].size() > 7) {
-                obj->setColor(atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()), atof(tokens[i][7].c_str()));
+                obj->setColor(
+                    std::stof(tokens[i][5].c_str()), std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()));
             }
 
-            obj->create_2d_text(
-                atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), tokens[i][3], atof(tokens[i][4].c_str()));
+            obj->create_2d_text(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()), tokens[i][3],
+                std::stof(tokens[i][4].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -209,11 +210,12 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
         else if (tokens[i][0] == stl_object_type[enum_object_text3d].toStdString() && tokens[i].size() > 5) {
             obj = new MyObject();
             if (tokens[i].size() > 8) {
-                obj->setColor(atof(tokens[i][6].c_str()), atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()));
+                obj->setColor(
+                    std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()));
             }
 
-            obj->create_3d_text(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
-                tokens[i][4], atof(tokens[i][5].c_str()));
+            obj->create_3d_text(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
+                std::stof(tokens[i][3].c_str()), tokens[i][4], std::stof(tokens[i][5].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -222,11 +224,12 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
         else if (tokens[i][0] == stl_object_type[enum_object_sphere2d].toStdString() && tokens[i].size() > 5) {
             obj = new MyObject();
             if (tokens[i].size() > 8) {
-                obj->setColor(atof(tokens[i][6].c_str()), atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()));
+                obj->setColor(
+                    std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()));
             }
 
-            obj->create_2d_sphere(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
-                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()));
+            obj->create_2d_sphere(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
+                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -235,15 +238,17 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
         else if (tokens[i][0] == stl_object_type[enum_object_sphere3d].toStdString() && tokens[i].size() > 6) {
             obj = new MyObject();
             if (tokens[i].size() > 10) {
-                obj->setColor(atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()),
-                    atof(tokens[i][10].c_str()));
+                obj->setColor(std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()),
+                    std::stof(tokens[i][9].c_str()), std::stof(tokens[i][10].c_str()));
             }
             else if (tokens[i].size() > 9) {
-                obj->setColor(atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()));
+                obj->setColor(
+                    std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()), std::stof(tokens[i][9].c_str()));
             }
 
-            obj->create_3d_sphere(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
-                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()));
+            obj->create_3d_sphere(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
+                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()),
+                std::stof(tokens[i][6].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -252,11 +257,12 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
         else if (tokens[i][0] == stl_object_type[enum_object_box2d].toStdString() && tokens[i].size() > 5) {
             obj = new MyObject();
             if (tokens[i].size() > 8) {
-                obj->setColor(atof(tokens[i][6].c_str()), atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()));
+                obj->setColor(
+                    std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()));
             }
 
-            obj->create_2d_box(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
-                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()));
+            obj->create_2d_box(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
+                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -265,12 +271,13 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
         else if (tokens[i][0] == stl_object_type[enum_object_box3d].toStdString() && tokens[i].size() > 7) {
             obj = new MyObject();
             if (tokens[i].size() > 10) {
-                obj->setColor(atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()), atof(tokens[i][10].c_str()));
+                obj->setColor(
+                    std::stof(tokens[i][8].c_str()), std::stof(tokens[i][9].c_str()), std::stof(tokens[i][10].c_str()));
             }
 
-            obj->create_3d_box(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
-                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
-                atof(tokens[i][7].c_str()));
+            obj->create_3d_box(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
+                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()),
+                std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -279,11 +286,12 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
         else if (tokens[i][0] == stl_object_type[enum_object_line2d].toStdString() && tokens[i].size() > 5) {
             obj = new MyObject();
             if (tokens[i].size() > 8) {
-                obj->setColor(atof(tokens[i][6].c_str()), atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()));
+                obj->setColor(
+                    std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()));
             }
 
-            obj->create_2d_line(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
-                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()));
+            obj->create_2d_line(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
+                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -292,12 +300,13 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
         else if (tokens[i][0] == stl_object_type[enum_object_line3d].toStdString() && tokens[i].size() > 7) {
             obj = new MyObject();
             if (tokens[i].size() > 10) {
-                obj->setColor(atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()), atof(tokens[i][10].c_str()));
+                obj->setColor(
+                    std::stof(tokens[i][8].c_str()), std::stof(tokens[i][9].c_str()), std::stof(tokens[i][10].c_str()));
             }
 
-            obj->create_3d_line(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
-                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
-                atof(tokens[i][7].c_str()));
+            obj->create_3d_line(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
+                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()),
+                std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -306,16 +315,18 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
         else if (tokens[i][0] == stl_object_type[enum_object_quad2d].toStdString() && tokens[i].size() > 9) {
             obj = new MyObject();
             if (tokens[i].size() > 13) {
-                obj->setColor(atof(tokens[i][10].c_str()), atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()),
-                    atof(tokens[i][13].c_str()));
+                obj->setColor(std::stof(tokens[i][10].c_str()), std::stof(tokens[i][11].c_str()),
+                    std::stof(tokens[i][12].c_str()), std::stof(tokens[i][13].c_str()));
             }
             else if (tokens[i].size() > 12) {
-                obj->setColor(atof(tokens[i][10].c_str()), atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()));
+                obj->setColor(std::stof(tokens[i][10].c_str()), std::stof(tokens[i][11].c_str()),
+                    std::stof(tokens[i][12].c_str()));
             }
 
-            obj->create_2d_quad(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
-                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
-                atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()));
+            obj->create_2d_quad(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
+                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()),
+                std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()),
+                std::stof(tokens[i][9].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -324,16 +335,18 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
         else if (tokens[i][0] == stl_object_type[enum_object_plane3d].toStdString() && tokens[i].size() > 9) {
             obj = new MyObject();
             if (tokens[i].size() > 13) {
-                obj->setColor(atof(tokens[i][10].c_str()), atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()),
-                    atof(tokens[i][13].c_str()));
+                obj->setColor(std::stof(tokens[i][10].c_str()), std::stof(tokens[i][11].c_str()),
+                    std::stof(tokens[i][12].c_str()), std::stof(tokens[i][13].c_str()));
             }
             else if (tokens[i].size() > 12) {
-                obj->setColor(atof(tokens[i][10].c_str()), atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()));
+                obj->setColor(std::stof(tokens[i][10].c_str()), std::stof(tokens[i][11].c_str()),
+                    std::stof(tokens[i][12].c_str()));
             }
 
-            obj->create_3d_plane(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
-                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
-                atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()));
+            obj->create_3d_plane(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
+                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()),
+                std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()),
+                std::stof(tokens[i][9].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -342,11 +355,12 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
         else if (tokens[i][0] == stl_object_type[enum_object_disk2d].toStdString() && tokens[i].size() > 4) {
             obj = new MyObject();
             if (tokens[i].size() > 7) {
-                obj->setColor(atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()), atof(tokens[i][7].c_str()));
+                obj->setColor(
+                    std::stof(tokens[i][5].c_str()), std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()));
             }
 
-            obj->create_2d_disk(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
-                atof(tokens[i][4].c_str()));
+            obj->create_2d_disk(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
+                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -355,17 +369,18 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
         else if (tokens[i][0] == stl_object_type[enum_object_disk3d].toStdString() && tokens[i].size() > 9) {
             obj = new MyObject();
             if (tokens[i].size() > 14) {
-                obj->setColor(atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()), atof(tokens[i][13].c_str()),
-                    atof(tokens[i][14].c_str()));
+                obj->setColor(std::stof(tokens[i][11].c_str()), std::stof(tokens[i][12].c_str()),
+                    std::stof(tokens[i][13].c_str()), std::stof(tokens[i][14].c_str()));
             }
             else if (tokens[i].size() > 13) {
-                obj->setColor(atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()), atof(tokens[i][13].c_str()));
+                obj->setColor(std::stof(tokens[i][11].c_str()), std::stof(tokens[i][12].c_str()),
+                    std::stof(tokens[i][13].c_str()));
             }
 
-            obj->create_3d_disk(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
-                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
-                atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()),
-                atof(tokens[i][10].c_str()));
+            obj->create_3d_disk(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
+                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()),
+                std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()),
+                std::stof(tokens[i][9].c_str()), std::stof(tokens[i][10].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -374,17 +389,18 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
         else if (tokens[i][0] == stl_object_type[enum_object_cylinder3d].toStdString() && tokens[i].size() > 10) {
             obj = new MyObject();
             if (tokens[i].size() > 14) {
-                obj->setColor(atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()), atof(tokens[i][13].c_str()),
-                    atof(tokens[i][14].c_str()));
+                obj->setColor(std::stof(tokens[i][11].c_str()), std::stof(tokens[i][12].c_str()),
+                    std::stof(tokens[i][13].c_str()), std::stof(tokens[i][14].c_str()));
             }
             else if (tokens[i].size() > 13) {
-                obj->setColor(atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()), atof(tokens[i][13].c_str()));
+                obj->setColor(std::stof(tokens[i][11].c_str()), std::stof(tokens[i][12].c_str()),
+                    std::stof(tokens[i][13].c_str()));
             }
 
-            obj->create_3d_cylinder(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
-                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
-                atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()),
-                atof(tokens[i][10].c_str()));
+            obj->create_3d_cylinder(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
+                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()),
+                std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()),
+                std::stof(tokens[i][9].c_str()), std::stof(tokens[i][10].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -393,17 +409,18 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
         else if (tokens[i][0] == stl_object_type[enum_object_torus3d].toStdString() && tokens[i].size() > 10) {
             obj = new MyObject();
             if (tokens[i].size() > 14) {
-                obj->setColor(atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()), atof(tokens[i][13].c_str()),
-                    atof(tokens[i][14].c_str()));
+                obj->setColor(std::stof(tokens[i][11].c_str()), std::stof(tokens[i][12].c_str()),
+                    std::stof(tokens[i][13].c_str()), std::stof(tokens[i][14].c_str()));
             }
             else if (tokens[i].size() > 13) {
-                obj->setColor(atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()), atof(tokens[i][13].c_str()));
+                obj->setColor(std::stof(tokens[i][11].c_str()), std::stof(tokens[i][12].c_str()),
+                    std::stof(tokens[i][13].c_str()));
             }
 
-            obj->create_3d_torus(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
-                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
-                atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()),
-                atof(tokens[i][10].c_str()));
+            obj->create_3d_torus(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
+                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()),
+                std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()),
+                std::stof(tokens[i][9].c_str()), std::stof(tokens[i][10].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -412,22 +429,23 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
         else if (tokens[i][0] == stl_object_type[enum_object_tube3d].toStdString() && tokens[i].size() > 14) {
             obj = new MyObject();
             if (tokens[i].size() > 18) {
-                obj->setColor(atof(tokens[i][15].c_str()), atof(tokens[i][16].c_str()), atof(tokens[i][17].c_str()),
-                    atof(tokens[i][17].c_str()));
+                obj->setColor(std::stof(tokens[i][15].c_str()), std::stof(tokens[i][16].c_str()),
+                    std::stof(tokens[i][17].c_str()), std::stof(tokens[i][17].c_str()));
             }
             else if (tokens[i].size() > 17) {
-                obj->setColor(atof(tokens[i][15].c_str()), atof(tokens[i][16].c_str()), atof(tokens[i][17].c_str()));
+                obj->setColor(std::stof(tokens[i][15].c_str()), std::stof(tokens[i][16].c_str()),
+                    std::stof(tokens[i][17].c_str()));
             }
 
-            obj->create_3d_tube(atof(tokens[i][1].c_str()), atof(tokens[i][2].c_str()), atof(tokens[i][3].c_str()),
-                atof(tokens[i][4].c_str()), atof(tokens[i][5].c_str()), atof(tokens[i][6].c_str()),
-                atof(tokens[i][7].c_str()), atof(tokens[i][8].c_str()), atof(tokens[i][9].c_str()),
-                atof(tokens[i][10].c_str()), atof(tokens[i][11].c_str()), atof(tokens[i][12].c_str()),
-                atof(tokens[i][13].c_str()), atof(tokens[i][14].c_str()));
+            obj->create_3d_tube(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
+                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()),
+                std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()),
+                std::stof(tokens[i][9].c_str()), std::stof(tokens[i][10].c_str()), std::stof(tokens[i][11].c_str()),
+                std::stof(tokens[i][12].c_str()), std::stof(tokens[i][13].c_str()), std::stof(tokens[i][14].c_str()));
             objects.push_back(obj);
         }
     }
-    return (int)objects.size();
+    return static_cast<int>(objects.size());
 }
 
 void setStandardParams(struct_params* par)
@@ -505,7 +523,7 @@ void setStandardParams(struct_params* par)
 
     par->draw2d_bg_color = QColor(DEF_DRAW2D_BG_COLOR);
     par->draw2d_line_color = QColor(DEF_DRAW2D_LINE_COLOR);
-    par->draw2d_line_width = DEF_OPENGL_LINE_WIDTH;
+    par->draw2d_line_width = DEF_DRAW2D_LINE_WIDTH;
     par->draw2d_line_smooth = 0;
 
     par->draw2d_grid_color = QColor(DEF_DRAW2D_GRID_COLOR);
@@ -540,7 +558,7 @@ bool loadParamFile(const std::string& filename, struct_params* par)
             par->opengl_projection = atoi(tokens[i][1].c_str());
         }
         else if (baseString.compare("OGL_DRAW3D_TYPE") == 0 && tokens[i].size() > 1) {
-            par->opengl_draw3d_type = (m4d::enum_draw_type)atoi(tokens[i][1].c_str());
+            par->opengl_draw3d_type = static_cast<m4d::enum_draw_type>(atoi(tokens[i][1].c_str()));
         }
         else if (baseString.compare("OGL_EYE_POS") == 0 && tokens[i].size() > 3) {
             par->opengl_eye_pos
@@ -795,7 +813,7 @@ bool saveParamFile(const std::string& filename, struct_params* par)
     fprintf(fptr, "DRAW2D_LINE_SMOOTH     %d\n", par->draw2d_line_smooth);
     fprintf(fptr, "DRAW2D_GRID_COLOR      %3d %3d %3d\n", par->draw2d_grid_color.red(), par->draw2d_grid_color.green(),
         par->draw2d_grid_color.blue());
-    fprintf(fptr, "DRAW2D_REPRESENTATION  %d\n", (int)par->draw2d_representation);
+    fprintf(fptr, "DRAW2D_REPRESENTATION  %d\n", static_cast<int>(par->draw2d_representation));
     fprintf(fptr, "DRAW2D_ABSCISSA        %d\n", par->draw2d_abscissa);
     fprintf(fptr, "DRAW2D_ORDINATE        %d\n", par->draw2d_ordinate);
     fclose(fptr);

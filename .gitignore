@@ -41,3 +41,8 @@ local*
 *.pro
 *.user
 
+*.html
+*.stash 
+README.css
+
+

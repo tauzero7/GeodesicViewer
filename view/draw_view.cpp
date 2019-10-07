@@ -1117,7 +1117,7 @@ void DrawView::initElements()
     pub_fgcolor = new QPushButton();
     pub_fgcolor->setPalette(QPalette(Qt::yellow));
 
-    lab_linewidth = new QLabel("width");
+    lab_linewidth = new QLabel("Line width");
     spb_linewidth = new QSpinBox();
     spb_linewidth->setRange(1, 5);
 
@@ -1320,6 +1320,7 @@ void DrawView::initGUI()
     layout_2d_colors->addWidget(pub_draw2d_gridcolor, 1, 1);
     layout_2d_colors->addWidget(lab_draw2d_fgcolor, 1, 2);
     layout_2d_colors->addWidget(pub_draw2d_fgcolor, 1, 3);
+    layout_2d_colors->setRowStretch(2, 10);
     grb_2d_colors->setLayout(layout_2d_colors);
 
     QHBoxLayout* layout_2d_proj = new QHBoxLayout();
@@ -1339,19 +1340,17 @@ void DrawView::initGUI()
     //    3-D
     // ---------------------------------
     QGroupBox* grb_3d_col = new QGroupBox("Colors and line props");
-    QHBoxLayout* layout_3d_line = new QHBoxLayout();
-    layout_3d_line->addWidget(lab_fgcolor);
-    layout_3d_line->addWidget(pub_fgcolor);
-    layout_3d_line->addWidget(lab_linewidth);
-    layout_3d_line->addWidget(spb_linewidth);
-    layout_3d_line->addWidget(chb_linesmooth);
-    QHBoxLayout* layout_3d_bg = new QHBoxLayout();
-    layout_3d_bg->addWidget(lab_bgcolor);
-    layout_3d_bg->addWidget(pub_bgcolor);
-    layout_3d_bg->addSpacing(200);
     QGridLayout* layout_3d_col = new QGridLayout();
-    layout_3d_col->addLayout(layout_3d_line, 0, 0);
-    layout_3d_col->addLayout(layout_3d_bg, 1, 0);
+
+    layout_3d_col->addWidget(lab_fgcolor, 0, 0);
+    layout_3d_col->addWidget(pub_fgcolor, 0, 1);
+    layout_3d_col->addWidget(lab_linewidth, 1, 0);
+    layout_3d_col->addWidget(spb_linewidth, 1, 1);
+    layout_3d_col->addWidget(chb_linesmooth, 1, 2);
+    layout_3d_col->addWidget(lab_bgcolor, 2, 0);
+    layout_3d_col->addWidget(pub_bgcolor, 2, 1);
+    // layout_3d_bg->addSpacing(200);
+    layout_3d_col->setRowStretch(3, 10);
     grb_3d_col->setLayout(layout_3d_col);
 
     QGroupBox* grb_3d_pos = new QGroupBox("Camera parameters");

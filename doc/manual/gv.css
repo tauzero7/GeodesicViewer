@@ -1,7 +1,8 @@
-body {   color : #000000;
-        font-family : helvetica, sans-serif;
-        font-size   : 10pt;
-        }
+body {   
+    color : #000000;
+    font-family : helvetica, sans-serif;
+    font-size   : 12pt;
+}
 
 a:link    { color:#3333AA;
             text-decoration : none;

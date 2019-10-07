@@ -392,7 +392,7 @@ void Camera::setSpecialPos(enum_coord_axis pos)
     Quaternion r1, r2;
     mQuat = Quaternion(0, 0, 0, 1);
 
-    m4d::vec3 poi = m4d::vec3();
+    m4d::vec3 poi = m4d::vec3(0.0, 0.0, -0.001);
     mPOI = poi;
 
     switch (pos) {
@@ -405,7 +405,7 @@ void Camera::setSpecialPos(enum_coord_axis pos)
             break;
         }
         case enum_coord_axis_xneg: {
-            mPos = poi + m4d::vec3(dist, 0.0, 0.0);
+            mPos = poi - m4d::vec3(dist, 0.0, 0.0);
             r1.setRot(90.0 * DEG_TO_RAD, 0.0, 0.0, 1.0);
             r2.setRot(90.0 * DEG_TO_RAD, 1.0, 0.0, 0.0);
             mQuat = mQuat * r1 * r2;
@@ -420,7 +420,7 @@ void Camera::setSpecialPos(enum_coord_axis pos)
             break;
         }
         case enum_coord_axis_yneg: {
-            mPos = poi + m4d::vec3(0.0, dist, 0.0);
+            mPos = poi - m4d::vec3(0.0, dist, 0.0);
             r1.setRot(-90.0 * DEG_TO_RAD, 1.0, 0.0, 0.0);
             mQuat = mQuat * r1;
             setPosRFrame(mPos, m4d::vec3(0.0, 1.0, 0.0), m4d::vec3(0.0, 0.0, 1.0));
@@ -448,9 +448,8 @@ void Camera::setPosRFrame(m4d::vec3 pos, m4d::vec3 dir, m4d::vec3 up)
 {
     mPos = pos;
     mDir = dir.getNormalized();
-    mVup = up;
 
-    mRight = (mDir ^ mVup).getNormalized();
+    mRight = (mDir ^ up).getNormalized();
     mVup = mRight ^ mDir;
 }
 
@@ -461,21 +460,17 @@ void Camera::lookAt()
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 }
 
-/*! Call gluLookAt method with internal parameters
- */
 void Camera::lookAtCenter()
 {
     m4d::vec3 c = mPos + mDir;
     m4d::vec3 normedPos = mPos.getNormalized();
-    float fac = 37.0;
+    double fac = 37.0;
 
     gluLookAt(normedPos.x(0) * fac, normedPos.x(1) * fac, normedPos.x(2) * fac, 0.0, 0.0, 0.0, mVup.x(0), mVup.x(1),
         mVup.x(2));
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 }
 
-/*! Call gluLookAt method with internal parameters
- */
 void Camera::lookAtModelView()
 {
     glMatrixMode(GL_MODELVIEW);
@@ -483,8 +478,6 @@ void Camera::lookAtModelView()
     lookAt();
 }
 
-/*! Call gluLookAt method with internal parameters
- */
 void Camera::lookAtCenterModelView()
 {
     glMatrixMode(GL_MODELVIEW);
@@ -492,44 +485,28 @@ void Camera::lookAtCenterModelView()
     lookAtCenter();
 }
 
-/*! Set stereo parameters.
- *  \param sep : eye separation
- *  \param type : type of stereo glasses
- */
 void Camera::setStereoParams(double sep, enum_stereo_glasses type)
 {
     mEyeSep = sep;
     mStereoGlasses = type;
 }
 
-/*! Get stereo parameters.
- *  \param sep : reference to eye separation
- *  \param type : reference to type of stereo glasses
- */
 void Camera::getStereoParams(double& sep, enum_stereo_glasses& type)
 {
     sep = mEyeSep;
     type = mStereoGlasses;
 }
 
-/*! Set stereo type.
- * \param type : type of stereo projection.
- */
 void Camera::setStereoType(enum_stereo_type type)
 {
     mStereoType = type;
 }
 
-/*! Get stereo type.
- * \param type : reference to type of stereo projection.
- */
 void Camera::getStereoType(enum_stereo_type& type)
 {
     type = mStereoType;
 }
 
-/*! Set look-at position for left eye.
- */
 void Camera::lookAtMV_Left()
 {
     glMatrixMode(GL_MODELVIEW);
@@ -556,7 +533,6 @@ void Camera::lookAtMV_Left()
     m4d::vec3 eye = mPos - mRight * 0.5 * mEyeSep;
     m4d::vec3 focus = mPOI;
     switch (mStereoType) {
-        default:
         case enum_stereo_off_axis: {
             double focallength = (mPos - mPOI).getNorm();
             double wd2 = mZnear * tan(mFovY * DEG_TO_RAD * 0.5);
@@ -585,8 +561,6 @@ void Camera::lookAtMV_Left()
     gluLookAt(eye.x(0), eye.x(1), eye.x(2), focus.x(0), focus.x(1), focus.x(2), mVup.x(0), mVup.x(1), mVup.x(2));
 }
 
-/*! Set look-at position for right eye.
- */
 void Camera::lookAtMV_Right()
 {
     glMatrixMode(GL_MODELVIEW);
@@ -613,7 +587,6 @@ void Camera::lookAtMV_Right()
     m4d::vec3 eye = mPos + mRight * 0.5 * mEyeSep;
     m4d::vec3 focus = mPOI;
     switch (mStereoType) {
-        default:
         case enum_stereo_off_axis: {
             double focallength = (mPos - mPOI).getNorm();
             double wd2 = mZnear * tan(mFovY * DEG_TO_RAD * 0.5);
@@ -642,8 +615,6 @@ void Camera::lookAtMV_Right()
     gluLookAt(eye.x(0), eye.x(1), eye.x(2), focus.x(0), focus.x(1), focus.x(2), mVup.x(0), mVup.x(1), mVup.x(2));
 }
 
-/*! Call gluPerspective method with internal parameters.
- */
 void Camera::perspective()
 {
     glMatrixMode(GL_PROJECTION);
@@ -652,8 +623,6 @@ void Camera::perspective()
     gluPerspective(mFovY, mAspect, mZnear, mZfar);
 }
 
-/*! Call gluPerspective method with internal parameters.
- */
 void Camera::perspectiveAxes()
 {
     glMatrixMode(GL_PROJECTION);
@@ -662,8 +631,6 @@ void Camera::perspectiveAxes()
     gluPerspective(5.0, 1.0, mZnear, mZfar);
 }
 
-/*! Call gluOrtho2D method with internal parameters.
- */
 void Camera::orthographic()
 {
     glMatrixMode(GL_PROJECTION);
@@ -678,16 +645,11 @@ void Camera::orthographic()
     glOrtho(left, right, bottom, top, mZnear, mZfar);
 }
 
-/*! Call glViewport method with internal parameters;
- */
 void Camera::viewport()
 {
     glViewport(0, 0, GLsizei(mWidth), GLsizei(mHeight));
 }
 
-/*! Print camera parameters.
- *  \param ptr : file pointer
- */
 void Camera::print(FILE* ptr)
 {
     fprintf(ptr, "eye    :  %6.3f %6.3f %6.3f\n", mPos.x(0), mPos.x(1), mPos.x(2));

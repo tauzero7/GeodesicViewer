@@ -30,6 +30,7 @@ OpenGL2dModel::OpenGL2dModel(struct_params* par, QWidget* parent)
     mFGcolor = mParams->draw2d_line_color;
     mLineWidth = mParams->draw2d_line_width;
     mDrawStyle = enum_draw_lines;
+    mLineSmooth = 1;
 
     // Vertices for the geodesic.
     mVerts = nullptr;

@@ -18,6 +18,7 @@ RESOURCES = gviewer.qrc
 VIEW_DIR  = $$TOP_DIR/view
 MODEL_DIR = $$TOP_DIR/model
 UTILS_DIR = $$TOP_DIR/utils
+RSRC_DIR  = $$TOP_DIR/resources
 
 ######################################################################  HEADERS and SOURCES
 
@@ -83,6 +84,7 @@ UTILS_SOURCES = \
 
 include($$M4D_DIR/m4d_sources.pri)
 
+OTHER_FILES += $$RSRC_DIR/viewer.css
 
 ######################################################################  INCLUDE and DEPEND
 INCLUDEPATH +=  . .. $$VIEW_DIR  $$MODEL_DIR $$UTILS_DIR $$M4D_SRC_DIR \
