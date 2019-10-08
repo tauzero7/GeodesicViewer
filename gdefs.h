@@ -24,8 +24,8 @@
 // -----------------------------------
 //   GUI definitions
 // -----------------------------------
-#define DEF_GUI_WIDTH 1000
-#define DEF_GUI_HEIGHT 500
+#define DEF_GUI_WIDTH  1600
+#define DEF_GUI_HEIGHT 1200
 #define DEF_DRAW2D_WIDTH 720
 #define DEF_OPENGL_WIDTH 720
 #define DEF_OPENGL_HEIGHT 590
@@ -453,7 +453,7 @@ typedef struct _struct_obj {
     enum_object_type type;
     enum_object_dim dim;
 
-    float val[NUM_OBJECT_MAX_VALUES];
+    double val[NUM_OBJECT_MAX_VALUES];
     int numvals;
     float color[4];
 

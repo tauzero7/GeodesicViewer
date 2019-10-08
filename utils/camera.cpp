@@ -29,8 +29,8 @@ void Camera::setStandardParams()
     mRight = mDir ^ mVup;
     mPOI = m4d::vec3(0.0, 0.0, 0.0);
 
-    mZnear = 0.5;
-    mZfar = 100000.0;
+    mZnear = 0.01;
+    mZfar = 10000.0;
 
     mWidth = 100;
     mHeight = 100;

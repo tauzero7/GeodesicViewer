@@ -113,8 +113,8 @@ void OpenGL3dModel::setPoints(m4d::enum_draw_type dtype, bool needUpdate)
     SafeDelete<GLfloat>(mLambda);
 
     mNumVerts = static_cast<int>(mObject.points.size());
-    mVerts = new GLfloat[mNumVerts * 3];
-    mLambda = new GLfloat[mNumVerts];
+    mVerts = new GLfloat[static_cast<size_t>(mNumVerts * 3)];
+    mLambda = new GLfloat[static_cast<size_t>(mNumVerts)];
 
     GLfloat* vptr = mVerts;
     GLfloat* lptr = mLambda;
@@ -165,8 +165,8 @@ void OpenGL3dModel::setSachsAxes(bool needUpdate)
     mNumSachsVerts2 = static_cast<int>(mObject.sachs2.size());
     int mv = static_cast<int>(mObject.points.size());
 
-    mSachsVerts1 = new GLfloat[mNumSachsVerts1 * 3 * 2];
-    mSachsVerts2 = new GLfloat[mNumSachsVerts2 * 3 * 2];
+    mSachsVerts1 = new GLfloat[static_cast<size_t>(mNumSachsVerts1 * 3 * 2)];
+    mSachsVerts2 = new GLfloat[static_cast<size_t>(mNumSachsVerts2 * 3 * 2)];
 
     GLfloat* vptr1 = mSachsVerts1;
     GLfloat* vptr2 = mSachsVerts2;
@@ -656,6 +656,10 @@ void OpenGL3dModel::initializeGL()
     light_diffuse[0] = light_diffuse[1] = light_diffuse[2] = light_diffuse[3] = 1.0;
     light_position[0] = light_position[1] = light_position[2] = light_position[3] = 0.0;
 
+    mat_ambient[0] = mat_ambient[1] = mat_ambient[2] = 0.05f; mat_ambient[3] = 1.0f;
+    mat_diffuse[0] = mat_diffuse[1] = mat_diffuse[2] = 0.95f; mat_diffuse[3] = 1.0f;
+    mat_specular[0] = mat_specular[1] = mat_specular[2] = 0.01f; mat_specular[3] = 1.0f;
+
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
     glEnable(GL_LIGHTING);
@@ -733,14 +737,11 @@ void OpenGL3dModel::paintGL_mono()
     glColor3f(1, 1, 1);
     glScalef(GLfloat(mScaleX), GLfloat(mScaleY), GLfloat(mScaleZ));
 
-    //  GLfloat light_ambient[4] = { 0.4,0.4,0.4, 1.0 };
     GLfloat light_white[4] = { 1.0, 1.0, 1.0, 1.0 };
-    GLfloat light_spec[4] = { 1.0, 1.0, 1.0, 1.0 };
-    GLfloat light_black[4] = { 0.0, 0.0, 0.0, 1.0 };
 
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, light_black);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, light_black);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, light_spec);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat_ambient);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_diffuse);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat_specular);
     glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 0.5);
 
     glLightfv(GL_LIGHT0, GL_AMBIENT, light_white);
@@ -766,7 +767,7 @@ void OpenGL3dModel::paintGL_mono()
         glEnableClientState(GL_VERTEX_ARRAY);
 #ifdef _WIN32
         for (unsigned int i = 0; i < mEmbCounter - 1; i++) {
-            glDrawElements(GL_QUAD_STRIP, mCount[i], GL_UNSIGNED_INT, (const void**)mEmbIndices[i]);
+            glDrawElements(GL_QUAD_STRIP, mCount[i], GL_UNSIGNED_INT, reinterpret_cast<const void**>(mEmbIndices[i]));
         }
 #else
 #ifdef GL_GLEXT_PROTOTYPES
@@ -888,22 +889,24 @@ void OpenGL3dModel::paintGL_mono()
     }
 
     for (unsigned int i = 0; i < mObjects.size(); i++) {
-        if (mObjects[i]->withLight(light_diffuse, mStereo)) {
-            // glLightfv(GL_LIGHT0, GL_DIFFUSE, light_ambient);
-            glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, light_diffuse);
+        if (mObjects[i]->withLight(mat_diffuse, mStereo)) {
+            //glLightfv(GL_LIGHT0, GL_DIFFUSE, light_ambient);
+
+            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_diffuse);
+            //glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, light_diffuse);
             glEnable(GL_LIGHTING);
         }
 
         if (!mObjects[i]->drawObject(mStereo)) {
             if (mObjects[i]->getObjectType() == enum_object_text3d
                 && mObjects[i]->getObjectDim() == enum_object_dim_3d) {
-                float cx, cy, cz, size;
+                double cx, cy, cz, size;
                 mObjects[i]->getValue(0, cx);
                 mObjects[i]->getValue(1, cy);
                 mObjects[i]->getValue(2, cz);
-                mObjects[i]->getValue(3, size);
-                QFont font;
-                font.setPixelSize(static_cast<int>(size));
+                mObjects[i]->getValue(3, size);                
+
+                // TODO: render text
                 // this->renderText((double)cx, (double)cy, (double)cz, QString(mObjects[i]->getText().c_str()), font);
             }
         }

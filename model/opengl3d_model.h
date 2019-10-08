@@ -146,7 +146,7 @@ private:
     double mSachsScale;
 
     GLfloat* mEmbVerts;
-    int mEmbNumVerts;
+    unsigned int mEmbNumVerts;
     unsigned int mEmbNumElems;
     unsigned int mEmbCounter;
     unsigned int** mEmbIndices;
@@ -163,6 +163,10 @@ private:
     GLfloat light_diffuse[4];
     GLfloat light_position[4];
     GLfloat light_direction[3];
+
+    GLfloat mat_ambient[4];
+    GLfloat mat_diffuse[4];
+    GLfloat mat_specular[4];
 
     bool mUseFog;
     double mFogDensity;

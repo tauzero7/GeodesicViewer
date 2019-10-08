@@ -99,53 +99,53 @@ public:
     enum_object_dim getObjectDim();
     void getObject(struct_obj& obj);
 
-    bool getValue(int num, float& val);
+    bool getValue(int num, double& val);
     std::string getText();
 
     void setColor(float red, float green, float blue, float alpha = 1.0);
     void getColor(float& red, float& green, float& blue);
     void getColor(float& red, float& green, float& blue, float& alpha);
-    bool withLight(float light[], bool stereo = false);
+    bool withLight(float mat[], bool stereo = false);
 
-    void create_object(enum_object_type type, float* val, std::string text = "");
+    void create_object(enum_object_type type, double *val, std::string text = "");
 
-    void create_2d_text(float cx, float cy, std::string text, float size);
-    void create_3d_text(float cx, float cy, float cz, std::string text, float size);
+    void create_2d_text(double cx, double cy, std::string text, double size);
+    void create_3d_text(double cx, double cy, double cz, std::string text, double size);
 
-    void create_2d_sphere(float cx, float cy, float radius, float num_points, float width);
-    void create_3d_sphere(float cx, float cy, float cz,
-        float radius, float slices = DEF_GLU_SPHERE_SLICES, float stacks = DEF_GLU_SPHERE_STACKS);
+    void create_2d_sphere(double cx, double cy, double radius, double num_points, double width);
+    void create_3d_sphere(double cx, double cy, double cz,
+        double radius, double slices = DEF_GLU_SPHERE_SLICES, double stacks = DEF_GLU_SPHERE_STACKS);
 
-    void create_2d_box(float cx, float cy, float sizeX, float sizeY, float width);
-    void create_3d_box(float cx, float cy, float cz, float sizeX, float sizeY, float sizeZ, float width);
+    void create_2d_box(double cx, double cy, double sizeX, double sizeY, double width);
+    void create_3d_box(double cx, double cy, double cz, double sizeX, double sizeY, double sizeZ, double width);
 
-    void create_2d_line(float lx, float ly, float ux, float uy, float width);
-    void create_3d_line(float lx, float ly, float lz, float ux, float uy, float uz, float width);
+    void create_2d_line(double lx, double ly, double ux, double uy, double width);
+    void create_3d_line(double lx, double ly, double lz, double ux, double uy, double uz, double width);
 
-    void create_2d_quad(float v1x, float v1y, float v2x, float v2y, float v3x, float v3y, float v4x, float v4y, float width);
+    void create_2d_quad(double v1x, double v1y, double v2x, double v2y, double v3x, double v3y, double v4x, double v4y, double width);
 
-    void create_3d_plane(float v1x, float v1y, float v1z,
-        float v2x, float v2y, float v2z,
-        float v3x, float v3y, float v3z);
+    void create_3d_plane(double v1x, double v1y, double v1z,
+        double v2x, double v2y, double v2z,
+        double v3x, double v3y, double v3z);
 
-    void create_2d_disk(float cx, float cy, float radius, float fans = 30);
+    void create_2d_disk(double cx, double cy, double radius, double fans = 30);
 
-    void create_3d_disk(float cx, float cy, float cz,
-        float dx, float dy, float dz,
-        float iRadius, float oRadius,
-        float slices = DEF_GLU_DISK_SLICES, float loops = DEF_GLU_DISK_LOOPS);
+    void create_3d_disk(double cx, double cy, double cz,
+        double dx, double dy, double dz,
+        double  iRadius, double  oRadius,
+        double  slices = DEF_GLU_DISK_SLICES, double  loops = DEF_GLU_DISK_LOOPS);
 
-    void create_3d_cylinder(float bx, float by, float bz, float tx, float ty, float tz,
-        float baseRadius, float topRadius,
-        float slices = DEF_GLU_SPHERE_SLICES, float stacks = DEF_GLU_SPHERE_STACKS);
+    void create_3d_cylinder(double  bx, double  by, double  bz, double  tx, double  ty, double  tz,
+        double  baseRadius, double  topRadius,
+        double  slices = DEF_GLU_SPHERE_SLICES, double  stacks = DEF_GLU_SPHERE_STACKS);
 
-    void create_3d_torus(float cx, float cy, float cz, float nt, float np,
-        float outerRadius, float innerRadius, float maxPhi,
-        float slices = DEF_GLU_SPHERE_SLICES, float stacks = DEF_GLU_SPHERE_STACKS);
+    void create_3d_torus(double  cx, double  cy, double  cz, double  nt, double  np,
+        double  outerRadius, double  innerRadius, double  maxPhi,
+        double  slices = DEF_GLU_SPHERE_SLICES, double  stacks = DEF_GLU_SPHERE_STACKS);
 
-    void create_3d_tube(float bx, float by, float bz, float e1x, float e1y, float e1z,
-        float e2x, float e2y, float e2z, float e3x, float e3y, float e3z,
-        float slices = DEF_GLU_SPHERE_SLICES, float stacks = DEF_GLU_SPHERE_STACKS);
+    void create_3d_tube(double  bx, double  by, double  bz, double  e1x, double  e1y, double  e1z,
+        double  e2x, double  e2y, double  e2z, double  e3x, double  e3y, double  e3z,
+        double  slices = DEF_GLU_SPHERE_SLICES, double  stacks = DEF_GLU_SPHERE_STACKS);
 
     bool drawObject(bool stereo = false);
 
@@ -158,10 +158,9 @@ public:
 protected:
     void createQuadric();
     void deleteQuadric();
-    float clamp_float(float x, const float min, const float max);
 
-    void torus(const float R, const float r, const float alpha, const float beta,
-        float& x, float& y, float& z, float& dx, float& dy, float& dz);
+    void torus(const double  R, const double  r, const double  alpha, const double  beta,
+        double & x, double & y, double & z, double & dx, double & dy, double & dz);
 
 protected:
     struct_obj mObject;

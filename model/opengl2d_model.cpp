@@ -397,6 +397,10 @@ void OpenGL2dModel::paintGL()
     //   draw ticks
     // -----------------------
     glColor3f(1, 1, 1);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluOrtho2D(mXmin, mXmax, 0, 1);
@@ -452,7 +456,7 @@ void OpenGL2dModel::paintGL()
             if (!mObjects[i]->drawObject(false)) {
                 if (mObjects[i]->getObjectType() == enum_object_text2d
                     && mObjects[i]->getObjectDim() == enum_object_dim_2d) {
-                    float cx, cy, size;
+                    double cx, cy, size;
                     mObjects[i]->getValue(0, cx);
                     mObjects[i]->getValue(1, cy);
                     mObjects[i]->getValue(2, size);
@@ -528,7 +532,7 @@ void OpenGL2dModel::paintGL()
         glEnd();
     }
 
-    // draw tick labels
+    // draw tick labels    
     if (renderText != nullptr) {
         glViewport(DEF_DRAW2D_LEFT_BORDER, 0, mWinSize[0] - DEF_DRAW2D_LEFT_BORDER, DEF_DRAW2D_BOTTOM_BORDER);
         renderText->SetWindowSize(mWinSize[0], DEF_DRAW2D_BOTTOM_BORDER);

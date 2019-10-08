@@ -56,6 +56,7 @@ RenderText::RenderText(const char* fontFilename, unsigned int size)
 
     rtp = new RenderTextPimpl();
     initialized_ = init();
+    rotAngle = 0.0f;
 }
 
 RenderText::RenderText(const char* fontFilename, unsigned int size, float* rgba)
@@ -71,6 +72,7 @@ RenderText::RenderText(const char* fontFilename, unsigned int size, float* rgba)
 
     rtp = new RenderTextPimpl();
     initialized_ = init();
+    rotAngle = 0.0f;
 }
 
 RenderText::RenderText(const char* fontFilename, unsigned int size, float r, float g, float b, float a)
@@ -86,6 +88,7 @@ RenderText::RenderText(const char* fontFilename, unsigned int size, float r, flo
 
     rtp = new RenderTextPimpl();
     initialized_ = init();
+    rotAngle = 0.0f;
 }
 
 RenderText::~RenderText()

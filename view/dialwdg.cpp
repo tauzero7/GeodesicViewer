@@ -10,7 +10,7 @@
 DialWidget::DialWidget(double initValue, double step, QWidget* parent)
     : QWidget(parent)
 {
-    mInitValue = initValue;
+    mValue = mInitValue = initValue;
     if (step == 0.0) {
         mStep = 0.01;
     }
@@ -96,7 +96,7 @@ void DialWidget::paintEvent(QPaintEvent*)
     painter.setPen(ptr);
 
     painter.drawLine(
-        dspCenter, dspCenter + QPointF(ptrRadius * sin(mValue * DEG_TO_RAD), -ptrRadius * cos(mValue * DEG_TO_RAD)));
+        dspCenter, dspCenter + QPointF(ptrRadius * sin(deg_to_rad(mValue)), -ptrRadius * cos(deg_to_rad(mValue))));
 
     ptr.setColor(QColor(210, 210, 200));
     ptr.setWidth(2);
@@ -109,8 +109,9 @@ void DialWidget::paintEvent(QPaintEvent*)
         if (i % 30 != 0) {
             fk = 1.15;
         }
-        double sx = sin(i * DEG_TO_RAD);
-        double cx = cos(i * DEG_TO_RAD);
+        double ri = deg_to_rad(i);
+        double sx = sin(ri);
+        double cx = cos(ri);
         QPointF p1 = dspCenter + QPointF(ptrRadius * sx * fk, ptrRadius * cx * fk);
         QPointF p2 = dspCenter + QPointF(ptrRadius * sx * 1.1, ptrRadius * cx * 1.1);
         painter.drawLine(p1, p2);
@@ -120,8 +121,9 @@ void DialWidget::paintEvent(QPaintEvent*)
     Font.setBold(true);
     painter.setFont(Font);
     for (int i = 0; i <= arcMax; i += 60) {
-        double sx = sin(i * DEG_TO_RAD);
-        double cx = cos(i * DEG_TO_RAD);
+        double ri = deg_to_rad(i);
+        double sx = sin(ri);
+        double cx = cos(ri);
         QPointF pf = dspCenter + QPointF(1.45 * ptrRadius * sx, -1.45 * ptrRadius * cx);
         QRectF rect(pf.x() - 15.0, pf.y() - 9, 30, 18);
         if (i < 360) {
@@ -164,7 +166,7 @@ void DialWidget::posToAngle(QPoint pos)
     double px = static_cast<double>(pos.x());
     double py = static_cast<double>(pos.y());
 
-    mValue = angle = floor((atan2(-px, py) + PI) * RAD_TO_DEG / mStep) * mStep;
+    mValue = angle = floor(rad_to_deg(atan2(-px, py) + PI) / mStep) * mStep;
     mValue = std::max(std::min(mValue, arcMax), 0.0);
     setValue(mValue);
 }

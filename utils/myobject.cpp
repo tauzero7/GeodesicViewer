@@ -5,6 +5,7 @@
  * This file is part of GeodesicView.
  */
 #include "myobject.h"
+#include "mathutils.h"
 
 /*! Standard object constructor.
  *  \param prepare : do prepare.
@@ -98,7 +99,7 @@ void MyObject::getObject(struct_obj& obj)
     obj.text = mObject.text;
 }
 
-bool MyObject::getValue(int num, float& val)
+bool MyObject::getValue(int num, double& val)
 {
     if (num < 0 || num >= mObject.numvals) {
         return false;
@@ -114,10 +115,10 @@ std::string MyObject::getText()
 
 void MyObject::setColor(float red, float green, float blue, float alpha)
 {
-    mObject.color[0] = clamp_float(red, 0.0, 1.0);
-    mObject.color[1] = clamp_float(green, 0.0, 1.0);
-    mObject.color[2] = clamp_float(blue, 0.0, 1.0);
-    mObject.color[3] = clamp_float(alpha, 0.0, 1.0);
+    mObject.color[0] = clamp_f(red,   0.0f, 1.0f);
+    mObject.color[1] = clamp_f(green, 0.0f, 1.0f);
+    mObject.color[2] = clamp_f(blue,  0.0f, 1.0f);
+    mObject.color[3] = clamp_f(alpha, 0.0f, 1.0f);
 }
 
 void MyObject::getColor(float& red, float& green, float& blue)
@@ -135,24 +136,24 @@ void MyObject::getColor(float& red, float& green, float& blue, float& alpha)
     alpha = mObject.color[3];
 }
 
-bool MyObject::withLight(float light[], bool stereo)
+bool MyObject::withLight(float mat[], bool stereo)
 {
     if (mObject.lighted) {
         if (!stereo) {
-            light[0] = mObject.color[0];
-            light[1] = mObject.color[1];
-            light[2] = mObject.color[2];
-            light[3] = mObject.color[3];
+            mat[0] = mObject.color[0];
+            mat[1] = mObject.color[1];
+            mat[2] = mObject.color[2];
+            mat[3] = mObject.color[3];
         }
         else {
-            light[0] = light[1] = light[2] = light[3] = 1.0;
+            mat[0] = mat[1] = mat[2] = mat[3] = 1.0;
         }
         return true;
     }
     return false;
 }
 
-void MyObject::create_object(enum_object_type type, float* val, std::string text)
+void MyObject::create_object(enum_object_type type, double* val, std::string text)
 {
     switch (type) {
         case enum_object_undefined:
@@ -206,7 +207,7 @@ void MyObject::create_object(enum_object_type type, float* val, std::string text
     }
 }
 
-void MyObject::create_2d_text(float cx, float cy, std::string text, float size)
+void MyObject::create_2d_text(double  cx, double  cy, std::string text, double  size)
 {
     mObject.type = enum_object_text2d;
     mObject.dim = enum_object_dim_2d;
@@ -218,7 +219,7 @@ void MyObject::create_2d_text(float cx, float cy, std::string text, float size)
     mObject.lighted = false;
 }
 
-void MyObject::create_3d_text(float cx, float cy, float cz, std::string text, float size)
+void MyObject::create_3d_text(double  cx, double  cy, double  cz, std::string text, double  size)
 {
     mObject.type = enum_object_text3d;
     mObject.dim = enum_object_dim_3d;
@@ -231,7 +232,7 @@ void MyObject::create_3d_text(float cx, float cy, float cz, std::string text, fl
     mObject.lighted = false;
 }
 
-void MyObject::create_2d_sphere(float cx, float cy, float radius, float num_points, float width)
+void MyObject::create_2d_sphere(double  cx, double  cy, double  radius, double  num_points, double  width)
 {
     deleteQuadric();
 
@@ -246,7 +247,7 @@ void MyObject::create_2d_sphere(float cx, float cy, float radius, float num_poin
     mObject.lighted = false;
 }
 
-void MyObject::create_3d_sphere(float cx, float cy, float cz, float radius, float slices, float stacks)
+void MyObject::create_3d_sphere(double  cx, double  cy, double  cz, double  radius, double  slices, double  stacks)
 {
     mObject.type = enum_object_sphere3d;
     mObject.dim = enum_object_dim_3d;
@@ -262,7 +263,7 @@ void MyObject::create_3d_sphere(float cx, float cy, float cz, float radius, floa
     createQuadric();
 }
 
-void MyObject::create_2d_box(float cx, float cy, float sizeX, float sizeY, float width)
+void MyObject::create_2d_box(double  cx, double  cy, double  sizeX, double  sizeY, double  width)
 {
     deleteQuadric();
 
@@ -277,7 +278,7 @@ void MyObject::create_2d_box(float cx, float cy, float sizeX, float sizeY, float
     mObject.lighted = false;
 }
 
-void MyObject::create_3d_box(float cx, float cy, float cz, float sizeX, float sizeY, float sizeZ, float width)
+void MyObject::create_3d_box(double  cx, double  cy, double  cz, double  sizeX, double  sizeY, double  sizeZ, double  width)
 {
     deleteQuadric();
 
@@ -294,7 +295,7 @@ void MyObject::create_3d_box(float cx, float cy, float cz, float sizeX, float si
     mObject.lighted = false;
 }
 
-void MyObject::create_2d_line(float lx, float ly, float ux, float uy, float width)
+void MyObject::create_2d_line(double  lx, double  ly, double  ux, double  uy, double  width)
 {
     deleteQuadric();
 
@@ -309,7 +310,7 @@ void MyObject::create_2d_line(float lx, float ly, float ux, float uy, float widt
     mObject.lighted = false;
 }
 
-void MyObject::create_3d_line(float lx, float ly, float lz, float ux, float uy, float uz, float width)
+void MyObject::create_3d_line(double  lx, double  ly, double  lz, double  ux, double  uy, double  uz, double  width)
 {
     deleteQuadric();
 
@@ -327,7 +328,7 @@ void MyObject::create_3d_line(float lx, float ly, float lz, float ux, float uy, 
 }
 
 void MyObject::create_2d_quad(
-    float v1x, float v1y, float v2x, float v2y, float v3x, float v3y, float v4x, float v4y, float width)
+    double  v1x, double  v1y, double  v2x, double  v2y, double  v3x, double  v3y, double  v4x, double  v4y, double  width)
 {
     deleteQuadric();
 
@@ -347,7 +348,7 @@ void MyObject::create_2d_quad(
 }
 
 void MyObject::create_3d_plane(
-    float v1x, float v1y, float v1z, float v2x, float v2y, float v2z, float v3x, float v3y, float v3z)
+    double  v1x, double  v1y, double  v1z, double  v2x, double  v2y, double  v2z, double  v3x, double  v3y, double  v3z)
 {
     deleteQuadric();
 
@@ -364,11 +365,11 @@ void MyObject::create_3d_plane(
     mObject.val[7] = v3y;
     mObject.val[8] = v3z;
     mObject.numvals = 9;
-    mObject.lighted = false;
+    mObject.lighted = true;
     mObject.style = GLU_FILL;
 }
 
-void MyObject::create_2d_disk(float cx, float cy, float radius, float fans)
+void MyObject::create_2d_disk(double  cx, double  cy, double  radius, double  fans)
 {
     deleteQuadric();
 
@@ -385,7 +386,7 @@ void MyObject::create_2d_disk(float cx, float cy, float radius, float fans)
 }
 
 void MyObject::create_3d_disk(
-    float cx, float cy, float cz, float dx, float dy, float dz, float iRadius, float oRadius, float slices, float loops)
+    double  cx, double  cy, double  cz, double  dx, double  dy, double  dz, double  iRadius, double  oRadius, double  slices, double  loops)
 {
     // std::cerr << "disk created" << std::endl;
     mObject.type = enum_object_disk3d;
@@ -402,13 +403,13 @@ void MyObject::create_3d_disk(
     mObject.val[8] = slices;
     mObject.val[9] = loops;
     mObject.numvals = 10;
-    mObject.lighted = false;
+    mObject.lighted = true;
     mObject.style = GLU_FILL;
     createQuadric();
 }
 
-void MyObject::create_3d_cylinder(float bx, float by, float bz, float tx, float ty, float tz, float baseRadius,
-    float topRadius, float slices, float stacks)
+void MyObject::create_3d_cylinder(double  bx, double  by, double  bz, double  tx, double  ty, double  tz, double  baseRadius,
+    double  topRadius, double  slices, double  stacks)
 {
     mObject.type = enum_object_cylinder3d;
     mObject.dim = enum_object_dim_3d;
@@ -429,20 +430,20 @@ void MyObject::create_3d_cylinder(float bx, float by, float bz, float tx, float 
     createQuadric();
 }
 
-void MyObject::torus(const float R, const float r, const float alpha, const float beta, float& x, float& y, float& z,
-    float& dx, float& dy, float& dz)
+void MyObject::torus(const double  R, const double  r, const double  alpha, const double  beta, double & x, double & y, double & z,
+    double & dx, double & dy, double & dz)
 {
-    x = (R + r * cosf(beta)) * cosf(alpha);
-    y = (R + r * cosf(beta)) * sinf(alpha);
-    z = r * sinf(beta);
+    x = (R + r * cos(beta)) * cos(alpha);
+    y = (R + r * cos(beta)) * sin(alpha);
+    z = r * sin(beta);
 
-    dx = cosf(beta) * cosf(alpha);
-    dy = cosf(beta) * sinf(alpha);
-    dz = sinf(beta);
+    dx = cos(beta) * cos(alpha);
+    dy = cos(beta) * sin(alpha);
+    dz = sin(beta);
 }
 
-void MyObject::create_3d_torus(float cx, float cy, float cz, float nt, float np, float outerRadius, float innerRadius,
-    float maxPhi, float slices, float stacks)
+void MyObject::create_3d_torus(double  cx, double  cy, double  cz, double  nt, double  np, double  outerRadius, double  innerRadius,
+    double  maxPhi, double  slices, double  stacks)
 {
     mObject.type = enum_object_torus3d;
     mObject.dim = enum_object_dim_3d;
@@ -461,11 +462,11 @@ void MyObject::create_3d_torus(float cx, float cy, float cz, float nt, float np,
     mObject.lighted = true;
     mObject.style = GL_FILL;
 
-    if (maxPhi < 0.0f) {
-        mObject.val[7] = 0.0f;
+    if (maxPhi < 0.0) {
+        mObject.val[7] = 0.0;
     }
-    if (maxPhi > 360.0f) {
-        mObject.val[7] = 360.0f;
+    if (maxPhi > 360.0) {
+        mObject.val[7] = 360.0;
     }
 
     if (mDisplList != 0) {
@@ -474,36 +475,36 @@ void MyObject::create_3d_torus(float cx, float cy, float cz, float nt, float np,
 
     mDisplList = glGenLists(1);
     glNewList(mDisplList, GL_COMPILE);
-    float x, y, z, dx, dy, dz, alpha, beta;
-    float alphaStep = static_cast<float>(2.0 * M_PI) / slices;
-    float betaStep = static_cast<float>(2.0 * M_PI) / stacks;
+    double x, y, z, dx, dy, dz, alpha, beta;
+    double alphaStep = 2.0 * PI / slices;
+    double betaStep = 2.0 * PI / stacks;
 
-    float mp = mObject.val[7] * static_cast<float>(DEG_TO_RAD);
+    double mp = mObject.val[7] * DEG_TO_RAD;
     for (alpha = 0.0; alpha < mp; alpha += alphaStep) {
         glBegin(GL_QUAD_STRIP);
         beta = 0.0;
-        while (beta < 2.0f * static_cast<float>(M_PI)) {
+        while (beta < 2.0 * PI) {
             torus(outerRadius, innerRadius, alpha, beta, x, y, z, dx, dy, dz);
-            glNormal3f(dx, dy, dz);
-            glVertex3f(x, y, z);
+            glNormal3d(dx, dy, dz);
+            glVertex3d(x, y, z);
             torus(outerRadius, innerRadius, alpha + alphaStep, beta, x, y, z, dx, dy, dz);
-            glNormal3f(dx, dy, dz);
-            glVertex3f(x, y, z);
+            glNormal3d(dx, dy, dz);
+            glVertex3d(x, y, z);
             beta += betaStep;
         }
         torus(outerRadius, innerRadius, alpha, beta, x, y, z, dx, dy, dz);
-        glNormal3f(dx, dy, dz);
-        glVertex3f(x, y, z);
+        glNormal3d(dx, dy, dz);
+        glVertex3d(x, y, z);
         torus(outerRadius, innerRadius, alpha + alphaStep, 0.0, x, y, z, dx, dy, dz);
-        glNormal3f(dx, dy, dz);
-        glVertex3f(x, y, z);
+        glNormal3d(dx, dy, dz);
+        glVertex3d(x, y, z);
         glEnd();
     }
     glEndList();
 }
 
-void MyObject::create_3d_tube(float bx, float by, float bz, float e1x, float e1y, float e1z, float e2x, float e2y,
-    float e2z, float e3x, float e3y, float e3z, float slices, float stacks)
+void MyObject::create_3d_tube(double bx, double by, double bz, double e1x, double e1y, double e1z, double e2x, double e2y,
+    double e2z, double e3x, double e3y, double e3z, double slices, double stacks)
 {
     mObject.type = enum_object_tube3d;
     mObject.dim = enum_object_dim_3d;
@@ -533,50 +534,50 @@ void MyObject::create_3d_tube(float bx, float by, float bz, float e1x, float e1y
     mDisplList = glGenLists(1);
     glNewList(mDisplList, GL_COMPILE);
 
-    float x, y, z, dx, dy, dz, alpha;
-    float alphaStep = 2.0f * static_cast<float>(M_PI) / slices;
-    float lStep = 1.0f / stacks;
+    double x, y, z, dx, dy, dz, alpha;
+    double alphaStep = 2.0 * PI / slices;
+    double lStep = 1.0 / stacks;
 
-    for (float l = 0.0f; l < 1.0f; l += lStep) {
+    for (double l = 0.0; l < 1.0; l += lStep) {
         glBegin(GL_QUAD_STRIP);
-        for (alpha = 0.0f; alpha < 2.0f * static_cast<float>(M_PI); alpha += alphaStep) {
-            dx = e1x * cosf(alpha) + e2x * sinf(alpha);
-            dy = e1y * cosf(alpha) + e2y * sinf(alpha);
-            dz = e1z * cosf(alpha) + e2z * sinf(alpha);
+        for (alpha = 0.0; alpha < 2.0 * M_PI; alpha += alphaStep) {
+            dx = e1x * cos(alpha) + e2x * sin(alpha);
+            dy = e1y * cos(alpha) + e2y * sin(alpha);
+            dz = e1z * cos(alpha) + e2z * sin(alpha);
 
             x = bx + dx + l * e3x;
             y = by + dy + l * e3y;
             z = bz + dz + l * e3z;
 
-            glNormal3f(-dx, -dy, -dz);
-            glVertex3f(x, y, z);
+            glNormal3d(-dx, -dy, -dz);
+            glVertex3d(x, y, z);
 
             x = bx + dx + (l + lStep) * e3x;
             y = by + dy + (l + lStep) * e3y;
             z = bz + dz + (l + lStep) * e3z;
 
-            glNormal3f(-dx, -dy, -dz);
-            glVertex3f(x, y, z);
+            glNormal3d(-dx, -dy, -dz);
+            glVertex3d(x, y, z);
         }
 
-        alpha = 0.0f;
-        dx = e1x * cosf(alpha) + e2x * sinf(alpha);
-        dy = e1y * cosf(alpha) + e2y * sinf(alpha);
-        dz = e1z * cosf(alpha) + e2z * sinf(alpha);
+        alpha = 0.0;
+        dx = e1x * cos(alpha) + e2x * sin(alpha);
+        dy = e1y * cos(alpha) + e2y * sin(alpha);
+        dz = e1z * cos(alpha) + e2z * sin(alpha);
 
         x = bx + dx + l * e3x;
         y = by + dy + l * e3y;
         z = bz + dz + l * e3z;
 
-        glNormal3f(-dx, -dy, -dz);
-        glVertex3f(x, y, z);
+        glNormal3d(-dx, -dy, -dz);
+        glVertex3d(x, y, z);
 
         x = bx + dx + (l + lStep) * e3x;
         y = by + dy + (l + lStep) * e3y;
         z = bz + dz + (l + lStep) * e3z;
 
-        glNormal3f(-dx, -dy, -dz);
-        glVertex3f(x, y, z);
+        glNormal3d(-dx, -dy, -dz);
+        glVertex3d(x, y, z);
         glEnd();
     }
     glEndList();
@@ -599,114 +600,135 @@ bool MyObject::drawObject(bool stereo)
         case enum_object_text3d: {
             return false;
         }
+        // ---------------------------------
+        //   sphere2d
+        // ---------------------------------
         case enum_object_sphere2d: {
             glGetFloatv(GL_LINE_WIDTH, &line_width);
-            glLineWidth(mObject.val[4]);
-            float cx = mObject.val[0];
-            float cy = mObject.val[1];
-            float radius = mObject.val[2];
-            float numPoints = mObject.val[3];
-            float angleStep = 2.0f * static_cast<float>(M_PI) / numPoints;
+            glLineWidth(static_cast<float>(mObject.val[4]));
+            double cx = mObject.val[0];
+            double cy = mObject.val[1];
+            double radius = mObject.val[2];
+            double numPoints = mObject.val[3];
+            double angleStep = 2.0 * PI / numPoints;
             glBegin(GL_LINE_LOOP);
-            for (float angle = 0.0f; angle < 2.0f * static_cast<float>(M_PI); angle += angleStep) {
-                glVertex2f(cx + radius * cosf(angle), cy + radius * sinf(angle));
+            for (double angle = 0.0; angle < 2.0 * PI; angle += angleStep) {
+                glVertex2d(cx + radius * cos(angle), cy + radius * sin(angle));
             }
             glEnd();
             glLineWidth(line_width);
             break;
         }
+        // ---------------------------------
+        //   sphere3d
+        // ---------------------------------
         case enum_object_sphere3d: {
             glPushMatrix();
-            glTranslatef(mObject.val[0], mObject.val[1], mObject.val[2]);
-            gluSphere(myQuad, mObject.val[3], GLuint(mObject.val[4]), GLuint(mObject.val[5]));
+            glTranslated(mObject.val[0], mObject.val[1], mObject.val[2]);
+            gluSphere(myQuad, mObject.val[3], static_cast<GLint>(mObject.val[4]), static_cast<GLint>(mObject.val[5]));
             glPopMatrix();
             break;
         }
+        // ---------------------------------
+        //   box2d
+        // ---------------------------------
         case enum_object_box2d: {
             glGetFloatv(GL_LINE_WIDTH, &line_width);
-            glLineWidth(mObject.val[4]);
+            glLineWidth(static_cast<float>(mObject.val[4]));
             glBegin(GL_LINE_LOOP);
-            glVertex2f(mObject.val[0] - 0.5f * mObject.val[2], mObject.val[1] - 0.5f * mObject.val[3]);
-            glVertex2f(mObject.val[0] + 0.5f * mObject.val[2], mObject.val[1] - 0.5f * mObject.val[3]);
-            glVertex2f(mObject.val[0] + 0.5f * mObject.val[2], mObject.val[1] + 0.5f * mObject.val[3]);
-            glVertex2f(mObject.val[0] - 0.5f * mObject.val[2], mObject.val[1] + 0.5f * mObject.val[3]);
+            glVertex2d(mObject.val[0] - 0.5 * mObject.val[2], mObject.val[1] - 0.5 * mObject.val[3]);
+            glVertex2d(mObject.val[0] + 0.5 * mObject.val[2], mObject.val[1] - 0.5 * mObject.val[3]);
+            glVertex2d(mObject.val[0] + 0.5 * mObject.val[2], mObject.val[1] + 0.5 * mObject.val[3]);
+            glVertex2d(mObject.val[0] - 0.5 * mObject.val[2], mObject.val[1] + 0.5 * mObject.val[3]);
             glEnd();
             glLineWidth(line_width);
             break;
         }
+        // ---------------------------------
+        //   box3d
+        // ---------------------------------
         case enum_object_box3d: {
             glPushMatrix();
-            glTranslatef(mObject.val[0], mObject.val[1], mObject.val[2]);
+            glTranslated(mObject.val[0], mObject.val[1], mObject.val[2]);
 
             glGetFloatv(GL_LINE_WIDTH, &line_width);
-            glLineWidth(mObject.val[6]);
+            glLineWidth(static_cast<float>(mObject.val[6]));
             glEnable(GL_LINE_SMOOTH);
             glBegin(GL_LINE_LOOP);
-            glVertex3f(-0.5f * mObject.val[3], -0.5f * mObject.val[4], -0.5f * mObject.val[5]);
-            glVertex3f(0.5f * mObject.val[3], -0.5f * mObject.val[4], -0.5f * mObject.val[5]);
-            glVertex3f(0.5f * mObject.val[3], 0.5f * mObject.val[4], -0.5f * mObject.val[5]);
-            glVertex3f(-0.5f * mObject.val[3], 0.5f * mObject.val[4], -0.5f * mObject.val[5]);
+            glVertex3d(-0.5 * mObject.val[3], -0.5 * mObject.val[4], -0.5 * mObject.val[5]);
+            glVertex3d( 0.5 * mObject.val[3], -0.5 * mObject.val[4], -0.5 * mObject.val[5]);
+            glVertex3d( 0.5 * mObject.val[3],  0.5 * mObject.val[4], -0.5 * mObject.val[5]);
+            glVertex3d(-0.5 * mObject.val[3],  0.5 * mObject.val[4], -0.5 * mObject.val[5]);
             glEnd();
 
             glBegin(GL_LINE_LOOP);
-            glVertex3f(-0.5f * mObject.val[3], -0.5f * mObject.val[4], 0.5f * mObject.val[5]);
-            glVertex3f(0.5f * mObject.val[3], -0.5f * mObject.val[4], 0.5f * mObject.val[5]);
-            glVertex3f(0.5f * mObject.val[3], 0.5f * mObject.val[4], 0.5f * mObject.val[5]);
-            glVertex3f(-0.5f * mObject.val[3], 0.5f * mObject.val[4], 0.5f * mObject.val[5]);
+            glVertex3d(-0.5 * mObject.val[3], -0.5 * mObject.val[4], 0.5 * mObject.val[5]);
+            glVertex3d( 0.5 * mObject.val[3], -0.5 * mObject.val[4], 0.5 * mObject.val[5]);
+            glVertex3d( 0.5 * mObject.val[3],  0.5 * mObject.val[4], 0.5 * mObject.val[5]);
+            glVertex3d(-0.5 * mObject.val[3],  0.5 * mObject.val[4], 0.5 * mObject.val[5]);
             glEnd();
 
             glBegin(GL_LINES);
-            glVertex3f(-0.5f * mObject.val[3], -0.5f * mObject.val[4], -0.5f * mObject.val[5]);
-            glVertex3f(-0.5f * mObject.val[3], -0.5f * mObject.val[4], 0.5f * mObject.val[5]);
+            glVertex3d(-0.5 * mObject.val[3], -0.5 * mObject.val[4], -0.5 * mObject.val[5]);
+            glVertex3d(-0.5 * mObject.val[3], -0.5 * mObject.val[4], 0.5 * mObject.val[5]);
             glEnd();
 
             glBegin(GL_LINES);
-            glVertex3f(0.5f * mObject.val[3], -0.5f * mObject.val[4], -0.5f * mObject.val[5]);
-            glVertex3f(0.5f * mObject.val[3], -0.5f * mObject.val[4], 0.5f * mObject.val[5]);
+            glVertex3d(0.5 * mObject.val[3], -0.5 * mObject.val[4], -0.5 * mObject.val[5]);
+            glVertex3d(0.5 * mObject.val[3], -0.5 * mObject.val[4], 0.5 * mObject.val[5]);
             glEnd();
 
             glBegin(GL_LINES);
-            glVertex3f(0.5f * mObject.val[3], 0.5f * mObject.val[4], -0.5f * mObject.val[5]);
-            glVertex3f(0.5f * mObject.val[3], 0.5f * mObject.val[4], 0.5f * mObject.val[5]);
+            glVertex3d(0.5 * mObject.val[3], 0.5 * mObject.val[4], -0.5 * mObject.val[5]);
+            glVertex3d(0.5 * mObject.val[3], 0.5 * mObject.val[4], 0.5 * mObject.val[5]);
             glEnd();
 
             glBegin(GL_LINES);
-            glVertex3f(-0.5f * mObject.val[3], 0.5f * mObject.val[4], -0.5f * mObject.val[5]);
-            glVertex3f(-0.5f * mObject.val[3], 0.5f * mObject.val[4], 0.5f * mObject.val[5]);
+            glVertex3d(-0.5 * mObject.val[3], 0.5 * mObject.val[4], -0.5 * mObject.val[5]);
+            glVertex3d(-0.5 * mObject.val[3], 0.5 * mObject.val[4], 0.5 * mObject.val[5]);
             glEnd();
             glDisable(GL_LINE_SMOOTH);
             glLineWidth(line_width);
             glPopMatrix();
             break;
         }
+        // ---------------------------------
+        //   line2d
+        // ---------------------------------
         case enum_object_line2d: {
             glGetFloatv(GL_LINE_WIDTH, &line_width);
-            glLineWidth(mObject.val[4]);
+            glLineWidth(static_cast<float>(mObject.val[4]));
             glEnable(GL_LINE_SMOOTH);
             glBegin(GL_LINES);
-            glVertex2f(mObject.val[0], mObject.val[1]);
-            glVertex2f(mObject.val[2], mObject.val[3]);
+            glVertex2d(mObject.val[0], mObject.val[1]);
+            glVertex2d(mObject.val[2], mObject.val[3]);
             glEnd();
             glDisable(GL_LINE_SMOOTH);
             glLineWidth(line_width);
             break;
         }
+        // ---------------------------------
+        //   line3d
+        // ---------------------------------
         case enum_object_line3d: {
             glGetFloatv(GL_LINE_WIDTH, &line_width);
-            glLineWidth(mObject.val[6]);
+            glLineWidth(static_cast<float>(mObject.val[6]));
             glEnable(GL_LINE_SMOOTH);
             glBegin(GL_LINES);
-            glVertex3f(mObject.val[0], mObject.val[1], mObject.val[2]);
-            glVertex3f(mObject.val[3], mObject.val[4], mObject.val[5]);
+            glVertex3d(mObject.val[0], mObject.val[1], mObject.val[2]);
+            glVertex3d(mObject.val[3], mObject.val[4], mObject.val[5]);
             glEnd();
             glDisable(GL_LINE_SMOOTH);
             glLineWidth(line_width);
             break;
         }
+        // ---------------------------------
+        //   quad2d
+        // ---------------------------------
         case enum_object_quad2d: {
             glGetFloatv(GL_LINE_WIDTH, &line_width);
-            if (mObject.val[8] > 0.0f) {
-                glLineWidth(mObject.val[8]);
+            if (mObject.val[8] > 0.0) {
+                glLineWidth(static_cast<float>(mObject.val[8]));
                 glEnable(GL_LINE_SMOOTH);
                 glBegin(GL_LINE_LOOP);
             }
@@ -714,39 +736,48 @@ bool MyObject::drawObject(bool stereo)
                 glBegin(GL_QUADS);
             }
 
-            glVertex2f(mObject.val[0], mObject.val[1]);
-            glVertex2f(mObject.val[2], mObject.val[3]);
-            glVertex2f(mObject.val[4], mObject.val[5]);
-            glVertex2f(mObject.val[6], mObject.val[7]);
+            glVertex2d(mObject.val[0], mObject.val[1]);
+            glVertex2d(mObject.val[2], mObject.val[3]);
+            glVertex2d(mObject.val[4], mObject.val[5]);
+            glVertex2d(mObject.val[6], mObject.val[7]);
             glEnd();
             glDisable(GL_LINE_SMOOTH);
             glLineWidth(line_width);
             break;
         }
+        // ---------------------------------
+        //   plane3d
+        // ---------------------------------
         case enum_object_plane3d: {
             glBegin(GL_QUADS);
-            glVertex3f(mObject.val[0], mObject.val[1], mObject.val[2]);
-            glVertex3f(mObject.val[3], mObject.val[4], mObject.val[5]);
-            glVertex3f(mObject.val[3] + mObject.val[6] - mObject.val[0],
+            glVertex3d(mObject.val[0], mObject.val[1], mObject.val[2]);
+            glVertex3d(mObject.val[3], mObject.val[4], mObject.val[5]);
+            glVertex3d(mObject.val[3] + mObject.val[6] - mObject.val[0],
                 mObject.val[4] + mObject.val[7] - mObject.val[1], mObject.val[5] + mObject.val[8] - mObject.val[2]);
-            glVertex3f(mObject.val[6], mObject.val[7], mObject.val[8]);
+            glVertex3d(mObject.val[6], mObject.val[7], mObject.val[8]);
             glEnd();
             break;
         }
+        // ---------------------------------
+        //   disk2d
+        // ---------------------------------
         case enum_object_disk2d: {
-            float cx = mObject.val[0];
-            float cy = mObject.val[1];
-            float r = mObject.val[2];
-            float step = 2.0f * M_PI / mObject.val[3];
+            double cx = mObject.val[0];
+            double cy = mObject.val[1];
+            double r = mObject.val[2];
+            double step = 2.0 * PI / mObject.val[3];
             glBegin(GL_TRIANGLE_FAN);
-            glVertex2f(cx, cy);
-            for (float angle = 0.0f; angle < 2.0f * M_PI; angle += step) {
-                glVertex2f(cx + r * cosf(angle), cy + r * sinf(angle));
+            glVertex2d(cx, cy);
+            for (double angle = 0.0; angle < 2.0 * PI; angle += step) {
+                glVertex2d(cx + r * cos(angle), cy + r * sin(angle));
             }
-            glVertex2f(cx + r, cy);
+            glVertex2d(cx + r, cy);
             glEnd();
             break;
         }
+        // ---------------------------------
+        //   disk3d
+        // ---------------------------------
         case enum_object_disk3d: {
             m4d::vec3 dir, right;
             m4d::vec3 zup(0.0, 0.0, 1.0);
@@ -768,12 +799,17 @@ bool MyObject::drawObject(bool stereo)
             }
 
             glPushMatrix();
-            glTranslatef(mObject.val[0], mObject.val[1], mObject.val[2]);
-            glRotatef(angle * RAD_TO_DEG, right[0], right[1], right[2]);
-            gluDisk(myQuad, mObject.val[6], mObject.val[7], mObject.val[8], mObject.val[9]);
+            glTranslated(mObject.val[0], mObject.val[1], mObject.val[2]);
+            glRotated(angle * RAD_TO_DEG, right[0], right[1], right[2]);
+
+            // gluDisk(GLUquadric* quad,  GLdouble inner,  GLdouble outer,  GLint slices,  GLint loops);
+            gluDisk(myQuad, mObject.val[6], mObject.val[7], static_cast<int>(mObject.val[8]), static_cast<int>(mObject.val[9]));
             glPopMatrix();
             break;
         }
+        // ---------------------------------
+        //   cylinder3d
+        // ---------------------------------
         case enum_object_cylinder3d: {
             m4d::vec3 dir, right;
             m4d::vec3 zup(0.0, 0.0, 1.0);
@@ -798,23 +834,32 @@ bool MyObject::drawObject(bool stereo)
             }
 
             glPushMatrix();
-            glTranslatef(mObject.val[0], mObject.val[1], mObject.val[2]);
-            glRotatef(angle * RAD_TO_DEG, right[0], right[1], right[2]);
-            gluCylinder(myQuad, mObject.val[6], mObject.val[7], height, GLuint(mObject.val[8]), GLuint(mObject.val[9]));
+            glTranslated(mObject.val[0], mObject.val[1], mObject.val[2]);
+            glRotated(angle * RAD_TO_DEG, right[0], right[1], right[2]);
+
+            // gluCylinder(GLUquadric* quad,  GLdouble base,  GLdouble top,  GLdouble height,  GLint slices,  GLint stacks);
+            gluCylinder(myQuad, mObject.val[6], mObject.val[7], height,
+                    static_cast<GLint>(mObject.val[8]), static_cast<GLint>(mObject.val[9]));
             glPopMatrix();
             break;
         }
+        // ---------------------------------
+        //   torus3d
+        // ---------------------------------
         case enum_object_torus3d: {
             glEnable(GL_LINE_SMOOTH);
             glPushMatrix();
-            glTranslatef(mObject.val[0], mObject.val[1], mObject.val[2]);
-            glRotatef(mObject.val[4], 0.0, 0.0, 1.0);
-            glRotatef(-mObject.val[3], 1.0, 0.0, 0.0);
+            glTranslated(mObject.val[0], mObject.val[1], mObject.val[2]);
+            glRotated(mObject.val[4], 0.0, 0.0, 1.0);
+            glRotated(-mObject.val[3], 1.0, 0.0, 0.0);
             glCallList(mDisplList);
             glPopMatrix();
             glDisable(GL_LINE_SMOOTH);
             break;
         }
+        // ---------------------------------
+        //  tube3d
+        // ---------------------------------
         case enum_object_tube3d: {
             glEnable(GL_LINE_SMOOTH);
             glCallList(mDisplList);
@@ -835,7 +880,8 @@ void MyObject::print(FILE* fptr)
     fprintf(fptr, "val  9-11 : %f %f %f\n", mObject.val[9], mObject.val[10], mObject.val[11]);
     fprintf(fptr, "val 12-13 : %f %f\n", mObject.val[12], mObject.val[13]);
     fprintf(fptr, "text      : %s\n", mObject.text.c_str());
-    fprintf(fptr, "color     : %f %f %f %f\n", mObject.color[0], mObject.color[1], mObject.color[2], mObject.color[3]);
+    fprintf(fptr, "color     : %f %f %f %f\n", static_cast<double>(mObject.color[0]),
+            static_cast<double>(mObject.color[1]), static_cast<double>(mObject.color[2]), static_cast<double>(mObject.color[3]));
     fprintf(fptr, "disp-list : %d\n", mDisplList);
     fprintf(fptr, "quadric   : %s\n\n", (myQuad != nullptr ? "yes" : "no"));
     setlocale(LC_NUMERIC, oldlocale);
@@ -852,7 +898,7 @@ void MyObject::printLine(std::string& line)
 #ifdef _WIN32
             sprintf_s(buf, stl_object_format[enum_object_text2d].toStdString().c_str(),
                 stl_object_type[enum_object_text2d].toStdString().c_str(), mObject.val[0], mObject.val[1],
-                mObject.text.c_str(), mObject.val[2], mObject.color[0], mObject.color[1], mObject.color[2]);
+                mObject.text.c_str(), mObject.val[2], static_cast<double>(mObject.color[0]), static_cast<double>(mObject.color[1]), static_cast<double>(mObject.color[2]));
 #else
             sprintf(buf, stl_object_format[enum_object_text2d].toStdString().c_str(),
                 stl_object_type[enum_object_text2d].toStdString().c_str(), mObject.val[0], mObject.val[1],
@@ -863,8 +909,8 @@ void MyObject::printLine(std::string& line)
 #ifdef _WIN32
             sprintf_s(buf, stl_object_format[enum_object_text3d].toStdString().c_str(),
                 stl_object_type[enum_object_text3d].toStdString().c_str(), mObject.val[0], mObject.val[1],
-                mObject.val[2], mObject.text.c_str(), mObject.val[3], mObject.color[0], mObject.color[1],
-                mObject.color[2]);
+                mObject.val[2], mObject.text.c_str(), mObject.val[3], static_cast<double>(mObject.color[0]), static_cast<double>(mObject.color[1]),
+                static_cast<double>(mObject.color[2]));
 #else
             sprintf(buf, stl_object_format[enum_object_text3d].toStdString().c_str(),
                 stl_object_type[enum_object_text3d].toStdString().c_str(), mObject.val[0], mObject.val[1],
@@ -876,7 +922,7 @@ void MyObject::printLine(std::string& line)
 #ifdef _WIN32
             sprintf_s(buf, stl_object_format[enum_object_sphere2d].toStdString().c_str(),
                 stl_object_type[enum_object_sphere2d].toStdString().c_str(), mObject.val[0], mObject.val[1],
-                mObject.val[2], mObject.val[3], mObject.val[4], mObject.color[0], mObject.color[1], mObject.color[2]);
+                mObject.val[2], mObject.val[3], mObject.val[4], static_cast<double>(mObject.color[0]), static_cast<double>(mObject.color[1]), static_cast<double>(mObject.color[2]));
 #else
             sprintf(buf, stl_object_format[enum_object_sphere2d].toStdString().c_str(),
                 stl_object_type[enum_object_sphere2d].toStdString().c_str(), mObject.val[0], mObject.val[1],
@@ -887,8 +933,8 @@ void MyObject::printLine(std::string& line)
 #ifdef _WIN32
             sprintf_s(buf, stl_object_format[enum_object_sphere3d].toStdString().c_str(),
                 stl_object_type[enum_object_sphere3d].toStdString().c_str(), mObject.val[0], mObject.val[1],
-                mObject.val[2], mObject.val[3], mObject.val[4], mObject.val[5], mObject.color[0], mObject.color[1],
-                mObject.color[2]);
+                mObject.val[2], mObject.val[3], mObject.val[4], mObject.val[5],
+                    static_cast<double>(mObject.color[0]), static_cast<double>(mObject.color[1]), static_cast<double>(mObject.color[2]));
 #else
             sprintf(buf, stl_object_format[enum_object_sphere3d].toStdString().c_str(),
                 stl_object_type[enum_object_sphere3d].toStdString().c_str(), mObject.val[0], mObject.val[1],
@@ -900,7 +946,8 @@ void MyObject::printLine(std::string& line)
 #ifdef _WIN32
             sprintf_s(buf, stl_object_format[enum_object_box2d].toStdString().c_str(),
                 stl_object_type[enum_object_box2d].toStdString().c_str(), mObject.val[0], mObject.val[1],
-                mObject.val[2], mObject.val[3], mObject.val[4], mObject.color[0], mObject.color[1], mObject.color[2]);
+                mObject.val[2], mObject.val[3], mObject.val[4],
+                    static_cast<double>(mObject.color[0]), static_cast<double>(mObject.color[1]), static_cast<double>(mObject.color[2]));
 #else
             sprintf(buf, stl_object_format[enum_object_box2d].toStdString().c_str(),
                 stl_object_type[enum_object_box2d].toStdString().c_str(), mObject.val[0], mObject.val[1],
@@ -911,8 +958,8 @@ void MyObject::printLine(std::string& line)
 #ifdef _WIN32
             sprintf_s(buf, stl_object_format[enum_object_box3d].toStdString().c_str(),
                 stl_object_type[enum_object_box3d].toStdString().c_str(), mObject.val[0], mObject.val[1],
-                mObject.val[2], mObject.val[3], mObject.val[4], mObject.val[5], mObject.val[6], mObject.color[0],
-                mObject.color[1], mObject.color[2]);
+                mObject.val[2], mObject.val[3], mObject.val[4], mObject.val[5], mObject.val[6],
+                    static_cast<double>(mObject.color[0]), static_cast<double>(mObject.color[1]), static_cast<double>(mObject.color[2]));
 #else
             sprintf(buf, stl_object_format[enum_object_box3d].toStdString().c_str(),
                 stl_object_type[enum_object_box3d].toStdString().c_str(), mObject.val[0], mObject.val[1],
@@ -924,7 +971,8 @@ void MyObject::printLine(std::string& line)
 #ifdef _WIN32
             sprintf_s(buf, stl_object_format[enum_object_line2d].toStdString().c_str(),
                 stl_object_type[enum_object_line2d].toStdString().c_str(), mObject.val[0], mObject.val[1],
-                mObject.val[2], mObject.val[3], mObject.val[4], mObject.color[0], mObject.color[1], mObject.color[2]);
+                mObject.val[2], mObject.val[3], mObject.val[4],
+                    static_cast<double>(mObject.color[0]), static_cast<double>(mObject.color[1]), static_cast<double>(mObject.color[2]));
 #else
             sprintf(buf, stl_object_format[enum_object_line2d].toStdString().c_str(),
                 stl_object_type[enum_object_line2d].toStdString().c_str(), mObject.val[0], mObject.val[1],
@@ -935,8 +983,8 @@ void MyObject::printLine(std::string& line)
 #ifdef _WIN32
             sprintf_s(buf, stl_object_format[enum_object_line3d].toStdString().c_str(),
                 stl_object_type[enum_object_line3d].toStdString().c_str(), mObject.val[0], mObject.val[1],
-                mObject.val[2], mObject.val[3], mObject.val[4], mObject.val[5], mObject.val[6], mObject.color[0],
-                mObject.color[1], mObject.color[2]);
+                mObject.val[2], mObject.val[3], mObject.val[4], mObject.val[5], mObject.val[6],
+                    static_cast<double>(mObject.color[0]), static_cast<double>(mObject.color[1]), static_cast<double>(mObject.color[2]));
 #else
             sprintf(buf, stl_object_format[enum_object_line3d].toStdString().c_str(),
                 stl_object_type[enum_object_line3d].toStdString().c_str(), mObject.val[0], mObject.val[1],
@@ -949,7 +997,7 @@ void MyObject::printLine(std::string& line)
             sprintf_s(buf, stl_object_format[enum_object_quad2d].toStdString().c_str(),
                 stl_object_type[enum_object_quad2d].toStdString().c_str(), mObject.val[0], mObject.val[1],
                 mObject.val[2], mObject.val[3], mObject.val[4], mObject.val[5], mObject.val[6], mObject.val[7],
-                mObject.val[8], mObject.color[0], mObject.color[1], mObject.color[2]);
+                mObject.val[8], static_cast<double>(mObject.color[0]), static_cast<double>(mObject.color[1]), static_cast<double>(mObject.color[2]));
 #else
             sprintf(buf, stl_object_format[enum_object_quad2d].toStdString().c_str(),
                 stl_object_type[enum_object_quad2d].toStdString().c_str(), mObject.val[0], mObject.val[1],
@@ -962,7 +1010,7 @@ void MyObject::printLine(std::string& line)
             sprintf_s(buf, stl_object_format[enum_object_plane3d].toStdString().c_str(),
                 stl_object_type[enum_object_plane3d].toStdString().c_str(), mObject.val[0], mObject.val[1],
                 mObject.val[2], mObject.val[3], mObject.val[4], mObject.val[5], mObject.val[6], mObject.val[7],
-                mObject.val[8], mObject.color[0], mObject.color[1], mObject.color[2], mObject.color[3]);
+                mObject.val[8], static_cast<double>(mObject.color[0]), static_cast<double>(mObject.color[1]), static_cast<double>(mObject.color[2]));
 #else
             sprintf(buf, stl_object_format[enum_object_plane3d].toStdString().c_str(),
                 stl_object_type[enum_object_plane3d].toStdString().c_str(), mObject.val[0], mObject.val[1],
@@ -974,7 +1022,7 @@ void MyObject::printLine(std::string& line)
 #ifdef _WIN32
             sprintf_s(buf, stl_object_format[enum_object_disk2d].toStdString().c_str(),
                 stl_object_type[enum_object_disk2d].toStdString().c_str(), mObject.val[0], mObject.val[1],
-                mObject.val[2], mObject.val[3], mObject.color[0], mObject.color[1], mObject.color[2]);
+                mObject.val[2], mObject.val[3], static_cast<double>(mObject.color[0]), static_cast<double>(mObject.color[1]), static_cast<double>(mObject.color[2]));
 #else
             sprintf(buf, stl_object_format[enum_object_disk2d].toStdString().c_str(),
                 stl_object_type[enum_object_disk2d].toStdString().c_str(), mObject.val[0], mObject.val[1],
@@ -986,7 +1034,8 @@ void MyObject::printLine(std::string& line)
             sprintf_s(buf, stl_object_format[enum_object_disk3d].toStdString().c_str(),
                 stl_object_type[enum_object_disk3d].toStdString().c_str(), mObject.val[0], mObject.val[1],
                 mObject.val[2], mObject.val[3], mObject.val[4], mObject.val[5], mObject.val[6], mObject.val[7],
-                mObject.val[8], mObject.val[9], mObject.color[0], mObject.color[1], mObject.color[2], mObject.color[3]);
+                mObject.val[8], mObject.val[9],
+                    static_cast<double>(mObject.color[0]), static_cast<double>(mObject.color[1]), static_cast<double>(mObject.color[2]), static_cast<double>(mObject.color[3]));
 #else
             sprintf(buf, stl_object_format[enum_object_disk3d].toStdString().c_str(),
                 stl_object_type[enum_object_disk3d].toStdString().c_str(), mObject.val[0], mObject.val[1],
@@ -999,7 +1048,7 @@ void MyObject::printLine(std::string& line)
             sprintf_s(buf, stl_object_format[enum_object_cylinder3d].toStdString().c_str(),
                 stl_object_type[enum_object_cylinder3d].toStdString().c_str(), mObject.val[0], mObject.val[1],
                 mObject.val[2], mObject.val[3], mObject.val[4], mObject.val[5], mObject.val[6], mObject.val[7],
-                mObject.val[8], mObject.val[9], mObject.color[0], mObject.color[1], mObject.color[2]);
+                mObject.val[8], mObject.val[9],static_cast<double>(mObject.color[0]), static_cast<double>(mObject.color[1]), static_cast<double>(mObject.color[2]));
 #else
             sprintf(buf, stl_object_format[enum_object_cylinder3d].toStdString().c_str(),
                 stl_object_type[enum_object_cylinder3d].toStdString().c_str(), mObject.val[0], mObject.val[1],
@@ -1012,7 +1061,7 @@ void MyObject::printLine(std::string& line)
             sprintf_s(buf, stl_object_format[enum_object_torus3d].toStdString().c_str(),
                 stl_object_type[enum_object_torus3d].toStdString().c_str(), mObject.val[0], mObject.val[1],
                 mObject.val[2], mObject.val[3], mObject.val[4], mObject.val[5], mObject.val[6], mObject.val[7],
-                mObject.val[8], mObject.val[9], mObject.color[0], mObject.color[1], mObject.color[2]);
+                mObject.val[8], mObject.val[9],static_cast<double>(mObject.color[0]), static_cast<double>(mObject.color[1]), static_cast<double>(mObject.color[2]));
 #else
             sprintf(buf, stl_object_format[enum_object_torus3d].toStdString().c_str(),
                 stl_object_type[enum_object_torus3d].toStdString().c_str(), mObject.val[0], mObject.val[1],
@@ -1026,7 +1075,7 @@ void MyObject::printLine(std::string& line)
                 stl_object_type[enum_object_tube3d].toStdString().c_str(), mObject.val[0], mObject.val[1],
                 mObject.val[2], mObject.val[3], mObject.val[4], mObject.val[5], mObject.val[6], mObject.val[7],
                 mObject.val[8], mObject.val[9], mObject.val[10], mObject.val[11], mObject.val[12], mObject.val[13],
-                mObject.color[0], mObject.color[1], mObject.color[2]);
+                static_cast<double>(mObject.color[0]), static_cast<double>(mObject.color[1]), static_cast<double>(mObject.color[2]));
 #else
             sprintf(buf, stl_object_format[enum_object_tube3d].toStdString().c_str(),
                 stl_object_type[enum_object_tube3d].toStdString().c_str(), mObject.val[0], mObject.val[1],
@@ -1313,13 +1362,3 @@ void MyObject::deleteQuadric()
     myQuad = nullptr;
 }
 
-float MyObject::clamp_float(float x, const float min, const float max)
-{
-    if (x < min) {
-        return min;
-    }
-    else if (x > max) {
-        return max;
-    }
-    return x;
-}

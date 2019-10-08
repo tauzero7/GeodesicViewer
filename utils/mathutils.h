@@ -10,7 +10,12 @@
 #define GV_MATH_UTILS_H
 
 constexpr double PI = 3.14159265358979323846;
-constexpr double RAD_TO_DEG = 57.295779513082320875;
-constexpr double DEG_TO_RAD = 0.017453292519943295770;
+constexpr float PI_F = 3.14159265f;
+
+double rad_to_deg(double val);
+
+double deg_to_rad(double val);
+
+float clamp_f(float val, float vmin, float vmax);
 
 #endif // GV_MATH_UTILS_H
