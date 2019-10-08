@@ -300,36 +300,36 @@ void GeodesicView::slot_write_prot()
     basefilename.remove(DEF_VPARAMS_FILE_ENDING);
     basefilename.remove(DEF_OBJECT_FILE_ENDING);
 
-    /* ---------------------------------
-        save settings
-     --------------------------------- */
+    // ---------------------------------
+    //    save settings
+    // ---------------------------------
     if (mProtDialog->doWriteParameters()) {
         QString filename = dirname + "/" + basefilename;
         filename.append(DEF_PROTOCOL_FILE_ENDING);
         saveSetting(filename);
     }
 
-    /* ---------------------------------
-        save view parameters
-     --------------------------------- */
+    // ---------------------------------
+    //  save view parameters
+    // ---------------------------------
     if (mProtDialog->doWriteViewParams()) {
         QString filename = dirname + "/" + basefilename;
         filename.append(DEF_VPARAMS_FILE_ENDING);
         saveParamFile(filename.toStdString(), &mParams);
     }
 
-    /* ---------------------------------
-        save objects
-     --------------------------------- */
+    // ---------------------------------
+    //  save objects
+    // ---------------------------------
     if (mProtDialog->doWriteObjects()) {
         QString filename = dirname + "/" + basefilename;
         filename.append(DEF_OBJECT_FILE_ENDING);
         saveObjects(filename);
     }
 
-    /* ---------------------------------
-        save geodesic data
-     --------------------------------- */
+    // ---------------------------------
+    //   save geodesic data
+    // ---------------------------------
     if (mProtDialog->doWriteGeodesic() && mPointData.size() > 0) {
         QString filename = dirname + "/" + basefilename + ".points";
         QFile out_points(filename);
@@ -358,9 +358,9 @@ void GeodesicView::slot_write_prot()
         out_points.close();
     }
 
-    /* ---------------------------------
-        save images
-     --------------------------------- */
+    // ---------------------------------
+    //    save images
+    // ---------------------------------
     int currIdx = tab_draw->currentIndex();
     if (mProtDialog->doWrite3dImage()) {
         tab_draw->setCurrentIndex(0);
@@ -374,9 +374,9 @@ void GeodesicView::slot_write_prot()
     }
     tab_draw->setCurrentIndex(currIdx);
 
-    /* ---------------------------------
-        save report
-     --------------------------------- */
+    // ---------------------------------
+    //  save report
+    // ---------------------------------
     if (mProtDialog->doWriteReport()) {
         QString filename = dirname + "/" + basefilename;
         filename.append(DEF_REPORT_FILE_ENDING);

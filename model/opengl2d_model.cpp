@@ -532,19 +532,23 @@ void OpenGL2dModel::paintGL()
         glEnd();
     }
 
-    // draw tick labels    
+    // -----------------------
+    //   draw tick labels
+    // -----------------------
     if (renderText != nullptr) {
+        double xScale = 1.0 / (mXmax - mXmin) * mWinSize[0];
         glViewport(DEF_DRAW2D_LEFT_BORDER, 0, mWinSize[0] - DEF_DRAW2D_LEFT_BORDER, DEF_DRAW2D_BOTTOM_BORDER);
         renderText->SetWindowSize(mWinSize[0], DEF_DRAW2D_BOTTOM_BORDER);
         for (int x = xStart; x < xEnd; x++) {
-            int xpos = static_cast<int>((x * mXstep - mXmin) / (mXmax - mXmin) * mWinSize[0]);
+            int xpos = static_cast<int>((x * mXstep - mXmin) * xScale);
             renderText->Print(xpos, 2, QString::number(x * mXstep).toStdString().c_str(), ALIGN_HCENTER);
         }
 
+        double yScale = 1.0 / (mYmax - mYmin) * mWinSize[1];
         glViewport(0, DEF_DRAW2D_BOTTOM_BORDER, DEF_DRAW2D_LEFT_BORDER, mWinSize[1] - DEF_DRAW2D_BOTTOM_BORDER);
         renderText->SetWindowSize(DEF_DRAW2D_LEFT_BORDER, mWinSize[1]);
         for (int y = yStart; y < yEnd; y++) {
-            int ypos = static_cast<int>((y * mYstep - mYmin) / (mYmax - mYmin) * mWinSize[1]);
+            int ypos = static_cast<int>((y * mYstep - mYmin) * yScale);
             renderText->Print(
                 DEF_DRAW2D_LEFT_BORDER - 3, ypos + 2, QString::number(y * mYstep).toStdString().c_str(), ALIGN_RIGHT);
         }
@@ -774,45 +778,31 @@ void OpenGL2dModel::getTightLattice()
 
 void OpenGL2dModel::setLattice()
 {
-    // bool hasChanged = false;
-
     int pixStepX = static_cast<int>(floor(mXstep / mFactorX));
     int pixStepY = static_cast<int>(floor(mYstep / mFactorY));
 
-    if (pixStepX > 119) {
+    if (pixStepX > 139) {
         mXstepIdx--;
-        if (mXstepIdx < 0) {
-            mXstepIdx = 0;
-        }
-        // hasChanged = true;
+        mXstepIdx = std::max(mXstepIdx, 0);
     }
-    if (pixStepX < 40) {
+    else if (pixStepX < 51) {
         mXstepIdx++;
-        if (mXstepIdx >= mStepList.size()) {
-            mXstepIdx = mStepList.size() - 1;
-        }
-        // hasChanged = true;
+        mXstepIdx = std::min(mXstepIdx, mStepList.size() - 1);
     }
 
-    if (pixStepY > 119) {
+    if (pixStepY > 139) {
         mYstepIdx--;
-        if (mYstepIdx < 0) {
-            mYstepIdx = 0;
-        }
-        // hasChanged = true;
+        mYstepIdx = std::max(mYstepIdx, 0);
     }
-    if (pixStepY < 40) {
+    else if (pixStepY < 51) {
         mYstepIdx++;
-        if (mYstepIdx >= mStepList.size()) {
-            mYstepIdx = mStepList.size() - 1;
-        }
-        // hasChanged = true;
+        mYstepIdx = std::min(mYstepIdx, mStepList.size() - 1);
     }
 
     mXstep = mStepList[mXstepIdx];
     mYstep = mStepList[mYstepIdx];
 
-    // fprintf(stderr,"%d %d  %d %d  %f %f\n",pixStepX,pixStepY,mXstepIdx,mYstepIdx,mXstep,mYstep);
+   //  fprintf(stderr,"%d %d  %d %d  %f %f\n",pixStepX,pixStepY,mXstepIdx,mYstepIdx,mXstep,mYstep);
 
     xStart = static_cast<int>(floor(mXmin / mXstep)) + 1;
     xEnd = static_cast<int>(floor(mXmax / mXstep)) + 1;

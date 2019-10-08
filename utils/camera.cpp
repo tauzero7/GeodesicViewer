@@ -637,11 +637,11 @@ void Camera::orthographic()
     glLoadIdentity();
     glViewport(0, 0, mWidth, mHeight);
 
-    double size = 4.0;
-    double bottom = -size * tan(0.5 * mFovY * DEG_TO_RAD);
-    double top = size * tan(0.5 * mFovY * DEG_TO_RAD);
-    double left = -size * tan(0.5 * mFovY * DEG_TO_RAD) * mAspect;
-    double right = size * tan(0.5 * mFovY * DEG_TO_RAD) * mAspect;
+    double size = getDistance() * tan(0.5 * mFovY * DEG_TO_RAD);
+    double bottom = -size;
+    double top = size;
+    double left = -size * mAspect;
+    double right = size * mAspect;
     glOrtho(left, right, bottom, top, mZnear, mZfar);
 }
 
