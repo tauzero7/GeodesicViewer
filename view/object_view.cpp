@@ -31,11 +31,6 @@ QString ObjectView::getText()
     return ted_objects->toPlainText();
 }
 
-// void ObjectView::addObjectsToScriptEngine(QScriptEngine* engine) {
-//    QScriptValue obj = engine->newQObject(this);
-//    engine->globalObject().setProperty("obj", obj);
-//}
-
 void ObjectView::slot_showSyntax(int index)
 {
     std::string syntax;

@@ -109,36 +109,190 @@ public:
 
     void create_object(enum_object_type type, double *val, std::string text = "");
 
+    /**
+     * @brief create_2d_text
+     * @param cx
+     * @param cy
+     * @param text
+     * @param size
+     */
     void create_2d_text(double cx, double cy, std::string text, double size);
+
+    /**
+     * @brief create_3d_text
+     * @param cx
+     * @param cy
+     * @param cz
+     * @param text
+     * @param size
+     */
     void create_3d_text(double cx, double cy, double cz, std::string text, double size);
 
+    /**
+     * @brief create_2d_sphere
+     * @param cx
+     * @param cy
+     * @param radius
+     * @param num_points
+     * @param width
+     */
     void create_2d_sphere(double cx, double cy, double radius, double num_points, double width);
+
+    /**
+     * @brief Create 3D sphere.
+     *   The sphere is defined by the central point (cx,cy,cz) and the radius.
+     * @param cx
+     * @param cy
+     * @param cz
+     * @param radius
+     * @param slices
+     * @param stacks
+     */
     void create_3d_sphere(double cx, double cy, double cz,
         double radius, double slices = DEF_GLU_SPHERE_SLICES, double stacks = DEF_GLU_SPHERE_STACKS);
 
+    /**
+     * @brief Create 2D box.
+     *   The box is defined by the central point (cx,cy) and the side lengths.
+     * @param cx
+     * @param cy
+     * @param sizeX
+     * @param sizeY
+     * @param width
+     */
     void create_2d_box(double cx, double cy, double sizeX, double sizeY, double width);
+
+    /**
+     * @brief Create 3D box.
+     *   The box is defined by the central point (cx,cy,cz) and the side lengths.
+     * @param cx
+     * @param cy
+     * @param cz
+     * @param sizeX
+     * @param sizeY
+     * @param sizeZ
+     * @param width
+     */
     void create_3d_box(double cx, double cy, double cz, double sizeX, double sizeY, double sizeZ, double width);
 
+    /**
+     * @brief create_2d_line
+     * @param lx
+     * @param ly
+     * @param ux
+     * @param uy
+     * @param width
+     */
     void create_2d_line(double lx, double ly, double ux, double uy, double width);
+
+    /**
+     * @brief create_3d_line
+     * @param lx
+     * @param ly
+     * @param lz
+     * @param ux
+     * @param uy
+     * @param uz
+     * @param width
+     */
     void create_3d_line(double lx, double ly, double lz, double ux, double uy, double uz, double width);
 
+    /**
+     * @brief create_2d_quad
+     * @param v1x
+     * @param v1y
+     * @param v2x
+     * @param v2y
+     * @param v3x
+     * @param v3y
+     * @param v4x
+     * @param v4y
+     * @param width
+     */
     void create_2d_quad(double v1x, double v1y, double v2x, double v2y, double v3x, double v3y, double v4x, double v4y, double width);
 
+    /**
+     * @brief Create 3D plane.
+     *  Plane is defined by three points v1,v2,v3, where v1 is the modal point and
+     *  v2-v1 and v3-v1 are the span vectors.
+     * @param v1x
+     * @param v1y
+     * @param v1z
+     * @param v2x
+     * @param v2y
+     * @param v2z
+     * @param v3x
+     * @param v3y
+     * @param v3z
+     */
     void create_3d_plane(double v1x, double v1y, double v1z,
         double v2x, double v2y, double v2z,
         double v3x, double v3y, double v3z);
 
+    /**
+     * @brief Create 2D disk.
+     *   Disk is defined by the central point (cx,cy) and the radius.
+     * @param cx
+     * @param cy
+     * @param radius
+     * @param fans
+     */
     void create_2d_disk(double cx, double cy, double radius, double fans = 30);
 
+    /**
+     * @brief Create 3D disk.
+     *   The 3D disk is defined by the central point (cx,cy,cz), the normal vector (dx,dy,dz)
+     *   and an inner and outer radius.
+     * @param cx
+     * @param cy
+     * @param cz
+     * @param dx
+     * @param dy
+     * @param dz
+     * @param iRadius
+     * @param oRadius
+     * @param slices
+     * @param loops
+     */
     void create_3d_disk(double cx, double cy, double cz,
         double dx, double dy, double dz,
         double  iRadius, double  oRadius,
         double  slices = DEF_GLU_DISK_SLICES, double  loops = DEF_GLU_DISK_LOOPS);
 
+    /**
+     * @brief Create cylinder.
+     *   The cylinder is defined by the base point (bx,by,bz), the top point (tx,ty,tz),
+     *   and the corresponding radii at base and top.
+     * @param bx
+     * @param by
+     * @param bz
+     * @param tx
+     * @param ty
+     * @param tz
+     * @param baseRadius
+     * @param topRadius
+     * @param slices
+     * @param stacks
+     */
     void create_3d_cylinder(double  bx, double  by, double  bz, double  tx, double  ty, double  tz,
         double  baseRadius, double  topRadius,
         double  slices = DEF_GLU_SPHERE_SLICES, double  stacks = DEF_GLU_SPHERE_STACKS);
 
+    /**
+     * @brief Create torus.
+     *   The torus is defined by the central point (cx,cy,cz), the orientation angles nt and np,
+     *   the major and minor radii, ...
+     * @param cx
+     * @param cy
+     * @param cz
+     * @param nt
+     * @param np
+     * @param outerRadius  Major radius.
+     * @param innerRadius  Minor radius.
+     * @param maxPhi
+     * @param slices
+     * @param stacks
+     */
     void create_3d_torus(double  cx, double  cy, double  cz, double  nt, double  np,
         double  outerRadius, double  innerRadius, double  maxPhi,
         double  slices = DEF_GLU_SPHERE_SLICES, double  stacks = DEF_GLU_SPHERE_STACKS);

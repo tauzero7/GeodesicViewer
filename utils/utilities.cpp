@@ -200,8 +200,8 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
                     std::stof(tokens[i][5].c_str()), std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()));
             }
 
-            obj->create_2d_text(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()), tokens[i][3],
-                std::stof(tokens[i][4].c_str()));
+            obj->create_2d_text(std::stod(tokens[i][1].c_str()), std::stod(tokens[i][2].c_str()), tokens[i][3],
+                std::stod(tokens[i][4].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -214,8 +214,8 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
                     std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()));
             }
 
-            obj->create_3d_text(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
-                std::stof(tokens[i][3].c_str()), tokens[i][4], std::stof(tokens[i][5].c_str()));
+            obj->create_3d_text(std::stod(tokens[i][1].c_str()), std::stod(tokens[i][2].c_str()),
+                std::stod(tokens[i][3].c_str()), tokens[i][4], std::stod(tokens[i][5].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -228,8 +228,8 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
                     std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()));
             }
 
-            obj->create_2d_sphere(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
-                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()));
+            obj->create_2d_sphere(std::stod(tokens[i][1].c_str()), std::stod(tokens[i][2].c_str()),
+                std::stod(tokens[i][3].c_str()), std::stod(tokens[i][4].c_str()), std::stod(tokens[i][5].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -246,9 +246,9 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
                     std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()), std::stof(tokens[i][9].c_str()));
             }
 
-            obj->create_3d_sphere(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
-                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()),
-                std::stof(tokens[i][6].c_str()));
+            obj->create_3d_sphere(std::stod(tokens[i][1].c_str()), std::stod(tokens[i][2].c_str()),
+                std::stod(tokens[i][3].c_str()), std::stod(tokens[i][4].c_str()), std::stod(tokens[i][5].c_str()),
+                std::stod(tokens[i][6].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -261,8 +261,8 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
                     std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()));
             }
 
-            obj->create_2d_box(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
-                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()));
+            obj->create_2d_box(std::stod(tokens[i][1].c_str()), std::stod(tokens[i][2].c_str()),
+                std::stod(tokens[i][3].c_str()), std::stod(tokens[i][4].c_str()), std::stod(tokens[i][5].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -275,9 +275,9 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
                     std::stof(tokens[i][8].c_str()), std::stof(tokens[i][9].c_str()), std::stof(tokens[i][10].c_str()));
             }
 
-            obj->create_3d_box(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
-                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()),
-                std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()));
+            obj->create_3d_box(std::stod(tokens[i][1].c_str()), std::stod(tokens[i][2].c_str()),
+                std::stod(tokens[i][3].c_str()), std::stod(tokens[i][4].c_str()), std::stod(tokens[i][5].c_str()),
+                std::stod(tokens[i][6].c_str()), std::stod(tokens[i][7].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -290,8 +290,8 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
                     std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()));
             }
 
-            obj->create_2d_line(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
-                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()));
+            obj->create_2d_line(std::stod(tokens[i][1].c_str()), std::stod(tokens[i][2].c_str()),
+                std::stod(tokens[i][3].c_str()), std::stod(tokens[i][4].c_str()), std::stod(tokens[i][5].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -304,9 +304,9 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
                     std::stof(tokens[i][8].c_str()), std::stof(tokens[i][9].c_str()), std::stof(tokens[i][10].c_str()));
             }
 
-            obj->create_3d_line(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
-                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()),
-                std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()));
+            obj->create_3d_line(std::stod(tokens[i][1].c_str()), std::stod(tokens[i][2].c_str()),
+                std::stod(tokens[i][3].c_str()), std::stod(tokens[i][4].c_str()), std::stod(tokens[i][5].c_str()),
+                std::stod(tokens[i][6].c_str()), std::stod(tokens[i][7].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -323,10 +323,10 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
                     std::stof(tokens[i][12].c_str()));
             }
 
-            obj->create_2d_quad(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
-                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()),
-                std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()),
-                std::stof(tokens[i][9].c_str()));
+            obj->create_2d_quad(std::stod(tokens[i][1].c_str()), std::stod(tokens[i][2].c_str()),
+                std::stod(tokens[i][3].c_str()), std::stod(tokens[i][4].c_str()), std::stod(tokens[i][5].c_str()),
+                std::stod(tokens[i][6].c_str()), std::stod(tokens[i][7].c_str()), std::stod(tokens[i][8].c_str()),
+                std::stod(tokens[i][9].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -343,10 +343,10 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
                     std::stof(tokens[i][12].c_str()));
             }
 
-            obj->create_3d_plane(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
-                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()),
-                std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()),
-                std::stof(tokens[i][9].c_str()));
+            obj->create_3d_plane(std::stod(tokens[i][1].c_str()), std::stod(tokens[i][2].c_str()),
+                std::stod(tokens[i][3].c_str()), std::stod(tokens[i][4].c_str()), std::stod(tokens[i][5].c_str()),
+                std::stod(tokens[i][6].c_str()), std::stod(tokens[i][7].c_str()), std::stod(tokens[i][8].c_str()),
+                std::stod(tokens[i][9].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -359,8 +359,8 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
                     std::stof(tokens[i][5].c_str()), std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()));
             }
 
-            obj->create_2d_disk(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
-                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()));
+            obj->create_2d_disk(std::stod(tokens[i][1].c_str()), std::stod(tokens[i][2].c_str()),
+                std::stod(tokens[i][3].c_str()), std::stod(tokens[i][4].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -377,10 +377,10 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
                     std::stof(tokens[i][13].c_str()));
             }
 
-            obj->create_3d_disk(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
-                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()),
-                std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()),
-                std::stof(tokens[i][9].c_str()), std::stof(tokens[i][10].c_str()));
+            obj->create_3d_disk(std::stod(tokens[i][1].c_str()), std::stod(tokens[i][2].c_str()),
+                std::stod(tokens[i][3].c_str()), std::stod(tokens[i][4].c_str()), std::stod(tokens[i][5].c_str()),
+                std::stod(tokens[i][6].c_str()), std::stod(tokens[i][7].c_str()), std::stod(tokens[i][8].c_str()),
+                std::stod(tokens[i][9].c_str()), std::stod(tokens[i][10].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -397,10 +397,10 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
                     std::stof(tokens[i][13].c_str()));
             }
 
-            obj->create_3d_cylinder(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
-                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()),
-                std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()),
-                std::stof(tokens[i][9].c_str()), std::stof(tokens[i][10].c_str()));
+            obj->create_3d_cylinder(std::stod(tokens[i][1].c_str()), std::stod(tokens[i][2].c_str()),
+                std::stod(tokens[i][3].c_str()), std::stod(tokens[i][4].c_str()), std::stod(tokens[i][5].c_str()),
+                std::stod(tokens[i][6].c_str()), std::stod(tokens[i][7].c_str()), std::stod(tokens[i][8].c_str()),
+                std::stod(tokens[i][9].c_str()), std::stod(tokens[i][10].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -417,10 +417,10 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
                     std::stof(tokens[i][13].c_str()));
             }
 
-            obj->create_3d_torus(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
-                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()),
-                std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()),
-                std::stof(tokens[i][9].c_str()), std::stof(tokens[i][10].c_str()));
+            obj->create_3d_torus(std::stod(tokens[i][1].c_str()), std::stod(tokens[i][2].c_str()),
+                std::stod(tokens[i][3].c_str()), std::stod(tokens[i][4].c_str()), std::stod(tokens[i][5].c_str()),
+                std::stod(tokens[i][6].c_str()), std::stod(tokens[i][7].c_str()), std::stod(tokens[i][8].c_str()),
+                std::stod(tokens[i][9].c_str()), std::stod(tokens[i][10].c_str()));
             objects.push_back(obj);
         }
         // ------------------------------
@@ -430,18 +430,18 @@ int readObjectsFromTokens(std::vector<std::vector<std::string>>& tokens, std::ve
             obj = new MyObject();
             if (tokens[i].size() > 18) {
                 obj->setColor(std::stof(tokens[i][15].c_str()), std::stof(tokens[i][16].c_str()),
-                    std::stof(tokens[i][17].c_str()), std::stof(tokens[i][17].c_str()));
+                    std::stof(tokens[i][17].c_str()), std::stof(tokens[i][18].c_str()));
             }
             else if (tokens[i].size() > 17) {
                 obj->setColor(std::stof(tokens[i][15].c_str()), std::stof(tokens[i][16].c_str()),
                     std::stof(tokens[i][17].c_str()));
             }
 
-            obj->create_3d_tube(std::stof(tokens[i][1].c_str()), std::stof(tokens[i][2].c_str()),
-                std::stof(tokens[i][3].c_str()), std::stof(tokens[i][4].c_str()), std::stof(tokens[i][5].c_str()),
-                std::stof(tokens[i][6].c_str()), std::stof(tokens[i][7].c_str()), std::stof(tokens[i][8].c_str()),
-                std::stof(tokens[i][9].c_str()), std::stof(tokens[i][10].c_str()), std::stof(tokens[i][11].c_str()),
-                std::stof(tokens[i][12].c_str()), std::stof(tokens[i][13].c_str()), std::stof(tokens[i][14].c_str()));
+            obj->create_3d_tube(std::stod(tokens[i][1].c_str()), std::stod(tokens[i][2].c_str()),
+                std::stod(tokens[i][3].c_str()), std::stod(tokens[i][4].c_str()), std::stod(tokens[i][5].c_str()),
+                std::stod(tokens[i][6].c_str()), std::stod(tokens[i][7].c_str()), std::stod(tokens[i][8].c_str()),
+                std::stod(tokens[i][9].c_str()), std::stod(tokens[i][10].c_str()), std::stod(tokens[i][11].c_str()),
+                std::stod(tokens[i][12].c_str()), std::stod(tokens[i][13].c_str()), std::stod(tokens[i][14].c_str()));
             objects.push_back(obj);
         }
     }

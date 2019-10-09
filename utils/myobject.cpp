@@ -1010,7 +1010,8 @@ void MyObject::printLine(std::string& line)
             sprintf_s(buf, stl_object_format[enum_object_plane3d].toStdString().c_str(),
                 stl_object_type[enum_object_plane3d].toStdString().c_str(), mObject.val[0], mObject.val[1],
                 mObject.val[2], mObject.val[3], mObject.val[4], mObject.val[5], mObject.val[6], mObject.val[7],
-                mObject.val[8], static_cast<double>(mObject.color[0]), static_cast<double>(mObject.color[1]), static_cast<double>(mObject.color[2]));
+                mObject.val[8],
+                    static_cast<double>(mObject.color[0]), static_cast<double>(mObject.color[1]), static_cast<double>(mObject.color[2]), static_cast<double>(mObject.color[3]));
 #else
             sprintf(buf, stl_object_format[enum_object_plane3d].toStdString().c_str(),
                 stl_object_type[enum_object_plane3d].toStdString().c_str(), mObject.val[0], mObject.val[1],

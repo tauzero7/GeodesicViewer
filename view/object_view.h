@@ -36,8 +36,6 @@ public:
     void writeText(QString text);
     QString getText();
 
-    //void  addObjectsToScriptEngine(QScriptEngine* engine);
-
 public slots:
     void slot_showSyntax(int index);
     void slot_apply();
