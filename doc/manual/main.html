@@ -2,91 +2,72 @@
 <html>
 
 <head>
-<title>GeodesicViewer manual - main page</title>
-<link rel="stylesheet" type="text/css" href="gv.css">
+    <title>GeodesicViewer manual - main page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="gv.css">
 </head>
 
-<body> 
+<body class="main"> 
   <h2>Introduction</h2>
-  <p>The GeodesicViewer realizes exocentric two- and three-dimensional illustrations of light-like and time-like geodesics in the general theory of relativity. By means of an intuitive graphical user interface, all parameters of a space-time as well as the initial conditions of the geodesics can be modified interactively. This makes the GeodesicViewer a useful instrument for the exploration of geodesics in four-dimensional Lorentzian space-times.</p>
+  <p>The GeodesicViewer realizes exocentric two- and three-dimensional illustrations of light-like and time-like geodesics in the general theory of relativity. By means of an intuitive graphical user interface, all parameters of a space-time as well as the initial conditions of the geodesics can be modified interactively. This makes the GeodesicViewer a useful instrument for the exploration of geodesics in four-dimensional Lorentzian space-times.</p>  
   <br>
   
   <a name="install"></a><h2>Installation</h2>
-  <p>The GeodesicViewer (v1.1) is based on the <a href="http://qt.nokia.com/products/" target="_top">Qt framework</a> (version 4.7), the open graphics library (<a href="http://www.opengl.org/" target="_top">OpenGL</a>), and the <a href="http://dx.doi.org/10.1016/j.cpc.2009.07.014" target="_top">Motion4D-library</a> (v1.3). On standard Linux machines, OpenGL is already installed via the graphics board drivers. Qt 4.7 can be downloaded from the <a href="http://qt.nokia.com/downloads" target="_top">developer site</a> as a LGPL-licensed version. The Motion4D-library also needs the <a href="http://www.gnu.org/software/gsl/" target="_top">GNU Scientific Library</a> (GSL).</p>
+  <p>The GeodesicViewer is based on the Qt framework (version 5.9), the open graphics 
+library (OpenGL), and the Motion4D-library. On standard Linux machines, OpenGL 
+is already installed via the graphics board drivers. Qt 5.9 can be downloaded 
+from the developer site as a (L)GPL-licensed version. The Motion4D-library also 
+needs the GNU Scientific Library (GSL).</p>
+  <p>Note that you need a graphics card that supports the OpenGL Shading language 
+(GLSL) version 2 or higher. If you start the GeodesicViewer from a console, 
+a message will be print on the standard output whether your graphics card 
+supports GLSL or not.</p>
 
-  <p>Note that you need a graphics card that supports the OpenGL Shading Language (GLSL). If you start the GeodesicViewer from a console, a message will be print on the standard output whether your graphics card supports GLSL or not.</p>
-  <p>The system was tested with the following graphics cards:<br>NVIDIA GeForce 8400M GT, GeForce 8800 GTX, GeForce GTX 460, QuadroFX 4800; ATI Radeon HD 5800.</p>
-  <p>on 'ubuntu 10.04', 'openSUSE 11.3', 'Windows XP', and 'Windows 7' systems.</p>
-  <p><b>Requirements:</b></p>
-  <ul>
-   <li><b>Qt  >= 4.7</b><br>
-     The LGPL-licensed version of the Qt4.7 SDK can be downloaded from <a href="http://qt.nokia.com/downloads" target="_top">http://qt.nokia.com/downloads</a>.
-   <li><b>GNU Scientific library.</b><br>
-     The current version 1.14 (11 March 2010) for Linux can be downloaded from 
-     <a href="http://www.gnu.org/software/gsl" target="_top">http://www.gnu.org/software/gsl</a>.<br>
-     The GSL developer files for Windows (mingw) can be found <a href="http://gnuwin32.sourceforge.net/packages/gsl.htm" target="_top">here</a>.
-  <li><b>Motion4D library.</b><br>
-   A detailed discussion of the Motion4D library can be found here: <a href="http://dx.doi.org/10.1016/j.cpc.2009.07.014" target="_top">DOI: 10.1016/j.cpc.2009.07.014</a>.<br>The Motion4D library is delivered with the GeodesicViewer.
-  </ul>
-  <br>
-  <p><b>Installation:</b></p>
-  <ol class="tut">
-    <li style="padding-bottom:20px">Start the QtCreator, open the "gviewer_m4d.pro" or "gviewer_win.pro"(Windows) project and select the Qt 4.7.* target.<br>
-    <a href="../pics/gv_install_projsetup.png" target="Daten"><img style="margin-left:10px" width="500" src="../pics/gv_install_projsetup.png"></a><br>
-    </li>
-    <li style="padding-bottom:20px;margin-right: 4cm">Double-click on the "gviewer_m4d.pro" or "gviewer_win.pro"(Windows) file and edit the following variables in "gviewer_m4d.pro" depending on your system:
-      <ul>
-        <li><b>TOP_DIR</b>
-         <p>Root path to the GeodesicViewer. Save the file gviewer.pro now !!
-         In the <b>Projects</b>-Tab of the Edit window you should find all header
-         and source files of the GeodesicViewer, otherwise the TOP_DIR 
-         variable was not correctly set.</p>
-        <li><b>M4D_DIR</b><p>Root path to the Motion4D library source directory (src).
-         In the <b>Projects</b>-Tab of the Edit window you should find all header
-         and source files of the Motion4D library, otherwise the M4D_DIR 
-         variable was not correctly set.</p>
-        <li><b>GSL_DIR</b><p>
-         Path to the GNU Scientific library. If, e.g., the entry is 'GSL_DIR = $$TOP_DIR/libMotion4D/gsl', this directory should look like this:<br>
-        &nbsp;&nbsp;&nbsp;libMotion4D/gsl/include<br>
-        &nbsp;&nbsp;&nbsp;libMotion4D/gsl/lib<br>
-        &nbsp;&nbsp;&nbsp;libMotion4D/gsl/manifest
-        </p>
-        <li><b>M4D_LIB_DIR, GSL_LIB_DIR</b><p>
-          If you have a 64-bit system, you might have to adjust the lib directories (lib -> lib64)</p>
-        <li>If your system supports  GL_GLEXT_PROTOTYPES, you can uncomment the line<p>
-            #DEFINES += GL_GLEXT_PROTOTYPES</p></li>
-        <li>If you have a big screen (> 1280x1024), you can uncomment the line<p>
-            #DEFINES += USE_BIG_SCREEN</p></li>
-        <li>If you would like to have tool tips shown in the status bar, then uncomment<p>
-            #DEFINES += SHOW_STATUS_TIPS</p></li>
-      </ul>
-      When finished, the QtCreator should look similar to<br>
-      <a href="../pics/gv_install_pro.png" target="Daten"><img style="margin-left:10px" width="500" src="../pics/gv_install_pro.png"></a>
-      </li>
-      <li style="padding-bottom:20px">Switch to the "Projects" tab and deselect the 'Shadow build':<br>
-      <a href="../pics/gv_install_buildset.png" target="Daten"><img style="margin-left:10px" width="500" src="../pics/gv_install_buildset.png"></a>
-      </li>
-      <li style="padding-bottom:20px">Build All.<p>The compilation could take a few minutes - see the progress bar in the left panel. You can also follow the compilation in the 'Compile Output' tab.</p></li>
-      <li style="padding-bottom:20px">Start the GeodesicViewer by clicking on the play button or by pressing 'Ctrl-R'.<br>On Windows systems you can also use winstart.bat. Maybe you have to adjust the Qt-bin and Qt-mingw-bin paths according to your Qt installation.</li>
-      <li>To check the installation, click on the 'File' menu and select 'Load all'. Select the Tutorial directory and open 'first_example.ini'. Now, the GeodesicViewer should look like this:<br>
-      <a href="../pics/gv_screenshot_first.png" target="Daten"><img style="margin-left:10px" width="500" src="../pics/gv_screenshot_first.png"></a>
-      </li>
-    </ol>
+<p>The following libraries have to be installed before compiling the GeodesicViewer:</p>
+<ul>
+    <li><b>GeodesicViewer</b><br>
+    https://github.com/tauzero7/GeodesicViewer</li>
+    <li><b>Motion4D library</b><br>  
+    https://github.com/tauzero7/Motion4D<br>
+    A detailed discussion of the Motion4D library can be found here:  
+    DOI: 10.1016/j.cpc.2009.07.014</li>
+    <li><b>Qt >= 5.9</b><br>
+    The (L)GPL-licensed version of the Qt SDK can be downloaded from http://download.qt.io/archive/qt/</li>
+    <li><b>GNU Scientific library</b><br>
+    http://www.gnu.org/software/gsl/<br>
+    For Windows, you should use https://github.com/ampl/gsl</li>
+    <li><b>Freetype</b><br>
+    https://sourceforge.net/projects/freetype/<br>
+    Freetype is necessary to render text into the OpenGL window.</li>
+</ul>  
 
-  <p>Please consider the <a href="tutorials.html" target="Daten">tutorials</a> for an introduction to the GeodesicViewer.</p>
-  <p>Details about the metrics can be found in the <i>Catalogue of Spacetimes</i>: <a href="http://xxx.lanl.gov/abs/0904.4184">arXiv:0904.4184 [gr-qc]</a>.</p>
-  <br>
-  <a name="licence"></a><h2>Licence</h2>
-  Copyright &copy; 2009-2011 by Thomas M&uuml;ller and Frank Grave
-  <p>Permission to use, copy, modify, and distribute this software and its documentation under the terms of the <a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_top">GNU General Public License</a> is hereby granted. No representations are made about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty. See the GNU General Public License for more details. </p>
-  <br>
+<h4>Build steps:</h4>
+<ol>
+    <li>Clone or download GeodesicViewer and Motion4D library.</li>
+    <li>Switch to GeodesicViewer folder and copy "local_template.pri" to "local.pri".   
+        <ul>
+            <li>Change "M4D_DIR" such that it points to the root folder of the Motion4D 
+   folder; e.g. "/home/username/libMotion4D"</li>
+            <li>Change "GSL_DIR" such that it points to the root folder of the GSL library.</li>
+            <li>If you have freetype available, uncomment the lines below "freetype".
+      Change the "FREETYPE_DIR" such that it points to the root folder of the
+      freetype library. You might also have to adapt "FREETYPE_LIB_DIR" and the
+      name of the library "-lfreetyped" or "-lfreetype".</li>
+        </ul></li>
+    <li>Start QtCreator and open the file "gviewer_m4d.pro".
+        <ul>
+            <li>Switch to "Projects"-Tab and deactivate "Shadow-Build" within the
+      "Build Settings".</li>
+            <li>Build GeodesicViewer via "Build -> Run qmake" and "Build -> Build All".</li></li>
+        </ul>
+</ol>    
 
   <a name="contact"></a><h2>Contact</h2>
+  <p>
+  Dr. Thomas Müller<br>
+  Haus der Astronomie/Max Planck Institute for Astronomy<br>
+  69117 Heidelberg, Germany<br>
+  Email: tmueller[at]mpia.de<br>  </p>
 
-Visualisierungsinstitut der Universit&auml;t Stuttgart (VISUS)<br>
-Allmandring 19</br>
-70569 Stuttgart, Germany<br>
-Email: Thomas.Mueller[at]vis.uni-stuttgart.de</span><br>
-<br>
 </body>
 </html>

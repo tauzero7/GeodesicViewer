@@ -1,7 +1,28 @@
 body {   
     color : #000000;
-    font-family : helvetica, sans-serif;
+    font-family : Monospace;
     font-size   : 12pt;
+    width: 1200px;
+}
+
+.header {
+    background-color: #444;
+    font-family: Monospace;
+    font-size: 12pt;
+    color: white;
+}
+
+.main {
+    background-color: #ededed;
+    font-family: Monospace;
+    font-size: 12pt;
+    color: #00000;
+    width: 1200px;
+}
+
+.nav {
+    background-color: #cccccc;
+    width: 250px;
 }
 
 a:link    { color:#3333AA;
@@ -14,109 +35,129 @@ a:active  { color:#3333AA;
             text-decoration : none;
         }
 
-IMG {  margin-left: 3cm; 
-       margin-top: 0.2cm;  }
+IMG {  
+    margin-left: 3cm; 
+    margin-top: 0.2cm;  
+}
 
-p {     margin-top : 0cm;
-        margin-left : 0.7cm;
-        margin-right: 4cm;
-        text-indent: 0mm;
-        line-height: 14pt;
-        font-family : Helvetica;
-        color:#373333
-        }
+p {    
+    margin-top : 0cm;
+    margin-left : 0.7cm;
+    margin-right: 4cm;
+    text-indent: 0mm;
+    line-height: 14pt;
+    font-family : Monospace;
+    color:#373333
+}
 
 h1 {
-        font-family : sans-serif;
-        font-size   : 22pt;
-        color       : black;
-        }
+    font-family : Monospace;
+    font-size   : 24pt;
+    color       : #ffffff;
+}
 
 h2 {    
-        font-family : Helvetica;
-        font-size   : 16pt;
-        color  : #00008B;
-        }
+    font-family : Monospace;
+    font-size   : 16pt;
+    color  : #00008B;
+}
 
 h3 {
-        font-family : Helvetica;
-        font-size   : 12pt;
-        color  : #4D6AB3;
-        }
+    font-family : Monospace;
+    font-size   : 14pt;
+    color  : #4D6AB3;
+}
 
 h4 {
-        font-family : Helvetica;
-        font-size   : 12pt;
-        color  : #4D6AB3;
-        }
+    font-family : Monospace;
+    font-size   : 12pt;
+    color  : #4D6AB3;
+}
 
-ul.nav {    margin-left     : 0.0cm;
-            margin-top      : -15px;
-            list-style-type : square;
-            font-size       : 10pt;
-        }
+ul.nav {    
+    margin-left     : 0.0cm;
+    margin-top      : -15px;
+    list-style-type : square;
+    font-size       : 10pt;
+}
 
-ul.text {   margin-left     : 0.0cm;
-            margin-top      : 10px;
-            list-style-type : square;
-            font-size       : 10pt;
-        }
+ul.text {   
+    margin-left     : 0.0cm;
+    margin-top      : 10px;
+    list-style-type : square;
+    font-size       : 10pt;
+}
 
 ol.tut {
-  margin-top : 20px;
-  margin-bottom : 20px
+    margin-top : 20px;
+    margin-bottom : 20px
 }
 
 li.tut {
    padding-bottom : 20px
 }
 
-table.keyboard {	font-size    : 10pt;
-	border-style : empty;
-	empty-cells  : show;
-	padding      : 0;
-	margin-left  : 1cm;
+li {
+    margin: 10px 0;
 }
 
-table.menu {	font-size    : 10pt;
-	border-style : double;
-	border-width : thin;
-	empty-cells  : show;
-	padding      : 0;
-	margin-left  : 1cm;
+table.keyboard, th, td {
+    font-size    : 10pt;
+    border : 1px solid black;
+    empty-cells  : show;
+    padding      : 0;
+    margin-left  : 1cm;
 }
 
-table.screenshots {	font-size    : 10pt;
-	border-style : none;
-	border-width : thin;
-	empty-cells  : show;
-	padding      : 0;
-	margin-left  : -2cm;
+table.keyboard td {
+    padding: 5px;
+}
+
+table.menu, th, td {
+    font-size    : 10pt;
+    border       : 1px solid black;
+    border-width : thin;
+    empty-cells  : show;
+    padding      : 1px;
+    margin-left  : 1cm;
+}
+
+table.menu td {
+    padding : 5px;
+}
+
+table.screenshots { 
+    font-size    : 10pt;
+    border-style : none;
+    border-width : thin;
+    empty-cells  : show;
+    padding      : 0;
+    margin-left  : -2cm;
 }
 
 gvmenu {
-  font-family : Helvetica;
+  font-family : Monospace;
   font-size   : 10pt;
   font-weight : bold;
   color  : #4D0000;
 }
 
 win {
-  font-family : Helvetica;
+  font-family : Monospace;
   font-size   : 10pt;
   font-weight : bold;
   color  : #4D4D00;
 }
 
 tab { 
-  font-family : Helvetica;
+  font-family : Monospace;
   font-size   : 10pt;
   font-weight : bold;
   color  : #4D6Aff;
 }
 
 parval {
-  font-family : Helvetica;
+  font-family : Monospace;
   font-size   : 10pt;
   font-weight : bold;
   color : #0000AA;

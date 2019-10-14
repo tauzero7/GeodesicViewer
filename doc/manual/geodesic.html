@@ -2,8 +2,9 @@
 <html>
 
 <head>
-<title>GeodesicViewer manual - geodesic</title>
-<link rel="stylesheet" type="text/css" href="gv.css">
+    <title>GeodesicViewer manual - geodesic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+    <link rel="stylesheet" type="text/css" href="gv.css">
 </head>
 
 <body>
@@ -14,26 +15,29 @@
     <li><a href="geodesic.html#sachsJacobi">Sachs/Jacobi</a></li>
   </ul>
   <hr>
-  
+
   <h3><a name="dirAngle">Direction Angles</a></h3>
-  
+
   Choose the type of the geodesic and its initial values.<br>
   <img style="margin-left:30px" width="400" src="../pics/geodesic.png">
   <ul class="text">
     <li>Type of the geodesic: lightlike, lightlike_sachs (includes parallel transport of Sachs basis and integration of geodesic deviation equation), or time-like.
     <li>If the geodesic is time-like then choose a velocity:  |beta|<1.0.
-    <li>Time direction: future or past.    
+    <li>Time direction: future or past.
   </ul>
 
   The direction angles are given with respect to the local reference frame {e<sub>(i)</sub>}.<br>
-  <img style="margin-left:30px" width="300" src="../pics/initialDir.png"><br>
+  <img style="margin:20px" width="300" src="../pics/initialDir.png"><br>
   Note that the local reference frame is defined with respect to a natural local tetrad of the space-time, compare <a href="localtetrad.html#lt_direction">Tetrad directions</a>.
+  <br>
+  The "orientation" determines, which axes represents the e<sub>(3)</sub> axis.
+  Thus, "axis-3" equals the system as shown in the figure above. 
   <hr>
 <!------------------------------------------------------------------------------------------
         keyboard handle
   ------------------------------------------------------------------------------------------>
   <h3><a name="keyboard">Keyboard handle</a></h3>
-  
+
   <table class="keyboard">
         <tr>
           <th width="150">Key</th>
@@ -42,21 +46,21 @@
         <tr>
           <td align="center">Ctrl + K</td>
           <td>Decrease &xi; by 'step'</td>
-        </tr>	
-	<tr>
+        </tr>
+    <tr>
           <td align="center">Ctrl + Shift + K</td>
           <td>Increase &xi; by 'step'</td>
-        </tr>	
-	<tr>
+        </tr>
+    <tr>
           <td align="center">Ctrl + C</td>
           <td>Decrease &chi; by 'step'</td>
-        </tr>	
-	<tr>
+        </tr>
+    <tr>
           <td align="center">Ctrl + Shift + C</td>
           <td>Increase &chi; by 'step'</td>
         </tr>
   </table>
-  <br>  
+  <br>
   <hr>
   <h3><a name="sachsJacobi">Sachs/Jacobi</a></h3>
   If the geodesic type is "lightlike_sachs", the Jacobi parameters are shown in the "Sachs/Jacobi"-tab.<br>

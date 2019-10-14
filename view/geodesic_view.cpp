@@ -43,7 +43,7 @@ GeodesicView::~GeodesicView()
     }
 
 #ifdef HAVE_LUA
-    //  lua_close(mLuaState);
+        //  lua_close(mLuaState);
 #endif
 }
 
@@ -995,7 +995,7 @@ void GeodesicView::setSolverParam(QString name, double val)
 void GeodesicView::wait(double)
 {
 #ifndef _WIN32
-    // usleep(sec*1e6);
+// usleep(sec*1e6);
 #endif
 }
 
@@ -1031,11 +1031,11 @@ void GeodesicView::init()
     initScripting();
     initStatusTips();
 
+#ifdef HAVE_NETWORK
     mServer = new QTcpServer(this);
     mServer->listen(QHostAddress::Any, DEF_SOCKET_PORT);
     connect(mServer, SIGNAL(newConnection()), this, SLOT(slot_newConnect()));
-
-    setWindowTitle("GeodesicViewer");
+#endif // HAVE_NETWORK
 
 #ifdef HAVE_LUA
     // Initialize lua stuff
@@ -1052,6 +1052,8 @@ void GeodesicView::init()
 
     lua_register(mLuaState, "SetGVCamera", setGVCamera);
 #endif
+
+    setWindowTitle("GeodesicViewer");
 }
 
 void GeodesicView::initActions()
@@ -2051,6 +2053,7 @@ void GeodesicView::closeEvent(QCloseEvent* event)
     }
 }
 
+#ifdef HAVE_NETWORK
 void GeodesicView::slot_newConnect()
 {
     mSocket = mServer->nextPendingConnection();
@@ -2088,6 +2091,7 @@ void GeodesicView::slot_readData()
         }
     }
 }
+#endif // HAVE_NETWORK
 
 #ifdef HAVE_LUA
 int laddGVObject(lua_State* L)

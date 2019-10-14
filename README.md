@@ -16,60 +16,60 @@ Email: tmueller@mpia.de
 The GeodesicViewer is based on the Qt framework (version 5.9), the open graphics 
 library (OpenGL), and the Motion4D-library. On standard Linux machines, OpenGL 
 is already installed via the graphics board drivers. Qt 5.9 can be downloaded 
-from the developer site as a LGPL-licensed version. The Motion4D-library also 
+from the developer site as a (L)GPL-licensed version. The Motion4D-library also 
 needs the GNU Scientific Library (GSL).
 
 Note that you need a graphics card that supports the OpenGL Shading language 
-(GLSL) version 2. If you start the GeodesicViewer from a console, a message 
-will be print on the standard output whether your graphics card supports GLSL 
-or not.
+(GLSL) version 2 or higher. If you start the GeodesicViewer from a console, 
+a message will be print on the standard output whether your graphics card 
+supports GLSL or not.
 
 
 The following libraries have to be installed before compiling the GeodesicViewer:
 
+* GeodesicViewer
+  https://github.com/tauzero7/GeodesicViewer
+
+* Motion4D library  
+  https://github.com/tauzero7/Motion4D  
+  A detailed discussion of the Motion4D library can be found here:  
+  DOI: 10.1016/j.cpc.2009.07.014  
+    
 * Qt >= 5.9  
-  The LGPL-licensed version of the Qt SDK can be downloaded from 
+  The (L)GPL-licensed version of the Qt SDK can be downloaded from  
   http://download.qt.io/archive/qt/
    
 * GNU Scientific library  
   http://www.gnu.org/software/gsl/  
   For Windows, you should use https://github.com/ampl/gsl
-
-* Motion4D library  
-  A detailed discussion of the Motion4D library can be found here:
-  DOI: 10.1016/j.cpc.2009.07.014
-  The Motion4D library is delivered with the GeodesicViewer.
   
 * Freetype  
   https://sourceforge.net/projects/freetype/  
-  Freetype is necessary to render text into the OpenGL window. 
+  Freetype is necessary to render text into the OpenGL window.  
 
 
 ## Installation:
 
-1. Start the QtCreator and open the file "gviewer_m4d.pro".
-    
-2. Edit the following variables in "local.pri" depending on your system:
-    
-    . M4D_DIR, M4D_SRC_DIR, M4D_LIB_DIR
-      Root path to the Motion4D library source directory (src).
-      In the "Projects"-Tab of the Edit window you should find all header
-      and source files of the Motion4D library, otherwise the M4D_DIR 
-      variable was not correctly set.
-       
-    . GSL_DIR, GSL_LIB_DIR  
-      Path to the GNU Scientific library.
+1. Clone or download GeodesicViewer and Motion4D library.
 
-    . DEFINES += HAVE_FREETYPE,  
-      FREETYPE_DIR, FREETYPE_LIB_DIR
+2. Switch to GeodesicViewer folder and copy "local_template.pri" to "local.pri".   
+    
+    - Change "M4D_DIR" such that it points to the root folder of the Motion4D 
+   folder; e.g. "/home/username/libMotion4D"
+    
+    - Change "GSL_DIR" such that it points to the root folder of the GSL library.
 
-    . unix:LIBS += -LGL -LGLU  
-      win32:  
-      macx:  
- 
-3. Switch to the "Project"-Tab and deactivate "Shadow-Build".
+    - If you have freetype available, uncomment the lines below "freetype".
+      Change the "FREETYPE_DIR" such that it points to the root folder of the
+      freetype library. You might also have to adapt "FREETYPE_LIB_DIR" and the
+      name of the library "-lfreetyped" or "-lfreetype".
+
+3. Start QtCreator and open the file "gviewer_m4d.pro".
+    
+    - Switch to "Projects"-Tab and deactivate "Shadow-Build" within the
+      "Build Settings".
       
-4. Build All.
+    - Build GeodesicViewer via "Build -> Run qmake" and "Build -> Build All".
 
 
 ## Examples:
@@ -86,6 +86,8 @@ Comput. Phys. Commun. 180, 2355-2360 (2009)
 
 
 ### Light ray in Schwarzschild spacetime:
+
+Construct a light ray in Schwarzschild spacetime that returns to its origin.
 
 1. Select "Schwarzschild" in the "Metric"-Tab of "Metric/Integrator/Constants".
  

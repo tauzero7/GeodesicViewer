@@ -9,15 +9,15 @@
 <body>
   <a name="home"></a>
   <h2>Training example</h2>
-  <p>In the training example, we consider time-like geodesics in the metric of a Schwarzschild black hole with a cosmic string, cf. [Phys. Rev. D 34 (1986), 2263-2266]. The corresponding line element reads
-  <br><img style="margin-left:30px" src="../pics/le_cosmic.png"><br>
+  <p>In the training example, we consider time-like geodesics in the metric of a Schwarzschild black hole with a cosmic string, cf. [<a href="https://doi.org/10.1103/PhysRevD.34.2263" target="_blank">Phys. Rev. D 34 (1986), 2263-2266</a>]. The corresponding line element reads
+  <br><img style="margin:20px" src="../pics/le_cosmic.png"><br>
   where &beta; is the string parameter and <img style="margin-left:0;margin-top:10px;vertical-align:text-bottom" src="../pics/schwradius.png"> is the Schwarzschild radius.</p>
   <p>The task is to reproduce the output of the <win>OpenGL 3D</win> and <win>Draw 2D</win> windows></p>
   <a href="../pics/third_example.3d.png"><img style="margin-left:30px;margin-right:0" width="350" src="../pics/third_example.3d.png"></a><a href="../pics/third_example.2d.png"><img style="margin-left:10px;margin-right:0"width="350" src="../pics/third_example.2d.png"></a><br>
   
   <h3>Contents</h3>
   <ol>
-    <li><a href="tut_third.html#start">Start the GeodesicViewer and set metric/integrator...</a></li>
+    <li><a href="tut_third.html#start">Start GeodesicViewer and set metric/integrator...</a></li>
     <li><a href="tut_third.html#tetrad">Initial position and local reference frame...</a></li>
     <li><a href="tut_third.html#geod">Initial direction and velocity...</a></li>
     <li><a href="tut_third.html#view3d">View parameters for 3D representation...</a></li>
@@ -27,7 +27,7 @@
   <hr>
   <!-- +++++++++++++++++++++++++++++++++ -->
   <ol class="tut">
-  <li class="tut"><a name="start"></a><b>Start the GeodesicViewer and set metric/integrator...</b>
+  <li class="tut"><a name="start"></a><b>Start GeodesicViewer and set metric/integrator...</b>
     <p>Start or reset the GeodesicViewer and select 'CosmicStringSchwarzschild' in the <tab>Metric</tab> tab. Set the metric parameters to <parval>beta=0.8</parval> and <parval>mass=1.0</parval>.</p>
     <p>Switch to the <tab>Integrator</tab> tab and select the Runge-Kutta-Fehlberg integrator. Activate step-size control, set the absolute error parameter <parval>eps abs=1e-12</parval>, and increase the maximum number of points to be calculated to <parval>max points=6000</parval>.</p>
     </li>
@@ -43,7 +43,7 @@
   </li>
   
   <li class="tut"><a name="view3d"><b>View parameters for 3D representation...</b></a>
-  <p>To reproduce the 3D view, change the representation type to 'embedding diagram', set the point of interest to <parval>poi z=12</parval>, and rotate the view by using the 'rotate on sphere' mouse control. To enhance the three-dimensional view, add an artifical fog of <parval>density=0.015</parval> to the scenary. As the embedding surface is too small with the predefined parameters, set the parameters to <parval>emp_phi_num=100</parval>, <parval>emb_r_num=40</parval>, <parval>emp_rmax=25</parval>, and <parval>emp_rmin=2</parval>.</p>
+  <p>To reproduce the 3D view, change the representation type to 'embedding diagram', set the point of interest to <parval>poi z=12</parval>, and rotate the view by panning mouse while pressing left button. To enhance the three-dimensional view, add an artifical fog of <parval>density=0.015</parval> to the scenary. As the embedding surface is too small with the predefined parameters, set the parameters to <parval>emp_phi_num=100</parval>, <parval>emb_r_num=40</parval>, <parval>emp_rmax=25</parval>, and <parval>emp_rmin=2</parval>.</p>
   </li>
   
   <li class="tut"><a name="poti"><b>Effective potential in the 2D view...</b></a>

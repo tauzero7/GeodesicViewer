@@ -59,7 +59,7 @@ QLineEdit {
 } 
 
 QLineEdit[readOnly="true"] {
-    color: #a55;
+    color: #f88;
     background-color: black;
 }
 
@@ -69,7 +69,7 @@ DoubleEdit {
 }
 
 DoubleEdit::disabled {
-    color: #a55;
+    color: #f88;
 }
 
 QMenu::separator {

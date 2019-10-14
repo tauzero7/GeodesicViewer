@@ -2,23 +2,24 @@
 <html>
 
 <head>
-<title>GeodesicViewer manual - first simple example</title>
-<link rel="stylesheet" type="text/css" href="gv.css">
+    <title>GeodesicViewer manual - first simple example</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="gv.css">
 </head>
 
-<body>
+<body class="main">
   <a name="home"></a>
   <h2>A simple example</h2>
   <p>As a first simple example we consider light-like geodesics in the Schwarzschild space-time defined in isotropic coordinates (t,x,y,z). The line element is given by<br>
-  <img style="margin-left:30px" src="../pics/le_schwarzschildiso.png"><br>
+  <img style="margin:20px" src="../pics/le_schwarzschildiso.png"><br>
   where the Schwarzschild radius  <img style="margin-left:0;margin-top:10px;vertical-align:text-bottom" src="../pics/schwarzschildradius.png"> and <img style="margin-left:0;margin-top:10px;vertical-align:text-bottom" src="../pics/isotropic_rho.png">.
   </p>
   
   <h3>Contents</h3>
   <ol>
-    <li><a href="tut_first.html#start">Start the GeodesicViewer...</a></li>
-    <li><a href="tut_first.html#metric">Choose the space-time metric...</a></li>
-    <li><a href="tut_first.html#position">Set the initial position and the local reference frame...</a></li>
+    <li><a href="tut_first.html#start">Start GeodesicViewer...</a></li>
+    <li><a href="tut_first.html#metric">Choose space-time metric...</a></li>
+    <li><a href="tut_first.html#position">Set initial position and local reference frame...</a></li>
     <li><a href="tut_first.html#play">Play around with the initial direction...</a></li> 
     <li><a href="tut_first.html#objects">Place objects for a better orientation...</a></li>
     <li><a href="tut_first.html#camera">Rotate the camera...</a></li>
@@ -26,19 +27,19 @@
   </ol>
   <hr>
   <ol class="tut">
-  <li class="tut"><a name="start"></a><b>Start the GeodesicViewer...</b>
-    <p>When starting the GeodesicViewer, the initial <tab>OpenGL 3D</tab> view is empty. There is only a small axes of coordinates  in the lower left corner. On the right hand side, there are the parameter windows for choosing the space-time metric, the integrator for the geodesics, the local tetrad, etc.</p>
+  <li class="tut"><a name="start"></a><b>Start GeodesicViewer...</b>
+    <p>When starting the GeodesicViewer, the initial <tab>OpenGL 3D</tab> view is empty. There is only a small axes of coordinates  in the lower left corner. On the right hand side, there is the parameter window for choosing the space-time metric, the integrator for the geodesics, the local tetrad, etc.</p>
     <img style="margin-left:10px" src="../pics/gv_screenshot_empty.png"></li>
   
-  <li class="tut"><a name="metric"></a><b>Choose the space-time metric...</b>
-    <p>The first step is to choose the space-time metric of interest. At the beginning, there is no space-time defined. This is indicated by the name 'unknown' in the <tab>Metric</tab> tab of the <win>Metric/Integrator/Constants</win> window. Here, we will study the Schwarzschild space-time in isotropic coordinates. For that, click on the combo box in the <tab>Metric</tab> tab and choose 'SchwarzschildIsotropic'. Below the combo box, there is a list of parameters of the current space-time. Here, we have only the mass of the black hole as free parameter which is set to one (in geometric units). Furthermore, there is a yellow line (the geodesic) in the <tab>OpenGL 3D</tab> view.</p></li>
+  <li class="tut"><a name="metric"></a><b>Choose space-time metric...</b>
+    <p>The first step is to choose the space-time metric of interest. At the beginning, there is no space-time defined. This is indicated by the name 'unknown' in the <tab>Metric</tab> tab of the <win>Metric/Integrator/Constants</win> window. Here, we will study the Schwarzschild space-time in isotropic coordinates. For that, click on the combo box in the <tab>Metric</tab> tab and choose 'SchwarzschildIsotropic'. Below the combo box, there is a list of parameters of the current space-time. Here, we have only the mass of the black hole as free parameter which is set to one (in geometric units). Now, there is a yellow line (the geodesic) in the <tab>OpenGL 3D</tab> view.</p></li>
     
-  <li class="tut"><a name="position"></a><b>Set the initial position and the local reference frame...</b>
+  <li class="tut"><a name="position"></a><b>Set initial position and local reference frame...</b>
     <p>When choosing a space-time metric, the GeodesicViewer shows a light-like geodesic with a predefined initial position and initial direction. The initial position is given in the <tab>Position</tab> tab of the <win>Local tetrad</win> window. In the line edit fields, set the initial position to<br><br><parval>t=0.0</parval> &nbsp;&nbsp; <parval>x=10.0</parval> &nbsp;&nbsp; <parval>y=6.0</parval> &nbsp;&nbsp; and &nbsp;&nbsp; <parval>z=0.0</parval>.<br><br>
     
     The local reference frame is given by the default natural local tetrad of the space-time. In the case of the Schwarzschild metric in isotropic coordinates, the natural local tetrad reads
-    <img style="margin-left:10px" src="../pics/localtetrad_iso.png"><br>
-    Hence, the orientation of the local reference frame coincides with the coordinate axes of the OpenGL 3D view. The initial four-vector of a null geodesic is then defined by the two initial angles &xi; and &chi;:<img style="margin-left:10px" src="../pics/initVector.png"></p></li>
+    <img style="margin:20px" src="../pics/localtetrad_iso.png"><br>
+    Hence, the orientation of the local reference frame coincides with the coordinate axes of the OpenGL 3D view. The initial four-vector of a null geodesic is then defined by the two initial angles &xi; and &chi;:<img style="margin-left:10px;margin-top:15px" src="../pics/initVector.png"></p></li>
     
     
   <li class="tut"><a name="play"></a><b>Play around with the initial direction...</b>
@@ -52,8 +53,8 @@
   <p>To add a sphere into the scenary, choose 'sphere3d' in the 'Add object' combo box and press the '+' button. The 'text field' now looks like this:
   </p>
   <img style="margin-left:10px" src="../pics/gv_screenshot_objects.png">
-  <p>The meaning of the different values is given in the 'Syntax' line. After the object name, here 'sphere3d', the Cartesian coordinates of the center of the sphere and the radius have to be defined. Because the sphere is represented by a mesh, the number of 'slices' and 'stacks' must be given. The last three values determine the colour of the sphere in rgb format, where 0 &le; r,g,b &le; 1. Because the event horizon has size r<sub>s</sub>=2 and we would like to have a red sphere, modify the line as follows:<br><br>
-  <parval>sphere3d &nbsp;&nbsp; 0.0000 &nbsp;&nbsp; 0.0000 &nbsp;&nbsp; 0.0000 &nbsp;&nbsp;&nbsp;&nbsp; 2.0000 &nbsp;&nbsp; 40.0 &nbsp;&nbsp; 40.0 &nbsp;&nbsp;&nbsp;&nbsp; 0.50 &nbsp;&nbsp; 0.00 &nbsp;&nbsp; 0.00</parval>
+  <p>The meaning of the different values is given in the 'Syntax' line. After the object name, here 'sphere3d', the Cartesian coordinates of the center of the sphere and the radius have to be defined. Because the sphere is represented by a mesh, the number of 'slices' and 'stacks' must be given. The last three values determine the colour of the sphere in rgb format, where 0 &le; r,g,b &le; 1. Because the event horizon has size &rho;<sub>s</sub>=1/2 and we would like to have a red sphere, modify the line as follows:<br><br>
+  <parval>sphere3d &nbsp;&nbsp; 0.0000 &nbsp;&nbsp; 0.0000 &nbsp;&nbsp; 0.0000 &nbsp;&nbsp;&nbsp;&nbsp; 0.5000 &nbsp;&nbsp; 40.0 &nbsp;&nbsp; 40.0 &nbsp;&nbsp;&nbsp;&nbsp; 0.50 &nbsp;&nbsp; 0.00 &nbsp;&nbsp; 0.00</parval>
   <br><br>and press 'Apply'. In the 'OpenGL 3D' view, a red sphere appears.</p>
   <p>Beside the sphere, let us also add a box into the scenary. For that, select 'box3d' in the 'Add object' combo box and press the '+' button. Then, change the parameters as follows:<br><br>
   <parval>box3d &nbsp;&nbsp;&nbsp;&nbsp; 0.0000 &nbsp;&nbsp; 0.0000 &nbsp;&nbsp; 0.0000 &nbsp;&nbsp;&nbsp;&nbsp; 20.0000 &nbsp;&nbsp; 12.0000 &nbsp;&nbsp; 10.0000 &nbsp;&nbsp;&nbsp;&nbsp; 1.0 &nbsp;&nbsp; 1.00 &nbsp;&nbsp;1.00 &nbsp;&nbsp;1.00</parval>
@@ -69,7 +70,7 @@
   
   <li class="tut"><a name="write"></a><b>Save parameters...</b>
   <p>To save the current parameters and settings, click on the <gvmenu>File</gvmenu> menu and select 'Write protocol'.</p><img style="margin-left:10px" width="400" src="../pics/write_prot_empty.png">
-  <p>First, choose the directory where the files configuration files shall be stored. If you press on the '...' button, a directory dialog pops-up where you can choose the directory as usual. Next, enter a base-filename for the configuration files in the 'Name' line. (Details about the checkboxes can be found <a href="menu.html#writeprot" target="Daten">here</a>). At last, press the 'Write' button. The resulting files can be seen here:</p>
+  <p>First, choose the directory where the configuration files shall be stored. If you press on the '...' button, a directory dialog pops-up where you can choose the directory as usual. Next, enter a base-filename for the configuration files in the 'Name' line. (Details about the checkboxes can be found <a href="menu.html#writeprot" target="Daten">here</a>). At last, press the 'Write' button. The resulting files can be seen here:</p>
   <ul>
     <li><a href="html/first_example.ini.html" target="Daten">first_example.ini</a></li>
     <li><a href="html/first_example.cfg.html" target="Daten">first_example.cfg</a></li>

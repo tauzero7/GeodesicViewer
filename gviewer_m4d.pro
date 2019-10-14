@@ -110,7 +110,7 @@ CONFIG(release, debug|release) {
 
 
 CONFIG  += console c++11  warn_on
-QT      += core gui opengl network
+QT      += core gui opengl
 TEMPLATE = app
 
 HEADERS += $$VIEW_HEADERS  $$MODEL_HEADERS  $$UTILS_HEADERS  $$M4D_HEADERS gdefs.h

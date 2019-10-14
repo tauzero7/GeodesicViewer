@@ -15,8 +15,11 @@
 #include <QMainWindow>
 #include <QMenuBar>
 #include <QStatusBar>
+
+#ifdef HAVE_NETWORK
 #include <QTcpServer>
 #include <QTcpSocket>
+#endif // HAVE_NETWORK
 
 #include <gdefs.h>
 
@@ -47,7 +50,8 @@
 /**
  * @brief The GeodesicView class
  */
-class GeodesicView : public QMainWindow {
+class GeodesicView : public QMainWindow
+{
     Q_OBJECT
 
 public:
@@ -166,9 +170,11 @@ protected:
 protected slots:
     virtual void closeEvent(QCloseEvent* event);
 
+#ifdef HAVE_NETWORK
     void slot_newConnect();
     void slot_disconn();
     void slot_readData();
+#endif // HAVE_NETWORK
 
 public:
     OpenGL3dModel* opengl;
@@ -180,7 +186,8 @@ private:
 
     static GeodesicView* m_instance;
 
-    class CGuard {
+    class CGuard
+    {
     public:
         ~CGuard()
         {
@@ -274,8 +281,8 @@ private:
     /* ---- Help menu ---- */
     QMenu* mHelpMenu;
     QAction* mActionAbout;
-    //QAction*        mActionDoc;
-    //DocView*        mHelpDoc;
+    // QAction*        mActionDoc;
+    // DocView*        mHelpDoc;
 
     QAction* mActionPlay;
     QAction* mActionStepKsiPlus;
@@ -288,7 +295,7 @@ private:
     ProtDialog* mProtDialog;
 
     // ---- QtScript ----
-    //QScriptEngine*  mScriptEngine;
+    // QScriptEngine*  mScriptEngine;
     QAction* mLoadScript;
 
     // ---- status bar ----
@@ -308,8 +315,10 @@ private:
 
     GreekLetter mGreekLetter;
 
+#ifdef HAVE_NETWORK
     QTcpServer* mServer;
     QTcpSocket* mSocket;
+#endif // HAVE_NETWORK
 };
 
 #ifdef HAVE_LUA
