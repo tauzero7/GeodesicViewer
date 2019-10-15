@@ -201,6 +201,7 @@ private:
     friend class CGuard;
 
     struct_params mParams;
+    QString mPreviousFolder;
 
     // Tab widget holding 2D and 3D rendering window
     QTabWidget* tab_draw;

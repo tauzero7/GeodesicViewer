@@ -564,42 +564,31 @@ void OpenGL3dModel::showNumVerts(int num)
 
 bool OpenGL3dModel::saveRGBimage(QString filename)
 {
-    unsigned char* buf = new unsigned char[DEF_OPENGL_WIDTH * DEF_OPENGL_HEIGHT * 4];
+    makeCurrent();
+    if (width() == 0 || height() == 0) {
+        fprintf(stderr, "Image size is null!\n");
+        return false;
+    }
+
+    unsigned char* buf = new unsigned char[static_cast<size_t>(width() * height() * 3)];
 
     update();
     glReadBuffer(GL_BACK);
-    glReadPixels(0, 0, DEF_OPENGL_WIDTH, DEF_OPENGL_HEIGHT, GL_RGB, GL_UNSIGNED_BYTE, buf);
+    glReadPixels(0, 0, width(), height(), GL_RGB, GL_UNSIGNED_BYTE, buf);
 
-    QImage img(buf, DEF_OPENGL_WIDTH, DEF_OPENGL_HEIGHT, QImage::Format_RGB888);
+    QImage img(buf, width(), height(), QImage::Format_RGB888);
     QTransform trans;
     trans.scale(1.0, -1.0);
     QImage flippedImage = img.transformed(trans);
     if (!flippedImage.isNull()) {
         flippedImage.save(filename);
     }
-    /*
-    std::ofstream out(filename.toStdString().c_str());
-    if (!out.is_open())
-    {
-    delete [] buf;
-    return false;
-    }
-
-    out << "P6" << std::endl << DEF_OPENGL_WIDTH << " " << DEF_OPENGL_HEIGHT << std::endl << "255" << std::endl;
-    int num;
-    for(int row=DEF_OPENGL_HEIGHT-1; row>=0; row--)
-    for(int col=0; col<DEF_OPENGL_WIDTH; col++)
-    {
-      num = (row*DEF_OPENGL_WIDTH+col)*4;
-      out << char(buf[num+0]) << char(buf[num+1]) << char(buf[num+2]);
-    }
-    out << std::endl;
-    out.close();
-    */
 
     delete[] buf;
     return true;
 }
+
+
 
 void OpenGL3dModel::updateParams()
 {

@@ -135,7 +135,9 @@ private:
     enum_draw_coord_num mAbscissa;
     enum_draw_coord_num mOrdinate;
 
+#ifdef HAVE_FREETYPE
     RenderText* renderText;
+#endif // HAVE_FREETYPE
 };
 
 #endif // OPENGL2D_MODEL_H

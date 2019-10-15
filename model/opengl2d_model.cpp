@@ -308,39 +308,25 @@ void OpenGL2dModel::getWinSize(int& width, int& height)
 
 bool OpenGL2dModel::saveRGBimage(QString filename)
 {
-    unsigned char* buf = new unsigned char[DEF_OPENGL_WIDTH * DEF_OPENGL_HEIGHT * 4];
+    makeCurrent();
+    if (mWinSize[0] == 0 || mWinSize[1] == 0) {
+        fprintf(stderr, "Image size is null!\n");
+        return false;
+    }
+
+    unsigned char* buf = new unsigned char[static_cast<size_t>(mWinSize[0] * mWinSize[1] * 3)];
 
     update();
     glReadBuffer(GL_BACK);
-    glReadPixels(0, 0, DEF_OPENGL_WIDTH, DEF_OPENGL_HEIGHT, GL_RGB, GL_UNSIGNED_BYTE, buf);
+    glReadPixels(0, 0, mWinSize[0], mWinSize[1], GL_RGB, GL_UNSIGNED_BYTE, buf);
 
-    QImage img(buf, DEF_OPENGL_WIDTH, DEF_OPENGL_HEIGHT, QImage::Format_RGB888);
+    QImage img(buf, mWinSize[0], mWinSize[1], QImage::Format_RGB888);
     QTransform trans;
     trans.scale(1.0, -1.0);
     QImage flippedImage = img.transformed(trans);
     if (!flippedImage.isNull()) {
         flippedImage.save(filename);
     }
-
-    /*
-    std::ofstream out(filename.toStdString().c_str());
-    if (!out.is_open())
-    {
-    delete [] buf;
-    return false;
-    }
-
-    out << "P6" << std::endl << DEF_OPENGL_WIDTH << " " << DEF_OPENGL_HEIGHT << std::endl << "255" << std::endl;
-    int num;
-    for(int row=DEF_OPENGL_HEIGHT-1; row>=0; row--)
-    for(int col=0; col<DEF_OPENGL_WIDTH; col++)
-    {
-      num = (row*DEF_OPENGL_WIDTH+col)*4;
-      out << char(buf[num+0]) << char(buf[num+1]) << char(buf[num+2]);
-    }
-    out << std::endl;
-    out.close();
-    */
 
     delete[] buf;
     return true;
@@ -386,7 +372,9 @@ void OpenGL2dModel::initializeGL()
     mDPIFactor[0] = QApplication::desktop()->devicePixelRatioF();
     mDPIFactor[1] = QApplication::desktop()->devicePixelRatioF();
 
+#ifdef HAVE_FREETYPE
     renderText = new RenderText("resources/DroidSansMono.ttf", 12);
+#endif // HAVE_FREETYPE
 }
 
 void OpenGL2dModel::paintGL()
@@ -420,7 +408,6 @@ void OpenGL2dModel::paintGL()
         glVertex2f(0.6f, static_cast<float>(y * mYstep));
         glVertex2f(1.0f, static_cast<float>(y * mYstep));
         glEnd();
-        // renderText(0.1, y * mYstep, 0.0, QString::number(y * mYstep), mTicksFont);
     }
 
     glMatrixMode(GL_PROJECTION);
@@ -459,10 +446,7 @@ void OpenGL2dModel::paintGL()
                     double cx, cy, size;
                     mObjects[i]->getValue(0, cx);
                     mObjects[i]->getValue(1, cy);
-                    mObjects[i]->getValue(2, size);
-                    QFont font;
-                    font.setPixelSize(static_cast<int>(size));
-                    // this->renderText((double)cx, (double)cy, 0.0, QString(mObjects[i]->getText().c_str()), font);
+                    mObjects[i]->getValue(2, size);                    
                 }
             }
         }
@@ -535,6 +519,7 @@ void OpenGL2dModel::paintGL()
     // -----------------------
     //   draw tick labels
     // -----------------------
+#ifdef HAVE_FREETYPE
     if (renderText != nullptr) {
         double xScale = 1.0 / (mXmax - mXmin) * mWinSize[0];
         glViewport(DEF_DRAW2D_LEFT_BORDER, 0, mWinSize[0] - DEF_DRAW2D_LEFT_BORDER, DEF_DRAW2D_BOTTOM_BORDER);
@@ -553,6 +538,7 @@ void OpenGL2dModel::paintGL()
                 DEF_DRAW2D_LEFT_BORDER - 3, ypos + 2, QString::number(y * mYstep).toStdString().c_str(), ALIGN_RIGHT);
         }
     }
+#endif // HAVE_FREETYPE
 }
 
 void OpenGL2dModel::resizeGL(int width, int height)
@@ -568,9 +554,11 @@ void OpenGL2dModel::resizeGL(int width, int height)
     adjust();
     setLattice();
 
+#ifdef HAVE_FREETYPE
     if (renderText != nullptr) {
         renderText->SetWindowSize(width, height);
     }
+#endif // HAVE_FREETYPE
     update();
 }
 

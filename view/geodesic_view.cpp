@@ -5,6 +5,7 @@
  * This file is part of GeodesicView.
  */
 #include "geodesic_view.h"
+#include <QApplication>
 #include <QDockWidget>
 #include <QGroupBox>
 #include <QHeaderView>
@@ -23,7 +24,8 @@ GeodesicView* GeodesicView::m_instance = nullptr;
 
 GeodesicView::GeodesicView()
     : QMainWindow(nullptr)
-{
+{    
+    mPreviousFolder = QApplication::applicationDirPath();
 
     setStandardParams(&mParams);
     init();
@@ -59,14 +61,14 @@ QSize GeodesicView::sizeHint() const
 
 void GeodesicView::slot_load_setting()
 {
-    QDir cdir = QDir::current();
-    cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
     QString filename = QFileDialog::getOpenFileName(
-        this, tr("Load setting"), cdir.absolutePath(), tr(DEF_PROTOCOL_FILE_ENDING_PATTERN));
+        this, tr("Load setting"), mPreviousFolder, tr(DEF_PROTOCOL_FILE_ENDING_PATTERN));
 
     if (filename == QString()) {
         return;
     }
+
+    mPreviousFolder = QFileInfo(filename).absoluteDir().absolutePath();
 
     if (!mObject.loadSettings(filename.toStdString().c_str(), false)) {
         led_status->setText("load settings failed");
@@ -79,14 +81,14 @@ void GeodesicView::slot_load_setting()
 
 void GeodesicView::slot_save_setting()
 {
-    QDir cdir = QDir::current();
-    cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
     QString filename = QFileDialog::getSaveFileName(
-        this, tr("Save setting"), cdir.absolutePath(), tr(DEF_PROTOCOL_FILE_ENDING_PATTERN));
+        this, tr("Save setting"), mPreviousFolder, tr(DEF_PROTOCOL_FILE_ENDING_PATTERN));
 
     if (filename == QString()) {
         return;
     }
+
+    mPreviousFolder = QFileInfo(filename).absoluteDir().absolutePath();
 
     if (!filename.endsWith(DEF_PROTOCOL_FILE_ENDING)) {
         filename.append(DEF_PROTOCOL_FILE_ENDING);
@@ -97,14 +99,14 @@ void GeodesicView::slot_save_setting()
 
 void GeodesicView::slot_load_vparams()
 {
-    QDir cdir = QDir::current();
-    cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
     QString filename = QFileDialog::getOpenFileName(
-        this, tr("Load ViewParameters"), cdir.absolutePath(), tr(DEF_VPARAMS_FILE_ENDING_PATTERN));
+        this, tr("Load ViewParameters"), mPreviousFolder, tr(DEF_VPARAMS_FILE_ENDING_PATTERN));
 
     if (filename == QString()) {
         return;
     }
+
+    mPreviousFolder = QFileInfo(filename).absoluteDir().absolutePath();
 
     if (loadParamFile(filename.toStdString(), &mParams)) {
         opengl->updateParams();
@@ -118,14 +120,14 @@ void GeodesicView::slot_load_vparams()
 
 void GeodesicView::slot_save_vparams()
 {
-    QDir cdir = QDir::current();
-    cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
     QString filename = QFileDialog::getSaveFileName(
-        this, tr("Save ViewParameters"), cdir.absolutePath(), tr(DEF_VPARAMS_FILE_ENDING_PATTERN));
+        this, tr("Save ViewParameters"), mPreviousFolder, tr(DEF_VPARAMS_FILE_ENDING_PATTERN));
 
     if (filename == QString()) {
         return;
     }
+
+    mPreviousFolder = QFileInfo(filename).absoluteDir().absolutePath();
 
     if (!filename.endsWith(DEF_VPARAMS_FILE_ENDING)) {
         filename.append(DEF_VPARAMS_FILE_ENDING);
@@ -185,12 +187,13 @@ void GeodesicView::slot_reset_vparams()
 
 void GeodesicView::slot_save_image_2d()
 {
-    QDir cdir = QDir::current();
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save 2D image"), cdir.absolutePath(), DEF_2D_FILE_FILTER);
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save 2D image"), mPreviousFolder, DEF_2D_FILE_FILTER);
 
     if (filename == QString()) {
         return;
     }
+
+    mPreviousFolder = QFileInfo(filename).absoluteDir().absolutePath();
 
     if (filename.endsWith(DEF_2D_FILE_ENDING)) {
         filename.remove(DEF_2D_FILE_ENDING);
@@ -211,12 +214,13 @@ void GeodesicView::slot_save_image_2d()
 
 void GeodesicView::slot_save_image_3d()
 {
-    QDir cdir = QDir::current();
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save 3D image"), cdir.absolutePath(), DEF_3D_FILE_FILTER);
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save 3D image"), mPreviousFolder, DEF_3D_FILE_FILTER);
 
     if (filename == QString()) {
         return;
     }
+
+    mPreviousFolder = QFileInfo(filename).absoluteDir().absolutePath();
 
     if (filename.endsWith(DEF_3D_FILE_ENDING)) {
         filename.remove(DEF_3D_FILE_ENDING);
@@ -237,14 +241,14 @@ void GeodesicView::slot_save_image_3d()
 
 void GeodesicView::slot_load_all()
 {
-    QDir cdir = QDir::current();
-    cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
     QString filename
-        = QFileDialog::getOpenFileName(this, tr("Load all"), cdir.absolutePath(), tr(DEF_PROTOCOL_FILE_ENDING_PATTERN));
+        = QFileDialog::getOpenFileName(this, tr("Load all"), mPreviousFolder, tr(DEF_PROTOCOL_FILE_ENDING_PATTERN));
 
     if (filename == QString()) {
         return;
     }
+
+    mPreviousFolder = QFileInfo(filename).absoluteDir().absolutePath();
 
     if (!mObject.loadSettings(filename.toStdString().c_str(), false)) {
         led_status->setText("load settings failed");
@@ -392,13 +396,13 @@ void GeodesicView::slot_quit()
 #ifdef HAVE_LUA
 void GeodesicView::slot_run_luaScript()
 {
-    QDir cdir = QDir::current();
-    cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
-    QString filename = QFileDialog::getOpenFileName(this, tr("Load Lua Script"), cdir.absolutePath(), tr("*.lua"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Load Lua Script"), mPreviousFolder, tr("*.lua"));
 
     if (filename == QString()) {
         return;
     }
+
+    mPreviousFolder = QFileInfo(filename).absoluteDir().absolutePath();
 
     if (luaL_loadfile(mLuaState, filename.toStdString().c_str()) || lua_pcall(mLuaState, 0, 0, 0)) {
         mlua_error(mLuaState, "Error: %s\n", lua_tostring(mLuaState, -1));
@@ -516,28 +520,28 @@ void GeodesicView::slot_animate()
 
 void GeodesicView::slot_load_objects()
 {
-    QDir cdir = QDir::current();
-    cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
     QString filename = QFileDialog::getOpenFileName(
-        this, tr("Load object file"), cdir.absolutePath(), tr(DEF_OBJECT_FILE_ENDING_PATTERN));
+        this, tr("Load object file"), mPreviousFolder, tr(DEF_OBJECT_FILE_ENDING_PATTERN));
 
     if (filename == QString()) {
         return;
     }
+
+    mPreviousFolder = QFileInfo(filename).absoluteDir().absolutePath();
 
     loadObjects(filename);
 }
 
 void GeodesicView::slot_append_objects()
 {
-    QDir cdir = QDir::current();
-    cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
     QString filename = QFileDialog::getOpenFileName(
-        this, tr("Append object file"), cdir.absolutePath(), tr(DEF_OBJECT_FILE_ENDING_PATTERN));
+        this, tr("Append object file"), mPreviousFolder, tr(DEF_OBJECT_FILE_ENDING_PATTERN));
 
     if (filename == QString()) {
         return;
     }
+
+    mPreviousFolder = QFileInfo(filename).absoluteDir().absolutePath();
 
     opengl->clearAllObjects();
     draw2d->clearAllObjects();
@@ -561,14 +565,14 @@ void GeodesicView::slot_save_objects()
         return;
     }
 
-    QDir cdir = QDir::current();
-    cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
     QString filename = QFileDialog::getSaveFileName(
-        this, tr("Save object file"), cdir.absolutePath(), tr(DEF_OBJECT_FILE_ENDING_PATTERN));
+        this, tr("Save object file"), mPreviousFolder, tr(DEF_OBJECT_FILE_ENDING_PATTERN));
 
     if (filename == QString()) {
         return;
     }
+
+    mPreviousFolder = QFileInfo(filename).absoluteDir().absolutePath();
 
     if (!filename.endsWith(DEF_OBJECT_FILE_ENDING)) {
         filename.append(DEF_OBJECT_FILE_ENDING);
@@ -646,14 +650,14 @@ void GeodesicView::slot_show_report()
 
 void GeodesicView::slot_save_report()
 {
-    QDir cdir = QDir::current();
-    cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
     QString filename = QFileDialog::getSaveFileName(
-        this, tr("Save report"), cdir.absolutePath(), tr(DEF_REPORT_FILE_ENDING_PATTERN));
+        this, tr("Save report"), mPreviousFolder, tr(DEF_REPORT_FILE_ENDING_PATTERN));
 
     if (filename == QString()) {
         return;
     }
+
+    mPreviousFolder = QFileInfo(filename).absoluteDir().absolutePath();
 
     if (!filename.endsWith(DEF_REPORT_FILE_ENDING)) {
         filename.append(DEF_REPORT_FILE_ENDING);
@@ -862,14 +866,13 @@ void GeodesicView::slot_setOpenGLcolors()
 
 void GeodesicView::slot_executeScript()
 {
-    QDir cdir = QDir::current();
-    cdir.cd(DEF_STANDARD_DATA_DIRECTORY);
-    QString filename = QFileDialog::getOpenFileName(this, tr("Load script file"), cdir.absolutePath(), "*.js");
+    QString filename = QFileDialog::getOpenFileName(this, tr("Load script file"), mPreviousFolder, "*.js");
 
     if (filename == QString()) {
         return;
     }
 
+    mPreviousFolder = QFileInfo(filename).absoluteDir().absolutePath();
     execScript(filename);
 }
 
