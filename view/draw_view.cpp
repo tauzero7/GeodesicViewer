@@ -28,7 +28,6 @@ DrawView::DrawView(
 
     mBGcolor = mParams->opengl_bg_color;
     mFGcolor = mParams->opengl_line_color;
-    mEmbColor = Qt::lightGray;
 
     m2dFGcolor = mParams->draw2d_line_color;
     m2dBGcolor = mParams->draw2d_bg_color;
@@ -76,11 +75,10 @@ void DrawView::resetAll()
 
     mBGcolor = mParams->opengl_bg_color;
     mFGcolor = mParams->opengl_line_color;
-    mEmbColor = Qt::lightGray;
     pub_bgcolor->setPalette(QPalette(mBGcolor));
     pub_fgcolor->setPalette(QPalette(mFGcolor));
-    pub_emb_color->setPalette(QPalette(mEmbColor));
-    mOpenGL->setColors(mFGcolor, mBGcolor, mEmbColor);
+    pub_emb_color->setPalette(QPalette(mParams->opengl_emb_color));
+    mOpenGL->setColors(mFGcolor, mBGcolor);
 
     spb_linewidth->setValue(mParams->opengl_line_width);
 
@@ -118,6 +116,7 @@ void DrawView::resetAll()
 
     adjustEmbParams();
     pub_emb_color->setPalette(QPalette(mParams->opengl_emb_color));
+    dsb_emb_offset->setValue(mParams->opengl_emb_offset);
 
     slot_resetScaling();
 }
@@ -205,11 +204,10 @@ void DrawView::updateParams()
     /* --- colors --- */
     mBGcolor = mParams->opengl_bg_color;
     mFGcolor = mParams->opengl_line_color;
-    mEmbColor = mParams->opengl_emb_color;
     pub_bgcolor->setPalette(QPalette(mBGcolor));
     pub_fgcolor->setPalette(QPalette(mFGcolor));
-    pub_emb_color->setPalette(QPalette(mEmbColor));
-    mOpenGL->setColors(mFGcolor, mBGcolor, mEmbColor);
+    pub_emb_color->setPalette(QPalette(mParams->opengl_emb_color));
+    mOpenGL->setColors(mFGcolor, mBGcolor);
 
     spb_linewidth->setValue(mParams->opengl_line_width);
     if (mParams->opengl_line_smooth == 1) {
@@ -438,11 +436,10 @@ std::string DrawView ::getDrawType3DName()
     return cob_drawtype3d->currentText().toStdString();
 }
 
-void DrawView::getColors(QColor& bgcol, QColor& fgcol, QColor& embcol)
+void DrawView::getColors(QColor& bgcol, QColor& fgcol)
 {
     bgcol = mBGcolor;
     fgcol = mFGcolor;
-    embcol = mEmbColor;
 }
 
 void DrawView::animate(bool anim)
@@ -782,13 +779,20 @@ void DrawView::slot_setBGcolor()
 
 void DrawView::slot_setEmbColor()
 {
-    QColor embcol = QColorDialog::getColor(mEmbColor);
+    QColor embcol = QColorDialog::getColor(mParams->opengl_emb_color);
 
     if (embcol.isValid()) {
-        mParams->opengl_emb_color = mEmbColor = embcol;
-        pub_emb_color->setPalette(QPalette(mEmbColor));
+        mParams->opengl_emb_color = embcol;
+        pub_emb_color->setPalette(QPalette(embcol));
         emit colorChanged();
     }
+}
+
+void DrawView::slot_setEmbParams()
+{
+    double val = dsb_emb_offset->value();
+    mParams->opengl_emb_offset = val;
+    emit calcGeodesic();
 }
 
 void DrawView::slot_setLineWidth()
@@ -1279,6 +1283,14 @@ void DrawView::initElements()
     lab_emb_color = new QLabel("Color");
     pub_emb_color = new QPushButton();
     pub_emb_color->setPalette(QPalette(mParams->opengl_emb_color));
+
+    lab_emb_offset = new QLabel("Offset");
+    dsb_emb_offset = new QDoubleSpinBox();
+    dsb_emb_offset->setRange(-1.0, 1.0);
+    dsb_emb_offset->setSingleStep(0.01);
+    dsb_emb_offset->setDecimals(2);
+    dsb_emb_offset->setValue(0.0);
+    dsb_emb_offset->setKeyboardTracking(false);
 }
 
 void DrawView::initGUI()
@@ -1490,9 +1502,11 @@ void DrawView::initGUI()
     grb_emb_params->setLayout(layout_emb_params);
 
     QGridLayout* layout_emb = new QGridLayout();
-    layout_emb->addWidget(grb_emb_params, 0, 0, 1, 2);
+    layout_emb->addWidget(grb_emb_params, 0, 0, 1, 4);
     layout_emb->addWidget(lab_emb_color, 1, 0);
     layout_emb->addWidget(pub_emb_color, 1, 1);
+    layout_emb->addWidget(lab_emb_offset, 1, 2);
+    layout_emb->addWidget(dsb_emb_offset, 1, 3);
     wgt_draw_3demb->setLayout(layout_emb);
 
     // ---------------------------------
@@ -1539,6 +1553,7 @@ void DrawView::initControl()
     connect(pub_bgcolor, SIGNAL(pressed()), this, SLOT(slot_setBGcolor()));
     connect(pub_fgcolor, SIGNAL(pressed()), this, SLOT(slot_setFGcolor()));
     connect(pub_emb_color, SIGNAL(pressed()), this, SLOT(slot_setEmbColor()));
+    connect(dsb_emb_offset, SIGNAL(valueChanged(double)), this, SLOT(slot_setEmbParams()));
     connect(spb_linewidth, SIGNAL(valueChanged(int)), this, SLOT(slot_setLineWidth()));
     connect(chb_linesmooth, SIGNAL(clicked()), this, SLOT(slot_setSmoothLine()));
 

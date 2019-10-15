@@ -853,12 +853,11 @@ void GeodesicView::slot_calcGeodesic()
 
 void GeodesicView::slot_setOpenGLcolors()
 {
-    QColor bgcol, fgcol, embcol;
+    QColor bgcol, fgcol;
 
-    drw_view->getColors(bgcol, fgcol, embcol);
+    drw_view->getColors(bgcol, fgcol);
     opengl->setFGcolor(fgcol);
     opengl->setBGcolor(bgcol);
-    opengl->setEmbColor(embcol);
 }
 
 void GeodesicView::slot_executeScript()
@@ -1453,9 +1452,9 @@ void GeodesicView::initGUI()
     tab_metricInt = new QTabWidget;
     tab_metricInt->addTab(wgt_metric, tr("Metric"));
     tab_metricInt->addTab(wgt_integrator, tr("Integrator"));
-    tab_metricInt->addTab(wgt_constants, tr("Constants"));
+    // tab_metricInt->addTab(wgt_constants, tr("Constants"));
 
-    QGroupBox* grb_metricInt = new QGroupBox("Metric/Integrator/Constants");
+    QGroupBox* grb_metricInt = new QGroupBox("Metric / Integrator");
     QVBoxLayout* layout_metricInt = new QVBoxLayout();
     layout_metricInt->addWidget(tab_metricInt);
     layout_metricInt->addStretch(10);

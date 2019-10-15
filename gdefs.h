@@ -24,7 +24,7 @@
 // -----------------------------------
 //   GUI definitions
 // -----------------------------------
-#define DEF_GUI_WIDTH  1600
+#define DEF_GUI_WIDTH 1600
 #define DEF_GUI_HEIGHT 1200
 #define DEF_DRAW2D_WIDTH 720
 #define DEF_OPENGL_WIDTH 720
@@ -260,6 +260,7 @@ typedef struct _struct_params {
 
     std::map<std::string, double> opengl_emb_params;
     QColor opengl_emb_color;
+    double opengl_emb_offset;
 
     m4d::vec3 opengl_eye_pos;
     double opengl_eye_pos_step;

@@ -716,11 +716,29 @@ void OpenGL2dModel::mouseMoveEvent(QMouseEvent* event)
     else if (mButtonPressed == Qt::MidButton) {
     }
     else if (mButtonPressed == Qt::RightButton) {
-        double zoomFactor = 0.005 * (mYmax - mYmin);
-        mXmin += dxy.y() * zoomFactor * mAspect;
-        mXmax -= dxy.y() * zoomFactor * mAspect;
-        mYmin += dxy.y() * zoomFactor;
-        mYmax -= dxy.y() * zoomFactor;
+        double dx = mXmax - mXmin;
+        double dy = mYmax - mYmin;
+        double zoomFactorX = 0.005 * dx;
+        double zoomFactorY = 0.005 * dy;
+
+        if (mModifiers == Qt::ControlModifier) {
+            double umin = mXmin / dx;
+            double umax = mXmax / dx;
+            double vmin = mYmin / dy;
+            double vmax = mYmax / dy;
+            dx -= dxy.x() * zoomFactorX;
+            dy += dxy.y() * zoomFactorY;
+            mXmin = umin * dx;
+            mXmax = umax * dx;
+            mYmin = vmin * dy;
+            mYmax = vmax * dy;
+        }
+        else {
+            mXmin += dxy.y() * zoomFactorY * mAspect;
+            mXmax -= dxy.y() * zoomFactorY * mAspect;
+            mYmin += dxy.y() * zoomFactorY;
+            mYmax -= dxy.y() * zoomFactorY;
+        }
         adjust();
         setLattice();
     }
@@ -802,7 +820,7 @@ void OpenGL2dModel::setLattice()
     mXstep = mStepList[mXstepIdx];
     mYstep = mStepList[mYstepIdx];
 
-   //  fprintf(stderr,"%d %d  %d %d  %f %f\n",pixStepX,pixStepY,mXstepIdx,mYstepIdx,mXstep,mYstep);
+    //  fprintf(stderr,"%d %d  %d %d  %f %f\n",pixStepX,pixStepY,mXstepIdx,mYstepIdx,mXstep,mYstep);
 
     xStart = static_cast<int>(floor(mXmin / mXstep)) + 1;
     xEnd = static_cast<int>(floor(mXmax / mXstep)) + 1;

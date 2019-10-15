@@ -69,14 +69,12 @@ public:
     void getDrawAbsOrdIndex(int& absIdx, int& ordIdx);
     std::string getDrawType3DName();
 
-    void getColors(QColor& bgcol, QColor& fgcol, QColor& embcol);
+    void getColors(QColor& bgcol, QColor& fgcol);
 
     void animate(bool anim = false);
     bool isAnimated();
 
     void setGeodLength(int num);
-
-    // void  addObjectsToScriptEngine(QScriptEngine* engine);
 
 public slots:
     void setType(int num);
@@ -117,6 +115,7 @@ protected slots:
     void slot_setFGcolor();
     void slot_setBGcolor();
     void slot_setEmbColor();
+    void slot_setEmbParams();
     void slot_setLineWidth();
     void slot_setSmoothLine();
 
@@ -300,6 +299,8 @@ private:
     QTableWidget* tbw_emb_params;
     QLabel* lab_emb_color;
     QPushButton* pub_emb_color;
+    QLabel* lab_emb_offset;
+    QDoubleSpinBox* dsb_emb_offset;
 
     // ----------------------
     //    other things
@@ -308,7 +309,6 @@ private:
 
     QColor mBGcolor;
     QColor mFGcolor;
-    QColor mEmbColor;
 
     QColor m2dBGcolor;
     QColor m2dFGcolor;

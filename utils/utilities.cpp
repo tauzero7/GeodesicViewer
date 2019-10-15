@@ -467,6 +467,7 @@ void setStandardParams(struct_params* par)
     if (!par->opengl_emb_params.empty()) {
         par->opengl_emb_params.clear();
     }
+    par->opengl_emb_offset = 0.0;
 
     par->opengl_eye_pos = m4d::vec3(DEF_INIT_EYE_POS_X, DEF_INIT_EYE_POS_Y, DEF_INIT_EYE_POS_Z);
     par->opengl_eye_pos_step = 0.1;
@@ -605,6 +606,9 @@ bool loadParamFile(const std::string& filename, struct_params* par)
         else if (baseString.compare("OGL_EMBED_COLOR") == 0 && tokens[i].size() > 3) {
             par->opengl_emb_color
                 = QColor(atoi(tokens[i][1].c_str()), atoi(tokens[i][2].c_str()), atoi(tokens[i][3].c_str()));
+        }
+        else if (baseString.compare("OGL_EMBED_OFFSET") == 0) {
+            par->opengl_emb_offset = atof(tokens[i][1].c_str());
         }
         else if (baseString.compare("OGL_STEREO_USE") == 0 && tokens[i].size() > 1) {
             par->opengl_stereo_use = atoi(tokens[i][1].c_str());
@@ -762,8 +766,10 @@ bool saveParamFile(const std::string& filename, struct_params* par)
     fprintf(fptr, "OGL_LINE_SMOOTH      %d\n", par->opengl_line_smooth);
     fprintf(fptr, "OGL_BG_COLOR         %3d %3d %3d\n", par->opengl_bg_color.red(), par->opengl_bg_color.green(),
         par->opengl_bg_color.blue());
+
     fprintf(fptr, "OGL_EMBED_COLOR      %3d %3d %3d\n", par->opengl_emb_color.red(), par->opengl_emb_color.green(),
         par->opengl_emb_color.blue());
+    fprintf(fptr, "OGL_EMBED_OFFSET     %f\n", par->opengl_emb_offset);
     if (par->opengl_emb_params.size() > 0) {
         fprintf(fptr, "# -----\n");
         std::map<std::string, double>::iterator mapItr = par->opengl_emb_params.begin();

@@ -387,7 +387,7 @@ void GeodView::initElements()
 
     lab_geod_type = new QLabel(tr("type"));
     cob_geod_type = new QComboBox();
-    for (unsigned int i = 0; i < m4d::NUM_ENUM_GEODESIC_TYPE - 1; i++) {
+    for (unsigned int i = 0; i < m4d::NUM_ENUM_GEODESIC_TYPE - 2; i++) {
         cob_geod_type->addItem(m4d::stl_geodesic_type[i]);
     }
 

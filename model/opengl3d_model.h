@@ -33,8 +33,13 @@ public:
     OpenGL3dModel(struct_params* par, QWidget* parent = nullptr);
     virtual ~OpenGL3dModel();
 
-public:
+    /**
+     * @brief Set vertex points depending on draw type.
+     * @param dtype
+     * @param needUpdate
+     */
     void setPoints(m4d::enum_draw_type dtype = m4d::enum_draw_pseudocart, bool needUpdate = true);
+
     void clearPoints();
 
     void setSachsAxes(bool needUpdate = true);
@@ -64,8 +69,7 @@ public:
 
     void setFGcolor(QColor col);
     void setBGcolor(QColor col);
-    void setEmbColor(QColor col);
-    void setColors(QColor fgcol, QColor bgcol, QColor embcol);
+    void setColors(QColor fgcol, QColor bgcol);
 
     void setLineWidth(int width);
     void setLineSmooth(int smooth);
@@ -151,7 +155,6 @@ private:
     unsigned int mEmbCounter;
     unsigned int** mEmbIndices;
     GLsizei* mCount;
-    QColor mEmbColor;
 
     std::vector<MyObject*> mObjects;
     bool mWiredObjs;

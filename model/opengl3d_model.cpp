@@ -38,7 +38,6 @@ OpenGL3dModel::OpenGL3dModel(struct_params* par, QWidget* parent)
     mBGcolor = mParams->opengl_bg_color;
     mFGcolor = mParams->opengl_line_color;
 
-    mEmbColor = mParams->opengl_emb_color;
     mLineWidth = mParams->opengl_line_width;
 
     mProjection = static_cast<enum_projection>(mParams->opengl_projection);
@@ -132,6 +131,7 @@ void OpenGL3dModel::setPoints(m4d::enum_draw_type dtype, bool needUpdate)
                 break;
             case m4d::enum_draw_embedding:
                 mObject.currMetric->transToEmbedding(mObject.points[idx], tp);
+                tp[3] += mParams->opengl_emb_offset;
                 break;
             case m4d::enum_draw_twoplusone:
                 mObject.currMetric->transToTwoPlusOne(mObject.points[idx], tp);
@@ -444,17 +444,10 @@ void OpenGL3dModel::setBGcolor(QColor col)
     update();
 }
 
-void OpenGL3dModel::setEmbColor(QColor col)
-{
-    mEmbColor = col;
-    update();
-}
-
-void OpenGL3dModel::setColors(QColor fgcol, QColor bgcol, QColor embcol)
+void OpenGL3dModel::setColors(QColor fgcol, QColor bgcol)
 {
     mBGcolor = bgcol;
     mFGcolor = fgcol;
-    mEmbColor = embcol;
     update();
 }
 
@@ -619,7 +612,6 @@ void OpenGL3dModel::updateParams()
 
     mBGcolor = mParams->opengl_bg_color;
     mFGcolor = mParams->opengl_line_color;
-    mEmbColor = mParams->opengl_emb_color;
 
     mStereo = mParams->opengl_stereo_use;
     mCamera.setStereoParams(mParams->opengl_stereo_sep, mParams->opengl_stereo_glasses);
@@ -656,9 +648,12 @@ void OpenGL3dModel::initializeGL()
     light_diffuse[0] = light_diffuse[1] = light_diffuse[2] = light_diffuse[3] = 1.0;
     light_position[0] = light_position[1] = light_position[2] = light_position[3] = 0.0;
 
-    mat_ambient[0] = mat_ambient[1] = mat_ambient[2] = 0.05f; mat_ambient[3] = 1.0f;
-    mat_diffuse[0] = mat_diffuse[1] = mat_diffuse[2] = 0.95f; mat_diffuse[3] = 1.0f;
-    mat_specular[0] = mat_specular[1] = mat_specular[2] = 0.01f; mat_specular[3] = 1.0f;
+    mat_ambient[0] = mat_ambient[1] = mat_ambient[2] = 0.05f;
+    mat_ambient[3] = 1.0f;
+    mat_diffuse[0] = mat_diffuse[1] = mat_diffuse[2] = 0.95f;
+    mat_diffuse[3] = 1.0f;
+    mat_specular[0] = mat_specular[1] = mat_specular[2] = 0.01f;
+    mat_specular[3] = 1.0f;
 
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
@@ -759,8 +754,9 @@ void OpenGL3dModel::paintGL_mono()
             glColor3f(1, 1, 1);
         }
         else {
-            glColor3f(static_cast<float>(mEmbColor.redF()), static_cast<float>(mEmbColor.greenF()),
-                static_cast<float>(mEmbColor.blueF()));
+            glColor3f(static_cast<float>(mParams->opengl_emb_color.redF()),
+                static_cast<float>(mParams->opengl_emb_color.greenF()),
+                static_cast<float>(mParams->opengl_emb_color.blueF()));
         }
         glPointSize(1.0);
         glVertexPointer(3, GL_FLOAT, 0, mEmbVerts);
@@ -890,10 +886,10 @@ void OpenGL3dModel::paintGL_mono()
 
     for (unsigned int i = 0; i < mObjects.size(); i++) {
         if (mObjects[i]->withLight(mat_diffuse, mStereo)) {
-            //glLightfv(GL_LIGHT0, GL_DIFFUSE, light_ambient);
+            // glLightfv(GL_LIGHT0, GL_DIFFUSE, light_ambient);
 
             glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_diffuse);
-            //glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, light_diffuse);
+            // glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, light_diffuse);
             glEnable(GL_LIGHTING);
         }
 
@@ -904,7 +900,7 @@ void OpenGL3dModel::paintGL_mono()
                 mObjects[i]->getValue(0, cx);
                 mObjects[i]->getValue(1, cy);
                 mObjects[i]->getValue(2, cz);
-                mObjects[i]->getValue(3, size);                
+                mObjects[i]->getValue(3, size);
 
                 // TODO: render text
                 // this->renderText((double)cx, (double)cy, (double)cz, QString(mObjects[i]->getText().c_str()), font);
