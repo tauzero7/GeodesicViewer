@@ -8,7 +8,7 @@ Current contact:
 Dr. Thomas Müller  
 Haus der Astronomie/Max Planck Institute for Astronomy  
 69117 Heidelberg, Germany  
-Email: tmueller@mpia.de  
+Email: tmueller [at] mpia.de  
 
 
 ## Before installation:
@@ -25,24 +25,21 @@ a message will be print on the standard output whether your graphics card
 supports GLSL or not.
 
 
-The following libraries have to be installed before compiling the GeodesicViewer:
+The following libraries have to be installed/downloaded before compiling the 
+GeodesicViewer:
 
-* GeodesicViewer
-  https://github.com/tauzero7/GeodesicViewer
-
-* Motion4D library  
-  https://github.com/tauzero7/Motion4D  
-  A detailed discussion of the Motion4D library can be found here:  
-  DOI: 10.1016/j.cpc.2009.07.014  
-    
-* Qt >= 5.9  
-  The (L)GPL-licensed version of the Qt SDK can be downloaded from  
-  http://download.qt.io/archive/qt/
-   
 * GNU Scientific library  
   http://www.gnu.org/software/gsl/  
   For Windows, you should use https://github.com/ampl/gsl
   
+* Motion4D library  
+  https://github.com/tauzero7/Motion4D  
+  (just download, compilation is done together with GeodesicViewer)
+    
+* Qt >= 5.9  
+  The (L)GPL-licensed version of the Qt SDK can be downloaded from  
+  http://download.qt.io/archive/qt/
+    
 * Freetype  
   https://sourceforge.net/projects/freetype/  
   Freetype is necessary to render text into the OpenGL window.  
@@ -55,7 +52,7 @@ The following libraries have to be installed before compiling the GeodesicViewer
 2. Switch to GeodesicViewer folder and copy "local_template.pri" to "local.pri".   
     
     - Change "M4D_DIR" such that it points to the root folder of the Motion4D 
-   folder; e.g. "/home/username/libMotion4D"
+      folder; e.g. "/home/username/libMotion4D"
     
     - Change "GSL_DIR" such that it points to the root folder of the GSL library.
 
