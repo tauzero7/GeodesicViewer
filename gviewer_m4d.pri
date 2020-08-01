@@ -38,8 +38,6 @@ UTILS_SOURCES =  $$UTILS_DIR/camera.cpp $$UTILS_DIR/quaternions.cpp \
                  $$UTILS_DIR/myobject.cpp  $$UTILS_DIR/utilities.cpp \
                  $$UTILS_DIR/gramschmidt.cpp
 
-include($$M4D_DIR/m4d_sources.pri)
-
 ######################################################################  COMPILER
 #QMAKE_CC        = g++
 #QMAKE_CXX       = g++
