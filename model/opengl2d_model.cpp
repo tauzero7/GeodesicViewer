@@ -97,6 +97,7 @@ void OpenGL2dModel::setPoints(m4d::enum_draw_type dtype, bool needUpdate)
         switch (dtype) {
             case m4d::enum_draw_pseudocart: {
                 mObject.currMetric->transToPseudoCart(mObject.points[i], tp);
+                // fprintf(stderr, "%4d %f %f %f\n", i, mObject.points[i][1], tp[1], tp[2]);
                 *(vptr++) = GLfloat(tp[1]);
                 *(vptr++) = GLfloat(tp[2]);
                 break;
@@ -446,7 +447,7 @@ void OpenGL2dModel::paintGL()
                     double cx, cy, size;
                     mObjects[i]->getValue(0, cx);
                     mObjects[i]->getValue(1, cy);
-                    mObjects[i]->getValue(2, size);                    
+                    mObjects[i]->getValue(2, size);
                 }
             }
         }
